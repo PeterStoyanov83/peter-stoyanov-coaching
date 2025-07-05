@@ -1,0 +1,346 @@
+{
+  "home": {
+    "title": "Master the Stage. Speak with Charisma. Inspire with Ease.",
+    "description": "Transform yourself through theater techniques, voice, breathing, and play.",
+    "hero": {
+      "title": "Master the Stage. Speak with Charisma. Inspire with Confidence.",
+      "subtitle": "Overcome speaking anxiety and discover your authentic voice through proven theater techniques. Your ability to communicate is your path to success.",
+      "cta": "Join the Waitlist",
+      "meetPetar": "Meet Petar",
+      "stats": {
+        "experience": "Years of Experience",
+        "students": "Students Trained", 
+        "countries": "Countries Reached"
+      }
+    },
+    "leadMagnet": {
+      "title": "Free Download: \"5 Theater Secrets to Command Any Room\"",
+      "description": "Discover the professional techniques actors use to captivate audiences and eliminate stage fright. These proven methods will transform your presence in meetings, presentations, and conversations.",
+      "benefits": [
+        "Instantly calm your nerves before any important conversation",
+        "Use voice and posture to project unshakeable confidence", 
+        "Master the art of authentic storytelling that engages audiences",
+        "Quick exercises to improve your on-camera presence"
+      ],
+      "emailPlaceholder": "Enter your email address",
+      "downloadButton": "Download Free Guide",
+      "sending": "Sending...",
+      "joinText": "Join 1,000+ professionals who've transformed their communication skills",
+      "errors": {
+        "emailRequired": "Please enter a valid email address",
+        "networkError": "Network error. Please check your connection and try again.",
+        "submitError": "Something went wrong. Please try again."
+      },
+      "success": "Thank you! Your guide is ready for download."
+    },
+    "video": {
+      "title": "Video Introduction"
+    },
+    "features": {
+      "title": "What You'll Learn",
+      "feature1": {
+        "title": "Stage Presence",
+        "description": "Develop confidence and charisma on stage"
+      },
+      "feature2": {
+        "title": "Voice Techniques", 
+        "description": "Unlock the power of your voice"
+      },
+      "feature3": {
+        "title": "Group Work",
+        "description": "Learn in a supportive environment with like-minded people"
+      }
+    },
+    "testimonials": {
+      "title": "Testimonials",
+      "testimonial1": {
+        "name": "Maria Petrova",
+        "position": "Manager",
+        "text": "Petar helped me find confidence in my public speaking."
+      },
+      "testimonial2": {
+        "name": "Georgi Nikolov",
+        "position": "Entrepreneur", 
+        "text": "The breathing exercises changed how I communicate."
+      }
+    },
+    "cta": {
+      "title": "Ready to Start?",
+      "description": "Join the waitlist for the next workshop",
+      "button": "Sign Up Now"
+    }
+  },
+  "about": {
+    "title": "Who am I?",
+    "content": "My name is Petar Stoyanov — actor, clown, director, and coach. For over 20 years, I've helped people from all walks of life — from performers to business leaders — unlock their voice, overcome stage fear, and connect deeply with themselves and their audience. My teaching is rooted in play, improvisation, breathwork, and body awareness. It's practical, fun, and truly transformative."
+  },
+  "waitlist": {
+    "title": "Join the Waitlist",
+    "description": "Be among the first to access exclusive workshops and personalized coaching sessions. Transform your communication skills with theater-based techniques.",
+    "hero": {
+      "stats": {
+        "limited": "Limited",
+        "early": "Early", 
+        "exclusive": "Exclusive",
+        "spotsAvailable": "Spots Available",
+        "birdPricing": "Bird Pricing",
+        "access": "Access"
+      },
+      "quote": "Join a community of professionals who are transforming their communication skills and discovering their authentic voice."
+    },
+    "understanding": {
+      "title": "I Understand Your Challenge",
+      "subtitle": "Communication anxiety affects even the most successful professionals. You're not alone in this journey.",
+      "challenges": {
+        "title": "Common Challenges I Help Solve",
+        "fear": {
+          "title": "Fear of Public Speaking",
+          "description": "That knot in your stomach before presentations, the racing heart, the blank mind."
+        },
+        "impostor": {
+          "title": "Impostor Syndrome", 
+          "description": "Feeling like you don't belong in the room, despite your qualifications and achievements."
+        },
+        "presence": {
+          "title": "Lack of Executive Presence",
+          "description": "Struggling to command attention and respect in high-stakes business situations."
+        },
+        "camera": {
+          "title": "Camera Anxiety",
+          "description": "Freezing up in video calls, virtual presentations, or when being recorded."
+        }
+      },
+      "truth": {
+        "title": "Here's the truth:",
+        "description": "These challenges don't reflect your worth or potential. They're simply skills that can be learned and obstacles that can be overcome with the right approach."
+      }
+    },
+    "form": {
+      "title": "Complete Your Registration",
+      "subtitle": "Join our exclusive community of aspiring speakers and performers",
+      "fullName": "Full Name",
+      "email": "Email",
+      "cityCountry": "City & Country",
+      "occupation": "Occupation",
+      "whyJoin": "Why do you want to join this workshop?",
+      "skillsToImprove": "What communication skills do you want to improve?",
+      "submitButton": "Join Waitlist",
+      "submitting": "Submitting...",
+      "privacyNote": "By joining, you agree to receive updates about our workshops and coaching programs.",
+      "errors": {
+        "fullNameRequired": "Full name is required",
+        "emailRequired": "Email is required",
+        "emailInvalid": "Email is invalid",
+        "cityCountryRequired": "City & Country is required",
+        "occupationRequired": "Occupation is required",
+        "whyJoinRequired": "Please tell us why you want to join",
+        "skillsToImproveRequired": "Please tell us what skills you want to improve",
+        "submitError": "An error occurred. Please try again.",
+        "networkError": "Network error. Please check your connection and try again."
+      }
+    },
+    "benefits": {
+      "title": "Why Join Our Community?",
+      "subtitle": "Gain exclusive access to transformative workshops and connect with like-minded individuals",
+      "earlyAccess": {
+        "title": "Early Access Benefits",
+        "description": "Be the first to know about new workshops, get priority booking, and receive exclusive early-bird pricing discounts."
+      },
+      "flexible": {
+        "title": "Flexible Scheduling",
+        "description": "Choose from multiple time slots and formats that fit your lifestyle, including weekend intensives and evening sessions."
+      },
+      "community": {
+        "title": "Community Network",
+        "description": "Connect with other aspiring speakers and performers, share experiences, and build lasting professional relationships."
+      },
+      "personalized": {
+        "title": "Personalized Guidance",
+        "description": "Receive tailored coaching based on your specific goals, whether for business presentations, public speaking, or performance."
+      }
+    }
+  },
+  "corporate": {
+    "title": "Corporate Training",
+    "description": "Elevate your team's communication, leadership presence, and collaboration skills through proven theater techniques and interactive workshops designed for business professionals.",
+    "hero": {
+      "title": "Corporate Training",
+      "subtitle": "That Transforms Teams",
+      "description": "Elevate your team's communication, leadership presence, and collaboration skills through proven theater techniques and interactive workshops designed for business professionals.",
+      "stats": {
+        "companies": "Companies Trained",
+        "satisfaction": "Satisfaction Rate", 
+        "professionals": "Professionals Trained"
+      },
+      "quote": "Theater techniques don't just improve communication—they transform how teams connect, collaborate, and lead with authentic confidence."
+    },
+    "services": {
+      "title": "Training Programs",
+      "subtitle": "Customized workshops that address your team's specific communication and leadership challenges",
+      "presentation": {
+        "title": "Presentation Excellence",
+        "description": "Master the art of compelling presentations using voice, body language, and storytelling techniques that captivate audiences."
+      },
+      "leadership": {
+        "title": "Leadership Presence",
+        "description": "Develop commanding presence and authentic leadership communication that inspires teams and drives results."
+      },
+      "communication": {
+        "title": "Team Communication",
+        "description": "Enhance collaboration, active listening, and conflict resolution through interactive theater-based exercises."
+      },
+      "camera": {
+        "title": "Camera Confidence",
+        "description": "Excel in video meetings, interviews, and digital presentations with professional on-camera presence and delivery."
+      },
+      "improvisation": {
+        "title": "Improvisation Skills",
+        "description": "Build quick thinking, adaptability, and creative problem-solving skills for dynamic business situations."
+      },
+      "stress": {
+        "title": "Stress Management",
+        "description": "Learn breathing techniques and mindfulness practices to maintain composure and clarity under pressure."
+      }
+    },
+    "form": {
+      "title": "Request a Custom Training Proposal",
+      "subtitle": "Let's discuss how theater-based training can transform your team's communication and performance",
+      "consultationTitle": "Get Your Free Consultation",
+      "consultationSubtitle": "Tell us about your team's goals and we'll create a customized training program",
+      "companyName": "Company Name",
+      "contactPerson": "Contact Person",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "teamSize": "Team Size",
+      "budget": "Estimated Budget",
+      "trainingGoals": "Training Goals & Challenges",
+      "trainingGoalsPlaceholder": "What communication challenges does your team face? What outcomes are you hoping to achieve?",
+      "preferredDates": "Preferred Training Dates",
+      "preferredDatesPlaceholder": "e.g., March 2024, flexible, ASAP",
+      "additionalInfo": "Additional Information",
+      "additionalInfoPlaceholder": "Any specific requirements, team dynamics, or additional context we should know about?",
+      "submitButton": "Request Free Consultation",
+      "submitting": "Sending Request...",
+      "responseNote": "We'll respond within 24 hours with a customized training proposal",
+      "teamSizeOptions": {
+        "placeholder": "Select team size",
+        "small": "5-15 people",
+        "medium": "16-30 people",
+        "large": "31-50 people",
+        "xlarge": "51-100 people", 
+        "enterprise": "100+ people"
+      },
+      "budgetOptions": {
+        "placeholder": "Select budget range",
+        "under5k": "Under €5,000",
+        "5k10k": "€5,000 - €10,000",
+        "10k20k": "€10,000 - €20,000",
+        "20kplus": "€20,000+",
+        "discuss": "Let's discuss"
+      },
+      "errors": {
+        "companyNameRequired": "Company name is required",
+        "contactPersonRequired": "Contact person is required",
+        "emailRequired": "Email is required",
+        "emailInvalid": "Email is invalid",
+        "teamSizeRequired": "Team size is required",
+        "trainingGoalsRequired": "Training goals are required",
+        "submitError": "An error occurred. Please try again.",
+        "networkError": "Network error. Please check your connection and try again."
+      }
+    },
+    "benefits": {
+      "title": "Why Choose Theater-Based Training?",
+      "subtitle": "Proven techniques from the world of performance that create lasting behavioral change",
+      "experiential": {
+        "title": "Experiential Learning",
+        "description": "Learn by doing through interactive exercises that create muscle memory for confident communication."
+      },
+      "immediate": {
+        "title": "Immediate Results",
+        "description": "See transformation in real-time as participants break through limiting beliefs and discover their authentic presence."
+      },
+      "teamBonding": {
+        "title": "Team Bonding",
+        "description": "Build trust and collaboration as teams work together in a safe, supportive, and energizing environment."
+      }
+    }
+  },
+  "thankYou": {
+    "title": "Thank You!",
+    "description": "Your message has been received. We'll be in touch soon to discuss your communication journey.",
+    "messages": {
+      "corporate": "Your corporate training inquiry has been received. We'll prepare a customized proposal for your team.",
+      "waitlist": "Welcome to our exclusive community! You're now on the waitlist for our transformative workshops.",
+      "general": "Your message has been received. We'll be in touch soon to discuss your communication journey."
+    },
+    "stats": {
+      "responseTime": "Response Time",
+      "satisfactionRate": "Satisfaction Rate",
+      "livesTransformed": "Lives Transformed"
+    },
+    "nextSteps": {
+      "title": "What Happens Next?",
+      "subtitle": "Here's your roadmap to communication transformation",
+      "step1": {
+        "corporate": "Proposal Review",
+        "general": "Email Confirmation", 
+        "corporateDesc": "We'll analyze your team's needs and prepare a customized training proposal within 24 hours.",
+        "generalDesc": "Check your email for a confirmation message with exclusive resources and next steps."
+      },
+      "step2": {
+        "corporate": "Strategy Call",
+        "general": "Personal Consultation",
+        "corporateDesc": "We'll schedule a strategy call to discuss your training goals and answer any questions.",
+        "generalDesc": "Receive a personal consultation to discuss your communication goals and workshop options."
+      },
+      "step3": {
+        "corporate": "Transform Your Team",
+        "general": "Begin Your Journey",
+        "corporateDesc": "Experience the transformation as your team develops authentic communication skills and confidence.",
+        "generalDesc": "Start your journey to confident communication with our proven theater-based techniques."
+      }
+    },
+    "actions": {
+      "returnHome": "Return Home",
+      "learnAbout": "Learn About Petar"
+    },
+    "resources": {
+      "title": "While You Wait...",
+      "subtitle": "Explore these resources to start your transformation journey today",
+      "freeGuide": {
+        "title": "Free Guide",
+        "description": "Download \"5 Theater Secrets to Command Any Room\" for instant confidence tips",
+        "action": "Get Free Guide"
+      },
+      "aboutPetar": {
+        "title": "About Petar",
+        "description": "Learn about Petar's 20+ year journey from actor to international communication coach",
+        "action": "Read His Story"
+      },
+      "shareInspire": {
+        "title": "Share & Inspire",
+        "description": "Help others discover the power of confident communication by sharing your journey"
+      }
+    }
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "corporate": "Corporate",
+    "blog": "Blog",
+    "waitlist": "Join Waitlist"
+  },
+  "footer": {
+    "description": "Transforming communication through theater techniques, breath work, and authentic presence.",
+    "quickLinks": "Quick Links",
+    "contact": "Contact",
+    "followUs": "Follow Us",
+    "newsletter": "Newsletter",
+    "newsletterDescription": "Stay updated with our latest workshops, articles, and communication tips.",
+    "subscribe": "Subscribe",
+    "allRightsReserved": "All Rights Reserved",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service"
+  }
+}

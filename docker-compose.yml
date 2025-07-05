@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - ./blog:/app/blog
+    environment:
+      - DATABASE_URL=sqlite:///./coaching_site.db
+      - MAILERLITE_API_KEY=${MAILERLITE_API_KEY}
+    restart: unless-stopped
+    networks:
+      - coaching-network
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - coaching-network
+
+networks:
+  coaching-network:
+    driver: bridge
