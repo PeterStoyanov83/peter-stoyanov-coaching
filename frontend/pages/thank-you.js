@@ -24,7 +24,7 @@ export default function ThankYou() {
       <Head>
         <title>{t('thankYou.title')} | Petar Stoyanov</title>
         <meta name="description" content={t('thankYou.description')} />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicons/favicon.ico" />
       </Head>
 
       <Header />

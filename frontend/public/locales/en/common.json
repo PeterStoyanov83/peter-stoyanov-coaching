@@ -9,7 +9,7 @@
       "meetPetar": "Meet Petar",
       "stats": {
         "experience": "Years of Experience",
-        "students": "Students Trained", 
+        "students": "Students Trained",
         "countries": "Countries Reached"
       }
     },
@@ -18,7 +18,7 @@
       "description": "Discover the professional techniques actors use to captivate audiences and eliminate stage fright. These proven methods will transform your presence in meetings, presentations, and conversations.",
       "benefits": [
         "Instantly calm your nerves before any important conversation",
-        "Use voice and posture to project unshakeable confidence", 
+        "Use voice and posture to project unshakeable confidence",
         "Master the art of authentic storytelling that engages audiences",
         "Quick exercises to improve your on-camera presence"
       ],
@@ -65,7 +65,7 @@
         "description": "Develop confidence and charisma on stage"
       },
       "feature2": {
-        "title": "Voice Techniques", 
+        "title": "Voice Techniques",
         "description": "Unlock the power of your voice"
       },
       "feature3": {
@@ -95,7 +95,7 @@
       },
       "testimonial2": {
         "name": "Georgi Nikolov",
-        "position": "Entrepreneur", 
+        "position": "Entrepreneur",
         "text": "The breathing exercises changed how I communicate."
       },
       "testimonial3": {
@@ -148,7 +148,83 @@
   },
   "about": {
     "title": "Who am I?",
-    "content": "My name is Petar Stoyanov — actor, clown, director, and coach. For over 20 years, I've helped people from all walks of life — from performers to business leaders — unlock their voice, overcome stage fear, and connect deeply with themselves and their audience. My teaching is rooted in play, improvisation, breathwork, and body awareness. It's practical, fun, and truly transformative."
+    "content": "My name is Petar Stoyanov, and I’m an actor, clown, director, and (...well, I’m not a fan of the word \"coach\" – it sounds too wishy-washy to me...). For over 20 years, I’ve worked with people from various cultures and professions – from actors to business leaders – helping them free their voice, overcome stage fright, and connect more deeply with themselves and, through that, with their audience. I teach through games, exercises, improvisation, and physical work. My approach is practical, fun, and liberating.",
+
+    "hero": {
+      "title": "Meet",
+      "name": "Petar Stoyanov",
+      "subtitle": "Actor • Clown • Coach • Director",
+      "stats": {
+        "experience": "Years Experience",
+        "countries": "Countries"
+      },
+      "cta": {
+        "workshop": "Join a Workshop",
+        "corporate": "Corporate Training"
+      }
+    },
+    "journey": {
+      "title": "My Journey",
+      "theater": {
+        "title": "Theater & Clowning",
+        "description": "My journey began on the stage, where I discovered the transformative power of performance. Through years of theater and clowning, I learned that authenticity and vulnerability are the keys to genuine connection with an audience."
+      },
+      "international": {
+        "title": "International Experience",
+        "description": "Over two decades, I've worked across 15+ countries, collaborating with diverse audiences and understanding how communication transcends cultural boundaries. This global perspective shapes my unique approach to coaching."
+      },
+      "methodology": {
+        "title": "Unique Methodology",
+        "description": "My coaching combines theater techniques, voice work, breathing exercises, and mindfulness. Unlike traditional public speaking training, I focus on discovering your authentic voice and presence through play and exploration."
+      }
+    },
+    "philosophy": {
+      "title": "My Philosophy",
+      "quote": "Every person has a unique voice and presence. My role is not to change who you are, but to help you discover and amplify your authentic self.",
+      "belief": "I believe that confidence comes from authenticity, not from pretending to be someone else. Through my workshops, you'll learn to embrace your natural communication style while developing the skills to express yourself powerfully and clearly.",
+      "approach": "My approach combines theater techniques with practical business applications, creating a safe space where vulnerability becomes strength and fear transforms into confidence."
+    },
+    "approach": {
+      "title": "My Approach",
+      "playBased": {
+        "title": "Play-Based Learning",
+        "description": "Learning through joy and exploration, not fear and pressure."
+      },
+      "bodyAwareness": {
+        "title": "Body Awareness",
+        "description": "Understanding how your body communicates and using it as a tool."
+      },
+      "voiceBreath": {
+        "title": "Voice & Breath",
+        "description": "Developing vocal power and breathing techniques for confidence."
+      },
+      "mindfulPresence": {
+        "title": "Mindful Presence",
+        "description": "Being fully present and authentic in every interaction."
+      }
+    },
+    "workTogether": {
+      "title": "Let's Work Together",
+      "description": "Whether you're looking to overcome speaking anxiety, enhance your leadership presence, or transform your team's communication skills, I'm here to guide you on that journey.",
+      "individual": {
+        "title": "Individual Coaching",
+        "description": "Personalized sessions focused on your specific communication goals and challenges."
+      },
+      "group": {
+        "title": "Group Workshops",
+        "description": "Dynamic group sessions where participants learn together and support each other's growth."
+      },
+      "corporate": {
+        "title": "Corporate Training",
+        "description": "Customized programs designed to enhance your team's communication and leadership skills."
+      }
+    },
+    "cta": {
+      "title": "Ready to Transform Your Communication?",
+      "description": "Join hundreds of students who have discovered their authentic voice and confident presence.",
+      "workshop": "Join a Workshop",
+      "corporate": "Corporate Training"
+    }
   },
   "waitlist": {
     "title": "Join the Waitlist",
@@ -156,7 +232,7 @@
     "hero": {
       "stats": {
         "limited": "Limited",
-        "early": "Early", 
+        "early": "Early",
         "exclusive": "Exclusive",
         "spotsAvailable": "Spots Available",
         "birdPricing": "Bird Pricing",
@@ -174,7 +250,7 @@
           "description": "That knot in your stomach before presentations, the racing heart, the blank mind."
         },
         "impostor": {
-          "title": "Impostor Syndrome", 
+          "title": "Impostor Syndrome",
           "description": "Feeling like you don't belong in the room, despite your qualifications and achievements."
         },
         "presence": {
@@ -245,7 +321,7 @@
       "description": "Elevate your team's communication, leadership presence, and collaboration skills through proven theater techniques and interactive workshops designed for business professionals.",
       "stats": {
         "companies": "Companies Trained",
-        "satisfaction": "Satisfaction Rate", 
+        "satisfaction": "Satisfaction Rate",
         "professionals": "Professionals Trained"
       },
       "quote": "Theater techniques don't just improve communication—they transform how teams connect, collaborate, and lead with authentic confidence."
@@ -303,7 +379,7 @@
         "small": "5-15 people",
         "medium": "16-30 people",
         "large": "31-50 people",
-        "xlarge": "51-100 people", 
+        "xlarge": "51-100 people",
         "enterprise": "100+ people"
       },
       "budgetOptions": {
@@ -360,7 +436,7 @@
       "subtitle": "Here's your roadmap to communication transformation",
       "step1": {
         "corporate": "Proposal Review",
-        "general": "Email Confirmation", 
+        "general": "Email Confirmation",
         "corporateDesc": "We'll analyze your team's needs and prepare a customized training proposal within 24 hours.",
         "generalDesc": "Check your email for a confirmation message with exclusive resources and next steps."
       },
