@@ -3,9 +3,9 @@
     "title": "Master the Stage. Speak with Charisma. Inspire with Ease.",
     "description": "Transform yourself through theater techniques, voice, breathing, and play.",
     "hero": {
-      "title": "Master the Stage. Speak with Charisma. Inspire with Confidence.",
-      "subtitle": "Overcome speaking anxiety and discover your authentic voice through proven theater techniques. Your ability to communicate is your path to success.",
-      "cta": "Join the Waitlist",
+      "title": "Transform Your Stage Presence with Confidence",
+      "subtitle": "From theater stages to boardrooms - discover the authentic secrets that turn fear into fearless presence",
+      "cta": "Make the Change",
       "meetPetar": "Meet Petar",
       "stats": {
         "experience": "Years of Experience",
@@ -34,10 +34,32 @@
       "success": "Thank you! Your guide is ready for download."
     },
     "video": {
-      "title": "Video Introduction"
+      "title": "Video Introduction",
+      "description": "Watch Petar share his unique approach to stage presence and communication training.",
+      "comingSoon": "Video Coming Soon",
+      "preview": "Exclusive training preview",
+      "quote": "Every person has a unique voice and presence. My role is to help you discover and amplify yours.",
+      "credentials": "Actor, Coach & Communication Expert"
+    },
+    "methodology": {
+      "title": "Learning Through Practice",
+      "subtitle": "Skip traditional theory. Experience immediate transformation through proven theater techniques that create lasting change.",
+      "method1": {
+        "title": "Feel the Change",
+        "description": "Experience breakthrough moments as fear transforms into confidence through hands-on exercises."
+      },
+      "method2": {
+        "title": "Discover Your Voice",
+        "description": "Uncover your unique communication style and authentic presence that captivates any audience."
+      },
+      "method3": {
+        "title": "Apply Immediately",
+        "description": "Use your new skills right away in meetings, presentations, and important conversations."
+      }
     },
     "features": {
       "title": "What You'll Learn",
+      "subtitle": "Develop the skills that will transform how you communicate and connect with others.",
       "feature1": {
         "title": "Stage Presence",
         "description": "Develop confidence and charisma on stage"
@@ -47,12 +69,25 @@
         "description": "Unlock the power of your voice"
       },
       "feature3": {
-        "title": "Group Work",
-        "description": "Learn in a supportive environment with like-minded people"
+        "title": "Body Language",
+        "description": "Master non-verbal communication and commanding physical presence"
+      },
+      "feature4": {
+        "title": "Work with Camera",
+        "description": "Excel in video meetings, interviews, and digital presentations with commanding on-camera confidence."
+      },
+      "feature5": {
+        "title": "Addressing Audience",
+        "description": "Connect authentically with any audience and command attention in any room."
+      },
+      "feature6": {
+        "title": "Improvisational Skills",
+        "description": "Build quick thinking and adaptability for any speaking situation."
       }
     },
     "testimonials": {
       "title": "Testimonials",
+      "subtitle": "Hear from students who have transformed their communication skills.",
       "testimonial1": {
         "name": "Maria Petrova",
         "position": "Manager",
@@ -62,12 +97,53 @@
         "name": "Georgi Nikolov",
         "position": "Entrepreneur", 
         "text": "The breathing exercises changed how I communicate."
+      },
+      "testimonial3": {
+        "name": "Anna Stefanova",
+        "position": "Marketing Director",
+        "text": "The workshop gave me tools I use daily. My presentations are now engaging and confident."
       }
+    },
+    "transformation": {
+      "title": "From Fear-Full to Fear-Less",
+      "subtitle": "Experience the journey from communication anxiety to confident presence",
+      "before": {
+        "title": "Before: Silent Struggle",
+        "item1": "Racing heart before speaking",
+        "item2": "Avoiding important conversations",
+        "item3": "Feeling invisible in meetings",
+        "item4": "Self-doubt and overthinking"
+      },
+      "after": {
+        "title": "After: Commanding Presence",
+        "item1": "Speaking with calm confidence",
+        "item2": "Leading important discussions",
+        "item3": "Commanding attention naturally",
+        "item4": "Authentic self-expression"
+      },
+      "cta": {
+        "title": "Ready for Your Transformation?",
+        "button": "Start Your Journey"
+      }
+    },
+    "leadMagnetSection": {
+      "title": "Free Download: \"5 Theater Secrets to Command Any Room\"",
+      "description": "Discover the professional techniques actors use to captivate audiences and eliminate stage fright. These proven methods will transform your presence in meetings, presentations, and conversations.",
+      "benefits": [
+        "Instantly calm your nerves before any important conversation",
+        "Use voice and posture to project unshakeable confidence",
+        "Master the art of authentic storytelling that engages audiences",
+        "Quick exercises to improve your on-camera presence"
+      ],
+      "freeLabel": "FREE",
+      "guideLabel": "FREE GUIDE",
+      "pdfLabel": "PDF Download"
     },
     "cta": {
       "title": "Ready to Start?",
       "description": "Join the waitlist for the next workshop",
-      "button": "Sign Up Now"
+      "button": "Sign Up Now",
+      "corporateButton": "Corporate Training"
     }
   },
   "about": {

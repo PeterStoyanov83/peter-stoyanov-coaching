@@ -200,3 +200,126 @@ h3 {
 a {
   @apply transition-colors duration-200;
 }
+
+/* Journey Arrow Enhancements with Gradient */
+.journey-arrow-mobile {
+  filter: drop-shadow(0 4px 8px rgba(239, 68, 68, 0.4)) 
+          drop-shadow(0 0 12px rgba(16, 185, 129, 0.3));
+  position: relative;
+}
+
+.journey-arrow-mobile::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, 
+    rgba(239, 68, 68, 0.8) 0%,     /* Red at start */
+    rgba(249, 115, 22, 0.6) 30%,   /* Orange transition */
+    rgba(34, 197, 94, 0.6) 70%,    /* Green transition */
+    rgba(16, 185, 129, 0.8) 100%   /* Emerald at end */
+  );
+  mask: url('/arrow.svg') no-repeat center/contain;
+  -webkit-mask: url('/arrow.svg') no-repeat center/contain;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.journey-arrow-desktop {
+  filter: drop-shadow(0 6px 12px rgba(239, 68, 68, 0.4)) 
+          drop-shadow(0 0 16px rgba(16, 185, 129, 0.4))
+          drop-shadow(0 0 24px rgba(34, 197, 94, 0.3));
+  position: relative;
+}
+
+.journey-arrow-desktop::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to right, 
+    rgba(239, 68, 68, 0.9) 0%,     /* Red at start */
+    rgba(249, 115, 22, 0.7) 25%,   /* Orange */
+    rgba(251, 191, 36, 0.6) 50%,   /* Yellow */
+    rgba(34, 197, 94, 0.7) 75%,    /* Green */
+    rgba(16, 185, 129, 0.9) 100%   /* Emerald at end */
+  );
+  mask: url('/arrow.svg') no-repeat center/contain;
+  -webkit-mask: url('/arrow.svg') no-repeat center/contain;
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 0.3s ease;
+}
+
+.journey-arrow-desktop:hover::before {
+  opacity: 1.2;
+  filter: brightness(1.2);
+}
+
+.journey-glow {
+  background: radial-gradient(circle, 
+    rgba(239, 68, 68, 0.3) 0%,     /* Red center */
+    rgba(249, 115, 22, 0.2) 30%,   /* Orange */
+    rgba(34, 197, 94, 0.2) 60%,    /* Green */
+    rgba(16, 185, 129, 0.1) 80%,   /* Emerald */
+    transparent 100%);
+  border-radius: 50%;
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+.journey-glow-desktop {
+  background: radial-gradient(ellipse, 
+    rgba(239, 68, 68, 0.4) 0%,     /* Red center */
+    rgba(249, 115, 22, 0.3) 25%,   /* Orange */
+    rgba(251, 191, 36, 0.2) 45%,   /* Yellow */
+    rgba(34, 197, 94, 0.3) 65%,    /* Green */
+    rgba(16, 185, 129, 0.2) 80%,   /* Emerald */
+    transparent 100%);
+  border-radius: 50%;
+  animation: glow-flow 4s ease-in-out infinite;
+}
+
+/* Glow Animations */
+@keyframes glow-pulse {
+  0%, 100% { 
+    opacity: 0.4; 
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 0.8; 
+    transform: scale(1.1);
+  }
+}
+
+@keyframes glow-flow {
+  0%, 100% { 
+    opacity: 0.3; 
+    transform: scale(1) rotate(0deg);
+  }
+  33% { 
+    opacity: 0.6; 
+    transform: scale(1.05) rotate(2deg);
+  }
+  66% { 
+    opacity: 0.5; 
+    transform: scale(1.08) rotate(-1deg);
+  }
+}
+
+/* Journey Arrow Hover Effects with Red-Green Theme */
+.journey-arrow-mobile:hover {
+  filter: drop-shadow(0 6px 12px rgba(239, 68, 68, 0.6)) 
+          drop-shadow(0 0 20px rgba(34, 197, 94, 0.5))
+          drop-shadow(0 0 8px rgba(16, 185, 129, 0.4));
+}
+
+.journey-arrow-desktop:hover {
+  filter: drop-shadow(0 8px 16px rgba(239, 68, 68, 0.7)) 
+          drop-shadow(0 0 24px rgba(34, 197, 94, 0.6))
+          drop-shadow(0 0 32px rgba(16, 185, 129, 0.4))
+          drop-shadow(0 0 12px rgba(5, 150, 105, 0.5));
+}

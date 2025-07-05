@@ -6,9 +6,9 @@ from typing import List, Optional
 import markdown
 import glob
 
-from models import WaitlistRegistration, CorporateInquiry
-from database import get_db, store_waitlist_registration, store_corporate_inquiry
-from mailerlite import add_subscriber_to_mailerlite
+from models import WaitlistRegistration, CorporateInquiry, LeadMagnetDownload
+from database import get_db, store_waitlist_registration, store_corporate_inquiry, store_lead_magnet_download
+from mailerlite import add_subscriber_to_mailerlite, add_lead_magnet_subscriber, add_waitlist_subscriber
 
 app = FastAPI(title="Coaching Site API", description="API for Petar Stoyanov's coaching website")
 
@@ -34,6 +34,9 @@ class CorporateInquiryRequest(BaseModel):
     contact_person: str
     email: EmailStr
     message: str
+
+class LeadMagnetRequest(BaseModel):
+    email: EmailStr
 
 class BlogPost(BaseModel):
     slug: str
@@ -68,15 +71,10 @@ async def register_waitlist(
     if os.getenv("MAILERLITE_API_KEY"):
         try:
             background_tasks.add_task(
-                add_subscriber_to_mailerlite,
+                add_waitlist_subscriber,
                 registration.email,
                 registration.full_name,
-                {
-                    "city_country": registration.city_country,
-                    "occupation": registration.occupation,
-                    "why_join": registration.why_join,
-                    "skills_to_improve": registration.skills_to_improve
-                }
+                registration.skills_to_improve
             )
             mailer_success = True
         except Exception as e:
@@ -106,6 +104,45 @@ async def contact_corporate(
     store_corporate_inquiry(db, inq_model)
     
     return {"status": "success", "message": "Inquiry submitted successfully"}
+
+@app.post("/api/download-guide")
+async def download_guide(
+    request: LeadMagnetRequest,
+    background_tasks: BackgroundTasks,
+    db = Depends(get_db)
+):
+    """
+    Handle lead magnet download requests
+    - Store email in database
+    - Add to MailerLite if configured
+    - Return download URL
+    """
+    
+    # Store in database (tracks download count for returning users)
+    download_record = store_lead_magnet_download(db, request.email)
+    
+    # Try to add to MailerLite for email marketing
+    mailer_success = False
+    if os.getenv("MAILERLITE_API_KEY"):
+        try:
+            # Add to MailerLite in background task using automation function
+            background_tasks.add_task(
+                add_lead_magnet_subscriber,
+                request.email,
+                ""  # Name not provided in lead magnet form
+            )
+            mailer_success = True
+        except Exception as e:
+            print(f"MailerLite error for lead magnet: {e}")
+            # Continue anyway - email is stored in database
+    
+    # Return success response with download URL
+    return {
+        "success": True,
+        "message": "Thank you! Your guide is ready for download.",
+        "downloadUrl": "/guides/5-theater-secrets-guide.pdf",
+        "isReturningUser": download_record.download_count > 1
+    }
 
 @app.get("/api/posts", response_model=List[BlogPost])
 def get_blog_posts(tag: Optional[str] = None):

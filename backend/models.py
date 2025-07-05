@@ -29,6 +29,15 @@ class CorporateInquiry(Base):
     message = Column(Text, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
+class LeadMagnetDownload(Base):
+    __tablename__ = "lead_magnet_downloads"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String(100), nullable=False, index=True)
+    download_count = Column(Integer, default=1)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    last_downloaded_at = Column(DateTime, default=datetime.utcnow)
+
 # Pydantic models for response
 class WaitlistRegistrationResponse(BaseModel):
     id: int
@@ -50,6 +59,16 @@ class CorporateInquiryResponse(BaseModel):
     email: str
     message: str
     created_at: datetime
+    
+    class Config:
+        orm_mode = True
+
+class LeadMagnetDownloadResponse(BaseModel):
+    id: int
+    email: str
+    download_count: int
+    created_at: datetime
+    last_downloaded_at: datetime
     
     class Config:
         orm_mode = True
