@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
@@ -14,6 +14,36 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
   const [submitError, setSubmitError] = useState('');
+
+  // Testimonials carousel state
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+
+  // Auto-advance testimonials
+  useEffect(() => {
+    if (!isAutoPlaying) return;
+    
+    const interval = setInterval(() => {
+      setCurrentTestimonial((prev) => (prev + 1) % 10);
+    }, 5000); // Change every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [isAutoPlaying]);
+
+  const nextTestimonial = () => {
+    setCurrentTestimonial((prev) => (prev + 1) % 10);
+    setIsAutoPlaying(false);
+  };
+
+  const prevTestimonial = () => {
+    setCurrentTestimonial((prev) => (prev - 1 + 10) % 10);
+    setIsAutoPlaying(false);
+  };
+
+  const goToTestimonial = (index) => {
+    setCurrentTestimonial(index);
+    setIsAutoPlaying(false);
+  };
 
   const handleLeadMagnetSubmit = async (e) => {
     e.preventDefault();
@@ -63,7 +93,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       <Head>
-        <title>{t('home.title')} | Petar Stoyanov</title>
+        <title>{t('home.title')} | Peter Stoyanov</title>
         <meta name="description" content={t('home.description')} />
       </Head>
 
@@ -85,7 +115,7 @@ export default function Home() {
             <div className="max-w-7xl mx-auto">
               <div className="text-center">
                 
-                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
+                <h1 className="pt-20 text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
                   <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
                     {t('home.hero.title')}
                   </span>
@@ -166,7 +196,7 @@ export default function Home() {
                   <blockquote className="text-lg text-gray-700 italic leading-relaxed mb-4">
                     "{t('home.video.quote')}"
                   </blockquote>
-                  <p className="text-gray-900 font-semibold text-lg">— Petar Stoyanov</p>
+                  <p className="text-gray-900 font-semibold text-lg">— Peter Stoyanov</p>
                   <p className="text-gray-600 mt-2">{t('home.video.credentials')}</p>
                 </div>
               </div>
@@ -360,7 +390,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Testimonials Section - Enhanced Bold & Vibrant */}
+        {/* Testimonials Carousel Section - Enhanced Bold & Vibrant */}
         <section className="py-20 md:py-28 relative overflow-hidden">
           {/* Dynamic Gradient Background */}
           <div className="absolute inset-0 bg-gradient-to-br from-orange-100 via-pink-100 to-purple-100"></div>
@@ -383,89 +413,121 @@ export default function Home() {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-              {/* Testimonial 1 - Enhanced */}
-              <div className="group relative bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-4 transition-all duration-500 border border-white/60">
-                {/* Decorative Quote Mark */}
-                <div className="absolute -top-4 -left-4 w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
-                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z"/>
-                  </svg>
-                </div>
+            {/* Testimonials Carousel */}
+            <div className="relative max-w-6xl mx-auto">
+              {/* Main Carousel Container - Added extra padding for quote icons */}
+              <div className="relative overflow-hidden rounded-3xl pt-8 pb-4">
+                <div 
+                  className="flex transition-transform duration-700 ease-in-out"
+                  style={{ transform: `translateX(-${currentTestimonial * 100}%)` }}
+                  onMouseEnter={() => setIsAutoPlaying(false)}
+                  onMouseLeave={() => setIsAutoPlaying(true)}
+                >
+                  {/* Generate all 10 testimonials */}
+                  {[...Array(10)].map((_, index) => {
+                    const testimonialNumber = index + 1;
+                    const gradientColors = [
+                      'from-indigo-500 to-purple-600',
+                      'from-purple-500 to-pink-600', 
+                      'from-emerald-500 to-teal-600',
+                      'from-orange-500 to-red-600',
+                      'from-blue-500 to-cyan-600',
+                      'from-pink-500 to-rose-600',
+                      'from-green-500 to-emerald-600',
+                      'from-yellow-500 to-orange-600',
+                      'from-cyan-500 to-blue-600',
+                      'from-violet-500 to-purple-600'
+                    ];
+                    
+                    return (
+                      <div key={index} className="w-full flex-shrink-0 px-8">
+                        <div className="group relative bg-white/95 backdrop-blur-sm p-8 md:p-12 rounded-3xl shadow-2xl border border-white/60 max-w-5xl mx-auto mt-8">
+                          {/* Decorative Quote Mark - Adjusted positioning */}
+                          <div className={`absolute -top-4 -left-4 w-16 h-16 bg-gradient-to-br ${gradientColors[index]} rounded-full flex items-center justify-center shadow-xl`}>
+                            <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z"/>
+                            </svg>
+                          </div>
 
-                <div className="flex items-center mb-6">
-                  <div className="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-black text-xl mr-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                    {t('home.testimonials.testimonial1.name').split(' ').map(name => name[0]).join('')}
-                  </div>
-                  <div>
-                    <h4 className="font-black text-gray-900 text-xl group-hover:text-indigo-600 transition-colors duration-300">{t('home.testimonials.testimonial1.name')}</h4>
-                    <p className="text-gray-600 font-semibold">{t('home.testimonials.testimonial1.position')}</p>
-                  </div>
-                </div>
-                <p className="text-gray-800 italic leading-relaxed text-lg font-medium mb-6">"{t('home.testimonials.testimonial1.text')}"</p>
-                <div className="flex text-yellow-500 justify-center">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="w-6 h-6 drop-shadow-sm" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
+                          <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
+                            {/* Avatar and Info */}
+                            <div className="flex flex-col items-center md:items-start text-center md:text-left flex-shrink-0">
+                              <div className={`w-24 h-24 bg-gradient-to-br ${gradientColors[index]} rounded-full flex items-center justify-center text-white font-black text-2xl shadow-xl group-hover:scale-110 transition-transform duration-300 mb-4`}>
+                                {t(`home.testimonials.testimonial${testimonialNumber}.name`).split(' ').map(name => name[0]).join('')}
+                              </div>
+                              <h4 className="font-black text-gray-900 text-xl md:text-2xl mb-2">
+                                {t(`home.testimonials.testimonial${testimonialNumber}.name`)}
+                              </h4>
+                              <p className="text-gray-600 font-bold text-lg">
+                                {t(`home.testimonials.testimonial${testimonialNumber}.position`)}
+                              </p>
+                            </div>
+
+                            {/* Testimonial Text */}
+                            <div className="flex-1">
+                              <p className="text-gray-800 italic leading-relaxed text-xl md:text-2xl font-medium mb-8 text-center md:text-left">
+                                "{t(`home.testimonials.testimonial${testimonialNumber}.text`)}"
+                              </p>
+                              
+                              {/* Star Rating */}
+                              <div className="flex text-yellow-500 justify-center md:justify-start">
+                                {[...Array(5)].map((_, i) => (
+                                  <svg key={i} className="w-7 h-7 drop-shadow-sm" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                  </svg>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* Testimonial 2 - Enhanced */}
-              <div className="group relative bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-4 transition-all duration-500 border border-white/60">
-                {/* Decorative Quote Mark */}
-                <div className="absolute -top-4 -left-4 w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center shadow-lg">
-                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z"/>
-                  </svg>
-                </div>
+              {/* Navigation Arrows */}
+              <button
+                onClick={prevTestimonial}
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/90 backdrop-blur-sm rounded-full shadow-xl flex items-center justify-center text-gray-700 hover:bg-white hover:scale-110 transition-all duration-300 z-10"
+              >
+                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              
+              <button
+                onClick={nextTestimonial}
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/90 backdrop-blur-sm rounded-full shadow-xl flex items-center justify-center text-gray-700 hover:bg-white hover:scale-110 transition-all duration-300 z-10"
+              >
+                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
 
-                <div className="flex items-center mb-6">
-                  <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center text-white font-black text-xl mr-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                    {t('home.testimonials.testimonial2.name').split(' ').map(name => name[0]).join('')}
-                  </div>
-                  <div>
-                    <h4 className="font-black text-gray-900 text-xl group-hover:text-purple-600 transition-colors duration-300">{t('home.testimonials.testimonial2.name')}</h4>
-                    <p className="text-gray-600 font-semibold">{t('home.testimonials.testimonial2.position')}</p>
-                  </div>
-                </div>
-                <p className="text-gray-800 italic leading-relaxed text-lg font-medium mb-6">"{t('home.testimonials.testimonial2.text')}"</p>
-                <div className="flex text-yellow-500 justify-center">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="w-6 h-6 drop-shadow-sm" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
+              {/* Dots Indicator */}
+              <div className="flex justify-center mt-12 space-x-3">
+                {[...Array(10)].map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => goToTestimonial(index)}
+                    className={`w-4 h-4 rounded-full transition-all duration-300 ${
+                      currentTestimonial === index 
+                        ? 'bg-gradient-to-r from-orange-500 to-pink-500 scale-125 shadow-lg' 
+                        : 'bg-gray-300 hover:bg-gray-400'
+                    }`}
+                  />
+                ))}
               </div>
 
-              {/* Testimonial 3 - Enhanced */}
-              <div className="group relative bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-4 transition-all duration-500 border border-white/60">
-                {/* Decorative Quote Mark */}
-                <div className="absolute -top-4 -left-4 w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center shadow-lg">
-                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z"/>
-                  </svg>
-                </div>
-
-                <div className="flex items-center mb-6">
-                  <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-white font-black text-xl mr-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                    {t('home.testimonials.testimonial3.name').split(' ').map(name => name[0]).join('')}
-                  </div>
-                  <div>
-                    <h4 className="font-black text-gray-900 text-xl group-hover:text-emerald-600 transition-colors duration-300">{t('home.testimonials.testimonial3.name')}</h4>
-                    <p className="text-gray-600 font-semibold">{t('home.testimonials.testimonial3.position')}</p>
-                  </div>
-                </div>
-                <p className="text-gray-800 italic leading-relaxed text-lg font-medium mb-6">"{t('home.testimonials.testimonial3.text')}"</p>
-                <div className="flex text-yellow-500 justify-center">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="w-6 h-6 drop-shadow-sm" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
+              {/* Auto-play indicator */}
+              <div className="text-center mt-6">
+                <button
+                  onClick={() => setIsAutoPlaying(!isAutoPlaying)}
+                  className="text-gray-600 hover:text-gray-800 text-sm font-medium transition-colors duration-300"
+                >
+                  {isAutoPlaying ? '⏸️ Pause Auto-play' : '▶️ Resume Auto-play'}
+                </button>
               </div>
             </div>
           </div>

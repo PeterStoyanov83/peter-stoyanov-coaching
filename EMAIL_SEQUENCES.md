@@ -28,7 +28,7 @@ This guide contains the exact techniques I've learned from 20+ years on stage an
 I'm excited to be part of your confidence journey!
 
 Best regards,
-Petar Stoyanov
+Peter Stoyanov
 Theatre Professional & Communication Coach
 
 P.S. Keep an eye on your inbox - I'll be sharing more valuable insights over the next few days.
@@ -53,7 +53,7 @@ I was performing in a major production, and I was so focused on hitting every ma
 
 My director pulled me aside afterward and said something that changed everything:
 
-*"Petar, the audience doesn't want perfection. They want connection. They want to feel something."*
+*"Peter, the audience doesn't want perfection. They want connection. They want to feel something."*
 
 **This applies to EVERY communication situation:**
 - Business presentations
@@ -70,7 +70,7 @@ Trust me, they'll feel the difference immediately.
 What's one situation where you could apply this shift? Hit reply and let me know - I read every response!
 
 Cheering you on,
-Petar
+Peter
 
 P.S. Tomorrow I'll share a technique that helps you find this "present state" in under 30 seconds. It's a game-changer.
 ```
@@ -89,7 +89,7 @@ I want to tell you about Maria, one of my clients who went from dreading present
 
 Here's what she told me after 30 days:
 
-*"Petar, I can't believe the difference. Yesterday I presented to our board of directors and actually felt... confident? I connected with them instead of just reciting facts. Three board members approached me afterward with questions and compliments. This has never happened before."*
+*"Peter, I can't believe the difference. Yesterday I presented to our board of directors and actually felt... confident? I connected with them instead of just reciting facts. Three board members approached me afterward with questions and compliments. This has never happened before."*
 
 **What changed for Maria:**
 - She stopped trying to memorize every word
@@ -104,7 +104,7 @@ Here's what she told me after 30 days:
 The techniques work, but only if you use them.
 
 Supporting your journey,
-Petar
+Peter
 
 P.S. If you're ready to go deeper than just the guide, I have something special coming up. More on that tomorrow...
 ```
@@ -148,7 +148,7 @@ If you're curious about developing this level of communication mastery, just rep
 Only serious people need apply - this isn't for everyone.
 
 Keep shining,
-Petar
+Peter
 
 P.S. Even if you're not ready for coaching, keep practicing the techniques from your guide. They work.
 ```
@@ -200,7 +200,7 @@ Ready to transform your communication forever?
 Questions? Just reply to this email.
 
 Your communication coach,
-Petar
+Peter
 
 P.S. This group will be small (max 20 people) to ensure personal attention. When it's full, it's full.
 ```
@@ -221,7 +221,7 @@ I've been overwhelmed by the response. We already have 15 people enrolled, which
 
 *"I've been waiting for something like this for years. Finally, a program that addresses the real issues holding me back."* - Sarah, Tech Director
 
-*"Petar's approach is exactly what I need. Not just theory, but practical tools I can use immediately."* - Michael, Sales Manager
+*"Peter's approach is exactly what I need. Not just theory, but practical tools I can use immediately."* - Michael, Sales Manager
 
 If you've been on the fence, now is the time to decide.
 
@@ -243,7 +243,7 @@ But remember: The biggest risk is not taking any risk. Where will you be in 90 d
 Don't say I didn't warn you!
 
 Your last chance coach,
-Petar
+Peter
 
 P.S. If you're still not sure, ask yourself: "What's the cost of staying where I am?" Usually, it's much higher than the investment in growth.
 ```

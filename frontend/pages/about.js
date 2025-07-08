@@ -12,7 +12,7 @@ export default function About() {
   return (
     <div className="min-h-screen bg-white">
       <Head>
-        <title>{t('about.title')} | Petar Stoyanov</title>
+        <title>{t('about.title')} | Peter Stoyanov</title>
         <meta name="description" content={t('about.content')} />
         <link rel="icon" href="/favicons/favicon.ico" />
       </Head>
@@ -67,7 +67,7 @@ export default function About() {
                     <div className="w-full h-96 lg:h-[500px] rounded-3xl shadow-2xl overflow-hidden border-8 border-gradient-to-r from-yellow-400 to-pink-400 transform hover:scale-105 transition-all duration-500">
                       <img 
                         src="/pictures/PeterStoyanov-straight-look-black-and-white.jpg" 
-                        alt="Petar Stoyanov - Professional Communication Coach and Actor"
+                        alt="Peter Stoyanov - Professional Communication Coach and Actor"
                         className="w-full h-full object-cover hover:scale-110 transition-transform duration-700"
                       />
                     </div>
@@ -165,7 +165,7 @@ export default function About() {
                     <div className="w-80 h-96 rounded-2xl overflow-hidden shadow-xl transform hover:scale-105 transition-transform duration-500">
                       <img 
                         src="/pictures/PeterStoyanov-thinking.jpg" 
-                        alt="Petar Stoyanov - Thoughtful and Contemplative Approach"
+                        alt="Peter Stoyanov - Thoughtful and Contemplative Approach"
                         className="w-full h-full object-cover"
                       />
                     </div>
@@ -244,7 +244,7 @@ export default function About() {
                     <div className="w-80 h-96 rounded-3xl overflow-hidden shadow-2xl border-8 border-gradient-to-r from-yellow-400 to-pink-400 transform hover:scale-105 transition-all duration-500">
                       <img 
                         src="/pictures/PeterStoyanov-well-here-we-are.jpg" 
-                        alt="Petar Stoyanov - Ready to Welcome and Work Together"
+                        alt="Peter Stoyanov - Ready to Welcome and Work Together"
                         className="w-full h-full object-cover hover:scale-110 transition-transform duration-700"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-purple-600/30 via-transparent to-yellow-400/8"></div>

@@ -1,6 +1,6 @@
-# Coaching Site for Petar Stoyanov
+# Coaching Site for Peter Stoyanov
 
-A full-stack web application for a communication and stage presence coaching program led by Petar Stoyanov — an experienced actor, clown, and trainer with 20+ years of international work.
+A full-stack web application for a communication and stage presence coaching program led by Peter Stoyanov — an experienced actor, clown, and trainer with 20+ years of international work.
 
 ## 🚀 Features
 
@@ -152,4 +152,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 👤 Author
 
-Petar Stoyanov - Communication Coach and Trainer
+Peter Stoyanov - Communication Coach and Trainer

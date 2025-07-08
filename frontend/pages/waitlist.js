@@ -5,6 +5,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { Sparkles, Brain, Star, Calendar, Users, Lightbulb } from 'lucide-react';
 
 export default function Waitlist() {
   const { t } = useTranslation('common');
@@ -29,7 +30,7 @@ export default function Waitlist() {
       [name]: value
     }));
     
-    // Clear error when user starts typing
+    // Clear error when the user starts typing
     if (formErrors[name]) {
       setFormErrors(prev => ({
         ...prev,
@@ -83,7 +84,8 @@ export default function Waitlist() {
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('/api/register', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${apiUrl}/api/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -122,74 +124,55 @@ export default function Waitlist() {
   return (
     <div className="min-h-screen bg-white">
       <Head>
-        <title>{t('waitlist.title')} | Petar Stoyanov</title>
+        <title>{t('waitlist.title')} | Peter Stoyanov</title>
         <meta name="description" content={t('waitlist.description')} />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicons/favicon.ico" />
       </Head>
 
       <Header />
 
       <main>
         {/* Hero Section */}
-        <section className="relative hero-gradient pt-24 pb-20 md:pt-32 md:pb-32 overflow-hidden">
+        <section className="relative bg-gradient-to-br from-slate-700 via-blue-800 to-indigo-900 pt-24 pb-20 md:pt-32 md:pb-32 overflow-hidden">
           {/* Background decoration */}
-          <div className="absolute inset-0 opacity-30">
-            <div className="absolute top-10 left-10 w-72 h-72 bg-indigo-200 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
-            <div className="absolute top-40 right-10 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
-            <div className="absolute bottom-10 left-1/2 w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-500"></div>
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute top-10 left-10 w-72 h-72 bg-blue-300/8 rounded-full blur-xl animate-float"></div>
+            <div className="absolute top-40 right-10 w-72 h-72 bg-slate-300/8 rounded-full blur-xl animate-float-delayed"></div>
+            <div className="absolute bottom-10 left-1/2 w-72 h-72 bg-indigo-300/8 rounded-full blur-xl animate-float-slow"></div>
           </div>
           
           <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 text-gray-900 leading-tight">
-                <span className="text-gradient-primary">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black mb-8 text-white leading-tight drop-shadow-2xl animate-fade-in-up">
+                <span className="bg-gradient-to-r from-blue-300 via-teal-300 to-indigo-300 bg-clip-text text-transparent">
                   {t('waitlist.title')}
                 </span>
               </h1>
-              <p className="text-xl md:text-2xl mb-12 text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-xl md:text-2xl mb-12 text-blue-100 max-w-3xl mx-auto leading-relaxed font-semibold animate-fade-in-up delay-100">
                 {t('waitlist.description')}
               </p>
               
               {/* Stats & Image */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-16">
-                <div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="text-center p-4 bg-white bg-opacity-20 rounded-xl">
-                      <div className="text-2xl font-bold text-indigo-600 mb-2">{t('waitlist.hero.stats.limited')}</div>
-                      <div className="text-gray-600 text-sm">{t('waitlist.hero.stats.spotsAvailable')}</div>
+              <div className="flex flex-col items-center mt-20">
+                <div className="w-full max-w-6xl">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8 justify-items-center animate-fade-in-up delay-200">
+                    <div className="text-center p-6 py-8 min-w-[200px] bg-white/10 backdrop-blur-sm rounded-3xl border border-white/20 shadow-2xl transform hover:scale-105 hover:rotate-1 transition-all duration-300">
+                      <div className="text-lg md:text-xl font-black text-yellow-300 mb-3 drop-shadow-lg leading-tight break-words">{t('waitlist.hero.stats.limited')}</div>
+                      <div className="text-white/90 text-xs md:text-sm font-semibold leading-relaxed">{t('waitlist.hero.stats.spotsAvailable')}</div>
                     </div>
-                    <div className="text-center p-4 bg-white bg-opacity-20 rounded-xl">
-                      <div className="text-2xl font-bold text-purple-600 mb-2">{t('waitlist.hero.stats.early')}</div>
-                      <div className="text-gray-600 text-sm">{t('waitlist.hero.stats.birdPricing')}</div>
+                    <div className="text-center p-6 py-8 min-w-[200px] bg-white/10 backdrop-blur-sm rounded-3xl border border-white/20 shadow-2xl transform hover:scale-105 hover:-rotate-1 transition-all duration-300">
+                      <div className="text-lg md:text-xl font-black text-green-300 mb-3 drop-shadow-lg leading-tight break-words">{t('waitlist.hero.stats.early')}</div>
+                      <div className="text-white/90 text-xs md:text-sm font-semibold leading-relaxed">{t('waitlist.hero.stats.birdPricing')}</div>
                     </div>
-                    <div className="text-center p-4 bg-white bg-opacity-20 rounded-xl">
-                      <div className="text-2xl font-bold text-pink-600 mb-2">{t('waitlist.hero.stats.exclusive')}</div>
-                      <div className="text-gray-600 text-sm">{t('waitlist.hero.stats.access')}</div>
+                    <div className="text-center p-6 py-8 min-w-[200px] bg-white/10 backdrop-blur-sm rounded-3xl border border-white/20 shadow-2xl transform hover:scale-105 hover:rotate-1 transition-all duration-300">
+                      <div className="text-lg md:text-xl font-black text-orange-300 mb-3 drop-shadow-lg leading-tight break-words">{t('waitlist.hero.stats.exclusive')}</div>
+                      <div className="text-white/90 text-xs md:text-sm font-semibold leading-relaxed">{t('waitlist.hero.stats.access')}</div>
                     </div>
                   </div>
-                  <div className="mt-8 p-6 bg-white bg-opacity-10 rounded-xl">
-                    <p className="text-lg italic text-gray-700">
-                      {t('waitlist.hero.quote')}
+                  <div className="col-span-full mt-8 p-8 bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm rounded-3xl border border-white/30 shadow-2xl animate-fade-in-up delay-300">
+                    <p className="text-xl italic text-white font-semibold leading-relaxed text-center">
+                      "{t('waitlist.hero.quote')}"
                     </p>
-                  </div>
-                </div>
-                
-                <div className="text-center">
-                  <div className="relative inline-block">
-                    <div className="w-80 h-96 rounded-2xl overflow-hidden shadow-2xl">
-                      <img 
-                        src="/pictures/PeterStoyanov-dreaming.jpg" 
-                        alt="Petar Stoyanov - Inspiring Vision and Aspirational Coaching"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-white font-bold shadow-xl">
-                      <div className="text-center">
-                        <div className="text-2xl">✨</div>
-                        <div className="text-xs">Your</div>
-                        <div className="text-xs">Future</div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -198,14 +181,19 @@ export default function Waitlist() {
         </section>
 
         {/* Understanding Section */}
-        <section className="py-20 md:py-28 bg-gradient-to-br from-gray-50 to-indigo-50">
-          <div className="container mx-auto px-4">
+        <section className="py-20 md:py-28 bg-gradient-to-br from-slate-600 via-blue-700 to-indigo-800 relative overflow-hidden">
+          {/* Floating Background Elements */}
+            <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute top-1/4 right-1/4 w-80 h-80 bg-gradient-to-br from-blue-300/8 to-teal-400/8 rounded-full blur-3xl animate-float"></div>
+            <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-indigo-300/8 to-purple-400/8 rounded-full blur-3xl animate-float-delayed"></div>
+          </div>
+          <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-6xl mx-auto">
               <div className="text-center mb-16">
-                <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">
+                <h2 className="text-4xl md:text-5xl font-black mb-6 text-white drop-shadow-2xl animate-fade-in-up">
                   {t('waitlist.understanding.title')}
                 </h2>
-                <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                <p className="text-xl text-blue-200 max-w-3xl mx-auto font-semibold animate-fade-in-up delay-100">
                   {t('waitlist.understanding.subtitle')}
                 </p>
               </div>
@@ -213,80 +201,73 @@ export default function Waitlist() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div className="text-center">
                   <div className="relative inline-block">
-                    <div className="w-80 h-96 rounded-2xl overflow-hidden shadow-xl">
-                      <img 
-                        src="/pictures/PeterStoyanov-preplexed.jpg" 
-                        alt="Petar Stoyanov - Understanding Communication Challenges"
+                    <div className="w-100 h-100 rounded-2xl overflow-hidden shadow-xl">
+                      <img
+                        src="/pictures/PeterStoyanov-preplexed.jpg"
+                        alt="Peter Stoyanov - Understanding Communication Challenges"
                         className="w-full h-full object-cover"
                       />
-                    </div>
-                    <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold shadow-xl">
-                      <div className="text-center">
-                        <div className="text-2xl">🤔</div>
-                        <div className="text-xs">I Get</div>
-                        <div className="text-xs">It</div>
-                      </div>
                     </div>
                   </div>
                 </div>
                 
                 <div>
-                  <h3 className="text-3xl font-bold mb-8 text-gray-900">
+                  <h3 className="text-3xl font-black mb-8 text-white drop-shadow-lg">
                     {t('waitlist.understanding.challenges.title')}
                   </h3>
                   <div className="space-y-6">
-                    <div className="flex items-start">
-                      <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0 mt-1">
-                        <svg className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="flex items-start bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-xl animate-fade-in-up">
+                      <div className="w-12 h-12 bg-gradient-to-br from-red-400 to-pink-500 rounded-full flex items-center justify-center mr-4 flex-shrink-0 shadow-lg">
+                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
                       </div>
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-900 mb-2">{t('waitlist.understanding.challenges.fear.title')}</h4>
-                        <p className="text-gray-600">{t('waitlist.understanding.challenges.fear.description')}</p>
+                          <h4 className="text-xl font-black text-white mb-3 drop-shadow-lg">{t('waitlist.understanding.challenges.fear.title')}</h4>
+                        <p className="text-white/90 leading-relaxed">{t('waitlist.understanding.challenges.fear.description')}</p>
                       </div>
                     </div>
                     
-                    <div className="flex items-start">
-                      <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0 mt-1">
-                        <svg className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="flex items-start bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-xl animate-fade-in-up delay-100">
+                      <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center mr-4 flex-shrink-0 shadow-lg">
+                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
                       </div>
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-900 mb-2">Impostor Syndrome</h4>
-                        <p className="text-gray-600">Feeling like you don't belong in the room, despite your qualifications and achievements.</p>
+                        <h4 className="text-xl font-black text-white mb-3 drop-shadow-lg">{t('waitlist.understanding.challenges.impostor.title')}</h4>
+                        <p className="text-white/90 leading-relaxed">{t('waitlist.understanding.challenges.impostor.description')}</p>
                       </div>
                     </div>
                     
-                    <div className="flex items-start">
-                      <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0 mt-1">
-                        <svg className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="flex items-start bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-xl animate-fade-in-up delay-200">
+                      <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mr-4 flex-shrink-0 shadow-lg">
+                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
                       </div>
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-900 mb-2">Lack of Executive Presence</h4>
-                        <p className="text-gray-600">Struggling to command attention and respect in high-stakes business situations.</p>
+                        <h4 className="text-xl font-black text-white mb-3 drop-shadow-lg">{t('waitlist.understanding.challenges.presence.title')}</h4>
+                        <p className="text-white/90 leading-relaxed">{t('waitlist.understanding.challenges.presence.description')}</p>
                       </div>
                     </div>
                     
-                    <div className="flex items-start">
-                      <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0 mt-1">
-                        <svg className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="flex items-start bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-xl animate-fade-in-up delay-300">
+                      <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-teal-500 rounded-full flex items-center justify-center mr-4 flex-shrink-0 shadow-lg">
+                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
                       </div>
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-900 mb-2">Camera Anxiety</h4>
-                        <p className="text-gray-600">Freezing up in video calls, virtual presentations, or when being recorded.</p>
+                        <h4 className="text-xl font-black text-white mb-3 drop-shadow-lg">{t('waitlist.understanding.challenges.camera.title')}</h4>
+                        <p className="text-white/90 leading-relaxed">{t('waitlist.understanding.challenges.camera.description')}</p>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="mt-8 p-6 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl">
-                    <p className="text-lg font-semibold text-gray-900 mb-2">Here's the truth:</p>
-                    <p className="text-gray-700">These challenges don't reflect your worth or potential. They're simply skills that can be learned and obstacles that can be overcome with the right approach.</p>
+                  <div className="mt-8 p-8 bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm rounded-3xl border border-white/30 shadow-2xl animate-fade-in-up delay-400">
+                    <p className="text-xl font-black text-white mb-4 drop-shadow-lg">{t('waitlist.understanding.truth.title')}</p>
+                    <p className="text-white/90 leading-relaxed font-semibold">{t('waitlist.understanding.truth.description')}</p>
                   </div>
                 </div>
               </div>
@@ -294,27 +275,32 @@ export default function Waitlist() {
           </div>
         </section>
 
-        {/* Registration Form Section */}
-        <section className="py-16 md:py-24 bg-white">
-          <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto">
-              <div className="feature-card bg-white shadow-xl rounded-2xl p-8 md:p-12 border border-gray-100">
-                <div className="text-center mb-10">
-                  <div className="w-16 h-16 button-gradient rounded-2xl flex items-center justify-center mx-auto mb-6">
+          {/* Registration Form Section */}
+        <section className="py-20 md:py-28 bg-gradient-to-br from-slate-700 via-blue-800 to-indigo-900 relative overflow-hidden">
+          {/* Floating Background Elements */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-gradient-to-br from-blue-300/8 to-teal-400/8 rounded-full blur-3xl animate-float"></div>
+            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-slate-300/8 to-blue-400/8 rounded-full blur-3xl animate-float-delayed"></div>
+          </div>
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-white/10 backdrop-blur-sm shadow-2xl rounded-3xl p-8 md:p-12 border border-white/20">
+                <div className="text-center mb-12">
+                  <div className="w-20 h-20 bg-gradient-to-br from-slate-600 to-blue-700 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl">
                     <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                   </div>
-                  <h2 className="text-3xl font-bold text-gray-900">
-                    Complete Your Registration
+                  <h2 className="text-4xl md:text-5xl font-black text-white mb-6 drop-shadow-2xl animate-fade-in-up">
+                    {t('waitlist.form.title')}
                   </h2>
-                  <p className="text-gray-600 mt-3">
-                    Join our exclusive community of aspiring speakers and performers
+                  <p className="text-xl text-blue-200 font-semibold animate-fade-in-up delay-100">
+                    {t('waitlist.form.subtitle')}
                   </p>
                 </div>
                 
                 {formErrors.submit && (
-                  <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+                  <div className="bg-red-500/20 border border-red-400/50 text-red-200 px-6 py-4 rounded-2xl mb-8 backdrop-blur-sm">
                     {formErrors.submit}
                   </div>
                 )}
@@ -322,7 +308,7 @@ export default function Waitlist() {
                 <form onSubmit={handleSubmit}>
                   {/* Full Name */}
                   <div className="mb-6">
-                    <label htmlFor="fullName" className="block text-gray-700 font-medium mb-2">
+                    <label htmlFor="fullName" className="block text-blue-200 font-semibold mb-3">
                       {t('waitlist.form.fullName')} *
                     </label>
                     <input
@@ -331,18 +317,18 @@ export default function Waitlist() {
                       name="fullName"
                       value={formData.fullName}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
-                        formErrors.fullName ? 'border-red-500' : 'border-gray-300'
+                      className={`w-full px-4 py-3 bg-white/10 border border-white/30 rounded-xl text-white placeholder-white/60 backdrop-blur-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300 ${
+                        formErrors.fullName ? 'border-red-400' : ''
                       }`}
                     />
                     {formErrors.fullName && (
-                      <p className="mt-1 text-sm text-red-600">{formErrors.fullName}</p>
+                      <p className="mt-2 text-sm text-red-300">{formErrors.fullName}</p>
                     )}
                   </div>
                   
                   {/* Email */}
                   <div className="mb-6">
-                    <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
+                    <label htmlFor="email" className="block text-blue-200 font-semibold mb-3">
                       {t('waitlist.form.email')} *
                     </label>
                     <input
@@ -351,18 +337,18 @@ export default function Waitlist() {
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
-                        formErrors.email ? 'border-red-500' : 'border-gray-300'
+                      className={`w-full px-4 py-3 bg-white/10 border border-white/30 rounded-xl text-white placeholder-white/60 backdrop-blur-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300 ${
+                        formErrors.email ? 'border-red-400' : ''
                       }`}
                     />
                     {formErrors.email && (
-                      <p className="mt-1 text-sm text-red-600">{formErrors.email}</p>
+                      <p className="mt-2 text-sm text-red-300">{formErrors.email}</p>
                     )}
                   </div>
                   
                   {/* City & Country */}
                   <div className="mb-6">
-                    <label htmlFor="cityCountry" className="block text-gray-700 font-medium mb-2">
+                    <label htmlFor="cityCountry" className="block text-blue-200 font-semibold mb-3">
                       {t('waitlist.form.cityCountry')} *
                     </label>
                     <input
@@ -371,18 +357,18 @@ export default function Waitlist() {
                       name="cityCountry"
                       value={formData.cityCountry}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
-                        formErrors.cityCountry ? 'border-red-500' : 'border-gray-300'
+                      className={`w-full px-4 py-3 bg-white/10 border border-white/30 rounded-xl text-white placeholder-white/60 backdrop-blur-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300 ${
+                        formErrors.cityCountry ? 'border-red-400' : ''
                       }`}
                     />
                     {formErrors.cityCountry && (
-                      <p className="mt-1 text-sm text-red-600">{formErrors.cityCountry}</p>
+                      <p className="mt-2 text-sm text-red-300">{formErrors.cityCountry}</p>
                     )}
                   </div>
                   
                   {/* Occupation */}
                   <div className="mb-6">
-                    <label htmlFor="occupation" className="block text-gray-700 font-medium mb-2">
+                    <label htmlFor="occupation" className="block text-blue-200 font-semibold mb-3">
                       {t('waitlist.form.occupation')} *
                     </label>
                     <input
@@ -391,18 +377,18 @@ export default function Waitlist() {
                       name="occupation"
                       value={formData.occupation}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
-                        formErrors.occupation ? 'border-red-500' : 'border-gray-300'
+                      className={`w-full px-4 py-3 bg-white/10 border border-white/30 rounded-xl text-white placeholder-white/60 backdrop-blur-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300 ${
+                        formErrors.occupation ? 'border-red-400' : ''
                       }`}
                     />
                     {formErrors.occupation && (
-                      <p className="mt-1 text-sm text-red-600">{formErrors.occupation}</p>
+                      <p className="mt-2 text-sm text-red-300">{formErrors.occupation}</p>
                     )}
                   </div>
                   
                   {/* Why Join */}
                   <div className="mb-6">
-                    <label htmlFor="whyJoin" className="block text-gray-700 font-medium mb-2">
+                    <label htmlFor="whyJoin" className="block text-blue-200 font-semibold mb-3">
                       {t('waitlist.form.whyJoin')} *
                     </label>
                     <textarea
@@ -411,18 +397,18 @@ export default function Waitlist() {
                       value={formData.whyJoin}
                       onChange={handleChange}
                       rows="4"
-                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
-                        formErrors.whyJoin ? 'border-red-500' : 'border-gray-300'
+                      className={`w-full px-4 py-3 bg-white/10 border border-white/30 rounded-xl text-white placeholder-white/60 backdrop-blur-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300 resize-none ${
+                        formErrors.whyJoin ? 'border-red-400' : ''
                       }`}
                     ></textarea>
                     {formErrors.whyJoin && (
-                      <p className="mt-1 text-sm text-red-600">{formErrors.whyJoin}</p>
+                      <p className="mt-2 text-sm text-red-300">{formErrors.whyJoin}</p>
                     )}
                   </div>
                   
                   {/* Skills to Improve */}
                   <div className="mb-8">
-                    <label htmlFor="skillsToImprove" className="block text-gray-700 font-medium mb-2">
+                    <label htmlFor="skillsToImprove" className="block text-blue-200 font-semibold mb-3">
                       {t('waitlist.form.skillsToImprove')} *
                     </label>
                     <textarea
@@ -431,12 +417,12 @@ export default function Waitlist() {
                       value={formData.skillsToImprove}
                       onChange={handleChange}
                       rows="4"
-                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
-                        formErrors.skillsToImprove ? 'border-red-500' : 'border-gray-300'
+                      className={`w-full px-4 py-3 bg-white/10 border border-white/30 rounded-xl text-white placeholder-white/60 backdrop-blur-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300 resize-none ${
+                        formErrors.skillsToImprove ? 'border-red-400' : ''
                       }`}
                     ></textarea>
                     {formErrors.skillsToImprove && (
-                      <p className="mt-1 text-sm text-red-600">{formErrors.skillsToImprove}</p>
+                      <p className="mt-2 text-sm text-red-300">{formErrors.skillsToImprove}</p>
                     )}
                   </div>
                   
@@ -445,8 +431,8 @@ export default function Waitlist() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className={`inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white button-gradient rounded-xl shadow-lg transform transition-all duration-300 ${
-                        isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:-translate-y-1'
+                      className={`inline-flex items-center justify-center px-10 py-5 text-xl font-black text-purple-900 bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 rounded-2xl shadow-2xl transform transition-all duration-300 border-4 border-white/80 ${
+                        isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:scale-110 hover:-rotate-2 hover:shadow-3xl'
                       }`}
                     >
                       {isSubmitting ? (
@@ -455,19 +441,19 @@ export default function Waitlist() {
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                           </svg>
-                          Submitting...
+                          {t('waitlist.form.submitting')}
                         </>
                       ) : (
                         <>
                           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                           </svg>
-                          Join Waitlist
+                          {t('waitlist.form.submitButton')}
                         </>
                       )}
                     </button>
-                    <p className="text-sm text-gray-500 mt-4">
-                      By joining, you agree to receive updates about our workshops and coaching programs.
+                    <p className="text-sm text-blue-200/80 mt-6 font-semibold leading-relaxed">
+                      {t('waitlist.form.privacyNote')}
                     </p>
                   </div>
                 </form>
@@ -477,83 +463,73 @@ export default function Waitlist() {
         </section>
 
         {/* Benefits Section */}
-        <section className="py-20 md:py-28 bg-gray-50">
-          <div className="container mx-auto px-4">
+        <section className="py-20 md:py-28 bg-gradient-to-br from-slate-600 via-blue-700 to-indigo-800 relative overflow-hidden">
+          {/* Floating Background Elements */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute top-1/3 left-1/3 w-72 h-72 bg-yellow-300/8 rounded-full blur-3xl animate-float"></div>
+            <div className="absolute bottom-1/3 right-1/3 w-96 h-96 bg-purple-300/8 rounded-full blur-3xl animate-float-delayed"></div>
+          </div>
+          <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-6xl mx-auto">
               <div className="text-center mb-16">
-                <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">
-                  Why Join Our Community?
+                <h2 className="text-4xl md:text-5xl font-black mb-6 text-white drop-shadow-2xl animate-fade-in-up">
+                  {t('waitlist.benefits.title')}
                 </h2>
-                <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                  Gain exclusive access to transformative workshops and connect with like-minded individuals
+                <p className="text-xl text-blue-200 max-w-3xl mx-auto font-semibold animate-fade-in-up delay-100">
+                  {t('waitlist.benefits.subtitle')}
                 </p>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Benefit 1 */}
-                <div className="feature-card bg-white p-8 rounded-2xl shadow-lg">
-                  <div className="feature-icon w-16 h-16 button-gradient rounded-2xl flex items-center justify-center mb-6">
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                      <circle cx="12" cy="12" r="2" fill="currentColor" />
-                    </svg>
+                <div className="bg-white/10 backdrop-blur-sm p-8 rounded-3xl shadow-2xl border border-white/20 transform hover:scale-105 hover:rotate-1 transition-all duration-300 animate-fade-in-up">
+                  <div className="w-20 h-20 bg-gradient-to-br from-slate-600 to-blue-700 rounded-3xl flex items-center justify-center mb-6 shadow-xl transform hover:scale-110 hover:rotate-12 transition-all duration-300">
+                    <Star className="w-8 h-8 text-white" strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-2xl font-bold mb-4 text-gray-900">
-                    Early Access Benefits
+                  <h3 className="text-2xl font-black mb-4 text-blue-200 drop-shadow-lg">
+                    {t('waitlist.benefits.earlyAccess.title')}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Be the first to know about new workshops, get priority booking, and receive exclusive early-bird pricing discounts.
+                  <p className="text-white/90 leading-relaxed">
+                    {t('waitlist.benefits.earlyAccess.description')}
                   </p>
                 </div>
                 
                 {/* Benefit 2 */}
-                <div className="feature-card bg-white p-8 rounded-2xl shadow-lg">
-                  <div className="feature-icon w-16 h-16 button-gradient rounded-2xl flex items-center justify-center mb-6">
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <rect x="3" y="4" width="18" height="15" rx="2" strokeWidth={2} />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 2v4M16 2v4" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01M16 17h.01" />
-                    </svg>
+                <div className="bg-white/10 backdrop-blur-sm p-8 rounded-3xl shadow-2xl border border-white/20 transform hover:scale-105 hover:-rotate-1 transition-all duration-300 animate-fade-in-up delay-100">
+                  <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-teal-500 rounded-3xl flex items-center justify-center mb-6 shadow-xl transform hover:scale-110 hover:-rotate-12 transition-all duration-300">
+                    <Calendar className="w-8 h-8 text-white" strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-2xl font-bold mb-4 text-gray-900">
-                    Flexible Scheduling
+                  <h3 className="text-2xl font-black mb-4 text-green-200 drop-shadow-lg">
+                    {t('waitlist.benefits.flexible.title')}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Choose from multiple time slots and formats that fit your lifestyle, including weekend intensives and evening sessions.
+                  <p className="text-white/90 leading-relaxed">
+                    {t('waitlist.benefits.flexible.description')}
                   </p>
                 </div>
                 
                 {/* Benefit 3 */}
-                <div className="feature-card bg-white p-8 rounded-2xl shadow-lg">
-                  <div className="feature-icon w-16 h-16 button-gradient rounded-2xl flex items-center justify-center mb-6">
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
+                <div className="bg-white/10 backdrop-blur-sm p-8 rounded-3xl shadow-2xl border border-white/20 transform hover:scale-105 hover:rotate-1 transition-all duration-300 animate-fade-in-up delay-200">
+                  <div className="w-20 h-20 bg-gradient-to-br from-purple-400 to-pink-500 rounded-3xl flex items-center justify-center mb-6 shadow-xl transform hover:scale-110 hover:rotate-12 transition-all duration-300">
+                    <Users className="w-8 h-8 text-white" strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-2xl font-bold mb-4 text-gray-900">
-                    Community Network
+                  <h3 className="text-2xl font-black mb-4 text-purple-200 drop-shadow-lg">
+                    {t('waitlist.benefits.community.title')}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Connect with other aspiring speakers and performers, share experiences, and build lasting professional relationships.
+                  <p className="text-white/90 leading-relaxed">
+                    {t('waitlist.benefits.community.description')}
                   </p>
                 </div>
                 
                 {/* Benefit 4 */}
-                <div className="feature-card bg-white p-8 rounded-2xl shadow-lg">
-                  <div className="feature-icon w-16 h-16 button-gradient rounded-2xl flex items-center justify-center mb-6">
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z" />
-                      <circle cx="12" cy="9" r="2" fill="currentColor" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 20h8" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 22h4" />
-                    </svg>
+                <div className="bg-white/10 backdrop-blur-sm p-8 rounded-3xl shadow-2xl border border-white/20 transform hover:scale-105 hover:-rotate-1 transition-all duration-300 animate-fade-in-up delay-300">
+                  <div className="w-20 h-20 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-3xl flex items-center justify-center mb-6 shadow-xl transform hover:scale-110 hover:-rotate-12 transition-all duration-300">
+                    <Lightbulb className="w-8 h-8 text-white" strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-2xl font-bold mb-4 text-gray-900">
-                    Personalized Guidance
+                  <h3 className="text-2xl font-black mb-4 text-cyan-200 drop-shadow-lg">
+                    {t('waitlist.benefits.personalized.title')}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Receive tailored coaching based on your specific goals, whether for business presentations, public speaking, or performance.
+                  <p className="text-white/90 leading-relaxed">
+                    {t('waitlist.benefits.personalized.description')}
                   </p>
                 </div>
               </div>

@@ -1,21 +1,26 @@
-from fastapi import FastAPI, HTTPException, Depends, BackgroundTasks, status
+from fastapi import FastAPI, HTTPException, Depends, BackgroundTasks, status, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, EmailStr
 import os
+import shutil
 from typing import List, Optional, Dict, Any
 import markdown
 import glob
 from datetime import datetime, timedelta
 from sqlalchemy import func, desc
+import uuid
 
-from models import WaitlistRegistration, CorporateInquiry, LeadMagnetDownload
-from database import get_db, store_waitlist_registration, store_corporate_inquiry, store_lead_magnet_download
+from models import WaitlistRegistration, CorporateInquiry, LeadMagnetDownload, BlogPost, BlogPostRequest, BlogPostResponse, BlogPostListResponse
+from database import (get_db, store_waitlist_registration, store_corporate_inquiry, store_lead_magnet_download,
+                     create_blog_post, get_blog_posts, get_blog_post_by_id, get_blog_post_by_slug, 
+                     update_blog_post, delete_blog_post, search_blog_posts)
 from mailerlite import add_subscriber_to_mailerlite, add_lead_magnet_subscriber, add_waitlist_subscriber
 from auth import authenticate_user, create_access_token, get_current_admin_user, Token, User, ACCESS_TOKEN_EXPIRE_MINUTES
 
-app = FastAPI(title="Coaching Site API", description="API for Petar Stoyanov's coaching website")
+app = FastAPI(title="Coaching Site API", description="API for Peter Stoyanov's coaching website")
 
 # Configure CORS
 app.add_middleware(
@@ -35,25 +40,23 @@ class WaitlistRegistrationRequest(BaseModel):
     skills_to_improve: str
 
 class CorporateInquiryRequest(BaseModel):
-    company_name: str
-    contact_person: str
+    companyName: str
+    contactPerson: str
     email: EmailStr
-    message: str
+    phone: Optional[str] = None
+    teamSize: str
+    budget: Optional[str] = None
+    trainingGoals: str
+    preferredDates: Optional[str] = None
+    additionalInfo: Optional[str] = None
 
 class LeadMagnetRequest(BaseModel):
     email: EmailStr
 
-class BlogPost(BaseModel):
-    slug: str
-    title: str
-    content: str
-    excerpt: str
-    date: str
-    tags: List[str] = []
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to Petar Stoyanov's Coaching API"}
+    return {"message": "Welcome to Peter Stoyanov's Coaching API"}
 
 @app.post("/api/register")
 async def register_waitlist(
@@ -92,23 +95,28 @@ async def register_waitlist(
     
     return {"status": "success", "message": "Registration successful"}
 
-@app.post("/api/contact-corporate")
-async def contact_corporate(
+@app.post("/api/corporate-inquiry")
+async def corporate_inquiry(
     inquiry: CorporateInquiryRequest,
     db = Depends(get_db)
 ):
     # Create model instance
     inq_model = CorporateInquiry(
-        company_name=inquiry.company_name,
-        contact_person=inquiry.contact_person,
+        company_name=inquiry.companyName,
+        contact_person=inquiry.contactPerson,
         email=inquiry.email,
-        message=inquiry.message
+        phone=inquiry.phone,
+        team_size=inquiry.teamSize,
+        budget=inquiry.budget,
+        training_goals=inquiry.trainingGoals,
+        preferred_dates=inquiry.preferredDates,
+        additional_info=inquiry.additionalInfo
     )
     
     # Store in database
     store_corporate_inquiry(db, inq_model)
     
-    return {"status": "success", "message": "Inquiry submitted successfully"}
+    return {"status": "success", "message": "Corporate inquiry submitted successfully"}
 
 @app.post("/api/download-guide")
 async def download_guide(
@@ -149,62 +157,19 @@ async def download_guide(
         "isReturningUser": download_record.download_count > 1
     }
 
-@app.get("/api/posts", response_model=List[BlogPost])
-def get_blog_posts(tag: Optional[str] = None):
-    posts = []
-    
-    # Get all markdown files from the blog directory
-    blog_files = glob.glob("../blog/*.md")
-    
-    for file_path in blog_files:
-        with open(file_path, "r", encoding="utf-8") as f:
-            content = f.read()
-            
-        # Extract metadata and content
-        # This is a simple implementation - in a real app, you might want to use frontmatter
-        lines = content.split("\n")
-        title = lines[0].replace("# ", "")
-        date = ""
-        tags_list = []
-        
-        # Look for metadata in the first few lines
-        for i, line in enumerate(lines[1:5]):
-            if line.startswith("Date: "):
-                date = line.replace("Date: ", "")
-            elif line.startswith("Tags: "):
-                tags_text = line.replace("Tags: ", "")
-                tags_list = [tag.strip() for tag in tags_text.split(",")]
-        
-        # Generate excerpt from first paragraph
-        excerpt = ""
-        for line in lines:
-            if line and not line.startswith("#") and not line.startswith("Date:") and not line.startswith("Tags:"):
-                excerpt = line[:150] + "..." if len(line) > 150 else line
-                break
-        
-        # Convert markdown to HTML
-        html_content = markdown.markdown(content)
-        
-        # Get slug from filename
-        slug = os.path.basename(file_path).replace(".md", "")
-        
-        # Filter by tag if specified
-        if tag and tag not in tags_list:
-            continue
-            
-        posts.append(BlogPost(
-            slug=slug,
-            title=title,
-            content=html_content,
-            excerpt=excerpt,
-            date=date,
-            tags=tags_list
-        ))
-    
-    # Sort by date (newest first)
-    posts.sort(key=lambda x: x.date, reverse=True)
-    
+@app.get("/api/posts", response_model=List[BlogPostListResponse])
+def api_get_blog_posts(published_only: bool = True, skip: int = 0, limit: int = 100, db = Depends(get_db)):
+    """Get published blog posts for public consumption"""
+    posts = get_blog_posts(db, skip=skip, limit=limit, published_only=published_only)
     return posts
+
+@app.get("/api/posts/{slug}", response_model=BlogPostResponse)
+def get_blog_post(slug: str, db = Depends(get_db)):
+    """Get a specific blog post by slug"""
+    post = get_blog_post_by_slug(db, slug, published_only=True)
+    if not post:
+        raise HTTPException(status_code=404, detail="Blog post not found")
+    return post
 
 # Authentication Endpoints
 @app.post("/auth/login", response_model=Token)
@@ -370,6 +335,79 @@ def get_all_emails(db = Depends(get_db), current_user: User = Depends(get_curren
         }
     }
 
+# Admin Blog Management Endpoints
+@app.get("/admin/blog/posts", response_model=List[BlogPostListResponse])
+def admin_get_blog_posts(skip: int = 0, limit: int = 100, published_only: Optional[bool] = None, 
+                        db = Depends(get_db), current_user: User = Depends(get_current_admin_user)):
+    """Get all blog posts for admin management"""
+    posts = get_blog_posts(db, skip=skip, limit=limit, published_only=published_only if published_only is not None else False)
+    return posts
+
+@app.get("/admin/blog/posts/{post_id}", response_model=BlogPostResponse)
+def admin_get_blog_post(post_id: int, db = Depends(get_db), current_user: User = Depends(get_current_admin_user)):
+    """Get a specific blog post for editing"""
+    post = get_blog_post_by_id(db, post_id)
+    if not post:
+        raise HTTPException(status_code=404, detail="Blog post not found")
+    return post
+
+@app.post("/admin/blog/posts", response_model=BlogPostResponse)
+def admin_create_blog_post(post: BlogPostRequest, db = Depends(get_db), current_user: User = Depends(get_current_admin_user)):
+    """Create a new blog post"""
+    try:
+        post_data = post.dict()
+        blog_post = create_blog_post(db, post_data)
+        return blog_post
+    except Exception as e:
+        if "UNIQUE constraint failed" in str(e):
+            raise HTTPException(status_code=400, detail="A blog post with this slug already exists")
+        raise HTTPException(status_code=400, detail="Failed to create blog post")
+
+@app.put("/admin/blog/posts/{post_id}", response_model=BlogPostResponse)
+def admin_update_blog_post(post_id: int, post: BlogPostRequest, 
+                          db = Depends(get_db), current_user: User = Depends(get_current_admin_user)):
+    """Update an existing blog post"""
+    post_data = post.dict()
+    updated_post = update_blog_post(db, post_id, post_data)
+    if not updated_post:
+        raise HTTPException(status_code=404, detail="Blog post not found")
+    return updated_post
+
+@app.delete("/admin/blog/posts/{post_id}")
+def admin_delete_blog_post(post_id: int, db = Depends(get_db), current_user: User = Depends(get_current_admin_user)):
+    """Delete a blog post"""
+    if not delete_blog_post(db, post_id):
+        raise HTTPException(status_code=404, detail="Blog post not found")
+    return {"message": "Blog post deleted successfully"}
+
+@app.post("/admin/blog/upload-image")
+async def admin_upload_blog_image(file: UploadFile = File(...), current_user: User = Depends(get_current_admin_user)):
+    """Upload an image for blog posts"""
+    # Validate file type
+    allowed_types = ["image/jpeg", "image/png", "image/gif", "image/webp"]
+    if file.content_type not in allowed_types:
+        raise HTTPException(status_code=400, detail="Invalid file type. Only JPEG, PNG, GIF, and WebP are allowed.")
+    
+    # Create uploads directory if it doesn't exist
+    upload_dir = "../frontend/public/uploads/blog"
+    os.makedirs(upload_dir, exist_ok=True)
+    
+    # Generate unique filename
+    file_extension = file.filename.split(".")[-1]
+    unique_filename = f"{uuid.uuid4().hex}.{file_extension}"
+    file_path = os.path.join(upload_dir, unique_filename)
+    
+    try:
+        # Save file
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+        
+        # Return the public URL
+        public_url = f"/uploads/blog/{unique_filename}"
+        return {"url": public_url, "filename": unique_filename}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to upload file: {str(e)}")
+
 @app.get("/admin/dashboard", response_class=HTMLResponse)
 def admin_dashboard():
     """Admin dashboard with authentication"""
@@ -407,6 +445,29 @@ def admin_dashboard():
             .refresh-btn:hover { background: #1d4ed8; }
             .hidden { display: none; }
             .error { color: #dc2626; margin-top: 10px; }
+            .nav-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+            .nav-tab { background: #f5f5f5; border: none; padding: 10px 20px; border-radius: 8px 8px 0 0; cursor: pointer; }
+            .nav-tab.active { background: white; border-bottom: 2px solid #2563eb; }
+            .tab-content { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+            .blog-list { display: flex; flex-direction: column; gap: 10px; }
+            .blog-item { display: flex; justify-content: between; align-items: center; padding: 15px; border: 1px solid #e5e7eb; border-radius: 8px; }
+            .blog-info { flex: 1; }
+            .blog-title { font-weight: bold; margin-bottom: 5px; }
+            .blog-meta { color: #666; font-size: 0.9em; }
+            .blog-actions { display: flex; gap: 10px; }
+            .btn-edit { background: #f59e0b; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+            .btn-delete { background: #dc2626; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+            .btn-new { background: #10b981; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin-bottom: 20px; }
+            .form-group { margin-bottom: 15px; }
+            .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+            .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+            .form-group textarea { height: 300px; }
+            .form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+            .btn-save { background: #2563eb; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+            .btn-cancel { background: #6b7280; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+            .status-badge { padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
+            .status-published { background: #10b981; color: white; }
+            .status-draft { background: #f59e0b; color: white; }
         </style>
     </head>
     <body>
@@ -440,6 +501,13 @@ def admin_dashboard():
                 </div>
             </div>
             
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showTab('dashboard')">Dashboard</button>
+                <button class="nav-tab" onclick="showTab('blog')">Blog Management</button>
+            </div>
+            
+            <!-- Dashboard Tab -->
+            <div id="dashboard-tab" class="tab-content">
             <div class="stats-grid" id="stats-grid">
                 <div class="stat-card">
                     <div class="stat-number" id="total-leads">Loading...</div>
@@ -466,6 +534,92 @@ def admin_dashboard():
             <div class="activity-section">
                 <h2>Recent Activity <button class="refresh-btn" onclick="loadData()">Refresh</button></h2>
                 <div id="recent-activity">Loading...</div>
+            </div>
+            </div>
+            
+            <!-- Blog Management Tab -->
+            <div id="blog-tab" class="tab-content hidden">
+                <div id="blog-list-view">
+                    <button class="btn-new" onclick="showBlogEditor()">New Blog Post</button>
+                    <div id="blog-posts-container">
+                        <div class="blog-list" id="blog-list">
+                            <!-- Blog posts will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="blog-editor-view" class="hidden">
+                    <h3 id="editor-title">Create New Blog Post</h3>
+                    <form id="blog-form">
+                        <div class="form-group">
+                            <label for="blog-slug">Slug (URL)</label>
+                            <input type="text" id="blog-slug" name="slug" required placeholder="e.g., mastering-public-speaking">
+                        </div>
+                        
+                        <h4>English Version</h4>
+                        
+                        <div class="form-group">
+                            <label for="blog-title-en">Title (English)</label>
+                            <input type="text" id="blog-title-en" name="title_en" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="blog-excerpt-en">Excerpt (English)</label>
+                            <textarea id="blog-excerpt-en" name="excerpt_en" rows="3" placeholder="Brief description in English"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="blog-content-en">Content (English)</label>
+                            <textarea id="blog-content-en" name="content_en" placeholder="Write your blog post content in English..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="blog-tags-en">Tags (English, comma-separated)</label>
+                            <input type="text" id="blog-tags-en" name="tags_en" placeholder="communication, public speaking, theater">
+                        </div>
+                        
+                        <h4>Bulgarian Version</h4>
+                        
+                        <div class="form-group">
+                            <label for="blog-title-bg">Title (Bulgarian)</label>
+                            <input type="text" id="blog-title-bg" name="title_bg">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="blog-excerpt-bg">Excerpt (Bulgarian)</label>
+                            <textarea id="blog-excerpt-bg" name="excerpt_bg" rows="3" placeholder="Кратко описание на български"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="blog-content-bg">Content (Bulgarian)</label>
+                            <textarea id="blog-content-bg" name="content_bg" placeholder="Напишете съдържанието на блог поста на български..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="blog-tags-bg">Tags (Bulgarian, comma-separated)</label>
+                            <input type="text" id="blog-tags-bg" name="tags_bg" placeholder="комуникация, публично говорене, театър">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="blog-featured-image">Featured Image URL</label>
+                            <input type="text" id="blog-featured-image" name="featured_image" placeholder="Upload or enter image URL">
+                            <button type="button" onclick="uploadImage()" style="margin-top: 5px;">Upload Image</button>
+                            <input type="file" id="image-upload" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+                        </div>
+                        
+                        
+                        <div class="form-group">
+                            <label for="blog-published">
+                                <input type="checkbox" id="blog-published" name="is_published"> Published
+                            </label>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn-cancel" onclick="closeBlogEditor()">Cancel</button>
+                            <button type="submit" class="btn-save">Save Post</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
         
@@ -612,6 +766,253 @@ def admin_dashboard():
                     console.error('Error loading data:', error);
                 }
             }
+            
+            // Blog Management Functions
+            let currentEditingPost = null;
+            
+            function showTab(tabName) {
+                // Update tab buttons
+                document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+                event.target.classList.add('active');
+                
+                // Show/hide tab content
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+                document.getElementById(tabName + '-tab').classList.remove('hidden');
+                
+                // Load data for the specific tab
+                if (tabName === 'blog') {
+                    loadBlogPosts();
+                } else if (tabName === 'dashboard') {
+                    loadData();
+                }
+            }
+            
+            async function loadBlogPosts() {
+                if (!authToken) return;
+                
+                try {
+                    const response = await fetch('/admin/blog/posts', {
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+                    
+                    if (!response.ok) throw new Error('Failed to load blog posts');
+                    
+                    const posts = await response.json();
+                    const blogList = document.getElementById('blog-list');
+                    
+                    blogList.innerHTML = '';
+                    
+                    if (posts.length === 0) {
+                        blogList.innerHTML = '<p>No blog posts found. Create your first post!</p>';
+                        return;
+                    }
+                    
+                    posts.forEach(post => {
+                        const postDiv = document.createElement('div');
+                        postDiv.className = 'blog-item';
+                        
+                        const statusClass = post.is_published ? 'status-published' : 'status-draft';
+                        const statusText = post.is_published ? 'Published' : 'Draft';
+                        const publishedDate = post.published_at ? new Date(post.published_at).toLocaleDateString() : 'Not published';
+                        const hasEnglish = post.title.en ? '🇺🇸' : '';
+                        const hasBulgarian = post.title.bg ? '🇧🇬' : '';
+                        const languages = [hasEnglish, hasBulgarian].filter(Boolean).join(' ');
+                        
+                        postDiv.innerHTML = `
+                            <div class="blog-info">
+                                <div class="blog-title">${languages} ${post.title.en || post.title.bg || 'Untitled'}</div>
+                                <div class="blog-meta">
+                                    <span class="status-badge ${statusClass}">${statusText}</span>
+                                    Created: ${new Date(post.created_at).toLocaleDateString()}
+                                    ${post.is_published ? `| Published: ${publishedDate}` : ''}
+                                </div>
+                            </div>
+                            <div class="blog-actions">
+                                <button class="btn-edit" onclick="editBlogPost(${post.id})">Edit</button>
+                                <button class="btn-delete" onclick="deleteBlogPost(${post.id}, '${post.title.en || post.title.bg || 'Untitled'}')">Delete</button>
+                            </div>
+                        `;
+                        
+                        blogList.appendChild(postDiv);
+                    });
+                    
+                } catch (error) {
+                    console.error('Error loading blog posts:', error);
+                    document.getElementById('blog-list').innerHTML = '<p>Error loading blog posts.</p>';
+                }
+            }
+            
+            function showBlogEditor(postData = null) {
+                document.getElementById('blog-list-view').classList.add('hidden');
+                document.getElementById('blog-editor-view').classList.remove('hidden');
+                
+                if (postData) {
+                    // Editing existing post
+                    document.getElementById('editor-title').textContent = 'Edit Blog Post';
+                    document.getElementById('blog-slug').value = postData.slug;
+                    
+                    // English fields
+                    document.getElementById('blog-title-en').value = postData.title.en || '';
+                    document.getElementById('blog-excerpt-en').value = postData.excerpt.en || '';
+                    document.getElementById('blog-content-en').value = postData.content.en || '';
+                    document.getElementById('blog-tags-en').value = postData.tags.en ? postData.tags.en.join(', ') : '';
+                    
+                    // Bulgarian fields
+                    document.getElementById('blog-title-bg').value = postData.title.bg || '';
+                    document.getElementById('blog-excerpt-bg').value = postData.excerpt.bg || '';
+                    document.getElementById('blog-content-bg').value = postData.content.bg || '';
+                    document.getElementById('blog-tags-bg').value = postData.tags.bg ? postData.tags.bg.join(', ') : '';
+                    
+                    document.getElementById('blog-featured-image').value = postData.featured_image || '';
+                    document.getElementById('blog-published').checked = postData.is_published;
+                    currentEditingPost = postData.id;
+                } else {
+                    // Creating new post
+                    document.getElementById('editor-title').textContent = 'Create New Blog Post';
+                    document.getElementById('blog-form').reset();
+                    currentEditingPost = null;
+                }
+            }
+            
+            function closeBlogEditor() {
+                document.getElementById('blog-editor-view').classList.add('hidden');
+                document.getElementById('blog-list-view').classList.remove('hidden');
+                document.getElementById('blog-form').reset();
+                currentEditingPost = null;
+            }
+            
+            async function editBlogPost(postId) {
+                try {
+                    const response = await fetch(`/admin/blog/posts/${postId}`, {
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+                    
+                    if (!response.ok) throw new Error('Failed to load blog post');
+                    
+                    const post = await response.json();
+                    showBlogEditor(post);
+                    
+                } catch (error) {
+                    console.error('Error loading blog post:', error);
+                    alert('Error loading blog post for editing');
+                }
+            }
+            
+            async function deleteBlogPost(postId, title) {
+                if (!confirm(`Are you sure you want to delete "${title}"?`)) return;
+                
+                try {
+                    const response = await fetch(`/admin/blog/posts/${postId}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+                    
+                    if (!response.ok) throw new Error('Failed to delete blog post');
+                    
+                    loadBlogPosts(); // Reload the list
+                    
+                } catch (error) {
+                    console.error('Error deleting blog post:', error);
+                    alert('Error deleting blog post');
+                }
+            }
+            
+            function uploadImage() {
+                document.getElementById('image-upload').click();
+            }
+            
+            async function handleImageUpload(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                const formData = new FormData();
+                formData.append('file', file);
+                
+                try {
+                    const response = await fetch('/admin/blog/upload-image', {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${authToken}` },
+                        body: formData
+                    });
+                    
+                    if (!response.ok) throw new Error('Failed to upload image');
+                    
+                    const result = await response.json();
+                    document.getElementById('blog-featured-image').value = result.url;
+                    
+                } catch (error) {
+                    console.error('Error uploading image:', error);
+                    alert('Error uploading image');
+                }
+            }
+            
+            // Handle blog form submission
+            document.getElementById('blog-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(e.target);
+                const postData = {
+                    slug: formData.get('slug'),
+                    title: {
+                        en: formData.get('title_en') || '',
+                        bg: formData.get('title_bg') || ''
+                    },
+                    excerpt: {
+                        en: formData.get('excerpt_en') || '',
+                        bg: formData.get('excerpt_bg') || ''
+                    },
+                    content: {
+                        en: formData.get('content_en') || '',
+                        bg: formData.get('content_bg') || ''
+                    },
+                    featured_image: formData.get('featured_image') || null,
+                    tags: {
+                        en: formData.get('tags_en') ? formData.get('tags_en').split(',').map(tag => tag.trim()) : [],
+                        bg: formData.get('tags_bg') ? formData.get('tags_bg').split(',').map(tag => tag.trim()) : []
+                    },
+                    is_published: formData.get('is_published') ? true : false
+                };
+                
+                try {
+                    const url = currentEditingPost ? 
+                        `/admin/blog/posts/${currentEditingPost}` : 
+                        '/admin/blog/posts';
+                    const method = currentEditingPost ? 'PUT' : 'POST';
+                    
+                    const response = await fetch(url, {
+                        method: method,
+                        headers: {
+                            'Authorization': `Bearer ${authToken}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(postData)
+                    });
+                    
+                    if (!response.ok) {
+                        const error = await response.json();
+                        throw new Error(error.detail || 'Failed to save blog post');
+                    }
+                    
+                    closeBlogEditor();
+                    loadBlogPosts();
+                    
+                } catch (error) {
+                    console.error('Error saving blog post:', error);
+                    alert('Error saving blog post: ' + error.message);
+                }
+            });
+            
+            // Auto-generate slug from English title
+            document.getElementById('blog-title-en').addEventListener('input', function(e) {
+                const title = e.target.value;
+                const slug = title
+                    .toLowerCase()
+                    .replace(/[^a-z0-9\s-]/g, '')
+                    .replace(/\s+/g, '-')
+                    .replace(/-+/g, '-')
+                    .trim('-');
+                document.getElementById('blog-slug').value = slug;
+            });
         </script>
     </body>
     </html>

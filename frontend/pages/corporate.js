@@ -94,7 +94,8 @@ export default function Corporate() {
         setIsSubmitting(true);
 
         try {
-            const response = await fetch('/api/corporate-inquiry', {
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+            const response = await fetch(`${apiUrl}/api/corporate-inquiry`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -126,7 +127,7 @@ export default function Corporate() {
     return (
         <div className="min-h-screen bg-white">
             <Head>
-                <title>{t('corporate.title')} | Petar Stoyanov</title>
+                <title>{t('corporate.title')} | Peter Stoyanov</title>
                 <meta name="description" content={t('corporate.description')}/>
                 <link rel="icon" href="/favicons/favicon.ico"/>
             </Head>
@@ -152,62 +153,35 @@ export default function Corporate() {
                             <h1 className="text-5xl md:text-6xl lg:text-7xl font-black mb-8 text-white leading-tight drop-shadow-2xl animate-fade-in-up">
                 <span
                     className="bg-gradient-to-r from-blue-300 via-teal-300 to-indigo-300 bg-clip-text text-transparent">
-                  Corporate Training
+                  {t('corporate.hero.title')}
                 </span>
                                 <br/>
                                 <span className="text-blue-200 drop-shadow-lg">
-                  That Transforms Teams
+                  {t('corporate.hero.subtitle')}
                 </span>
                             </h1>
                             <p className="text-xl md:text-2xl mb-12 text-blue-100 max-w-4xl mx-auto leading-relaxed font-semibold animate-fade-in-up delay-100">
-                                Elevate your team's communication, leadership presence, and collaboration skills through
-                                proven theater techniques and interactive workshops designed for business professionals.
+                                {t('corporate.hero.description')}
                             </p>
 
                             {/* Stats & Image */}
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-16">
                                 <div>
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in-up delay-200">
-                                        <div
-                                            className="text-center p-6 bg-white/10 backdrop-blur-sm rounded-3xl border border-white/20 shadow-2xl transform hover:scale-105 hover:rotate-1 transition-all duration-300">
-                                            <div
-                                                className="text-4xl font-black text-yellow-300 mb-2 drop-shadow-lg">50+
-                                            </div>
-                                            <div className="text-white/90 font-semibold">Companies Trained</div>
-                                        </div>
-                                        <div
-                                            className="text-center p-6 bg-white/10 backdrop-blur-sm rounded-3xl border border-white/20 shadow-2xl transform hover:scale-105 hover:-rotate-1 transition-all duration-300">
-                                            <div
-                                                className="text-4xl font-black text-green-300 mb-2 drop-shadow-lg">95%
-                                            </div>
-                                            <div className="text-white/90 font-semibold">Satisfaction Rate</div>
-                                        </div>
-                                        <div
-                                            className="text-center p-6 bg-white/10 backdrop-blur-sm rounded-3xl border border-white/20 shadow-2xl transform hover:scale-105 hover:rotate-1 transition-all duration-300">
-                                            <div
-                                                className="text-4xl font-black text-orange-300 mb-2 drop-shadow-lg">1000+
-                                            </div>
-                                            <div className="text-white/90 font-semibold">Professionals Trained</div>
-                                        </div>
-                                    </div>
                                     <blockquote
                                         className="text-xl italic text-white mt-8 p-8 bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm rounded-3xl border border-white/30 shadow-2xl font-semibold leading-relaxed animate-fade-in-up delay-300">
-                                        "Theater techniques don't just improve communication—they transform how teams
-                                        connect, collaborate, and lead with authentic confidence."
+                                        "{t('corporate.hero.quote')}"
                                     </blockquote>
                                 </div>
 
                                 <div className="text-center">
                                     <div className="relative inline-block">
                                         <div
-                                            className="w-80 h-96 rounded-3xl overflow-hidden shadow-2xl border-8 border-gradient-to-r from-yellow-400 to-pink-400 transform hover:scale-105 transition-all duration-500 animate-fade-in-up delay-200">
+                                            className="h-90 w-80 rounded-3xl overflow-hidden shadow-2xl border-8 border-white">
                                             <img
-                                                src="/pictures/PeterStoyanov-powerful-2.jpg"
-                                                alt="Petar Stoyanov - Executive Presence and Leadership Training"
-                                                className="w-full h-full object-cover hover:scale-110 transition-transform duration-700"
+                                                src="/pictures/PeterStoyanov-straight-look-in-your-eyes.jpg"
+                                                alt="Peter Stoyanov - Executive Presence and Leadership Training"
+                                                className="w-full h-full object-cover"
                                             />
-                                            <div
-                                                className="absolute inset-0 bg-gradient-to-t from-purple-600/30 via-transparent to-yellow-400/20"></div>
                                         </div>
 
                                     </div>
@@ -230,11 +204,10 @@ export default function Corporate() {
                     <div className="container mx-auto px-4">
                         <div className="text-center mb-20 relative z-10">
                             <h2 className="text-4xl md:text-5xl font-black mb-6 text-white drop-shadow-2xl animate-fade-in-up">
-                                🎯 Training Programs 🎯
+                                {t('corporate.services.title')}
                             </h2>
                             <p className="text-xl text-blue-200 max-w-3xl mx-auto font-semibold animate-fade-in-up delay-100">
-                                ✨ Customized workshops that address your team's specific communication and leadership
-                                challenges
+                                {t('corporate.services.subtitle')}
                             </p>
                         </div>
 
@@ -247,11 +220,8 @@ export default function Corporate() {
                                     className="w-20 h-20 bg-gradient-to-br from-slate-600 to-blue-700 rounded-3xl flex items-center justify-center mb-6 shadow-xl transform hover:scale-110 hover:rotate-12 transition-all duration-300">
                                     <Presentation className="w-8 h-8 text-white" strokeWidth={1.5}/>
                                 </div>
-                                <h3 className="text-2xl font-black mb-4 text-blue-200 drop-shadow-lg">Presentation
-                                    Excellence</h3>
-                                <p className="text-white/90 leading-relaxed">Master the art of compelling presentations
-                                    using voice, body language, and storytelling techniques that captivate
-                                    audiences.</p>
+                                <h3 className="text-2xl font-black mb-4 text-blue-200 drop-shadow-lg">{t('corporate.services.presentation.title')}</h3>
+                                <p className="text-white/90 leading-relaxed">{t('corporate.services.presentation.description')}</p>
                             </div>
 
                             {/* Service 2 */}
@@ -261,10 +231,8 @@ export default function Corporate() {
                                     className="w-20 h-20 bg-gradient-to-br from-purple-400 to-pink-500 rounded-3xl flex items-center justify-center mb-6 shadow-xl transform hover:scale-110 hover:-rotate-12 transition-all duration-300">
                                     <Crown className="w-8 h-8 text-white" strokeWidth={1.5}/>
                                 </div>
-                                <h3 className="text-2xl font-black mb-4 text-purple-200 drop-shadow-lg">Leadership
-                                    Presence</h3>
-                                <p className="text-white/90 leading-relaxed">Develop commanding presence and authentic
-                                    leadership communication that inspires teams and drives results.</p>
+                                <h3 className="text-2xl font-black mb-4 text-purple-200 drop-shadow-lg">{t('corporate.services.leadership.title')}</h3>
+                                <p className="text-white/90 leading-relaxed">{t('corporate.services.leadership.description')}</p>
                             </div>
 
                             {/* Service 3 */}
@@ -274,10 +242,8 @@ export default function Corporate() {
                                     className="w-20 h-20 bg-gradient-to-br from-green-400 to-teal-500 rounded-3xl flex items-center justify-center mb-6 shadow-xl transform hover:scale-110 hover:rotate-12 transition-all duration-300">
                                     <Users className="w-8 h-8 text-white" strokeWidth={1.5}/>
                                 </div>
-                                <h3 className="text-2xl font-black mb-4 text-green-200 drop-shadow-lg">Team
-                                    Communication</h3>
-                                <p className="text-white/90 leading-relaxed">Enhance collaboration, active listening,
-                                    and conflict resolution through interactive theater-based exercises.</p>
+                                <h3 className="text-2xl font-black mb-4 text-green-200 drop-shadow-lg">{t('corporate.services.communication.title')}</h3>
+                                <p className="text-white/90 leading-relaxed">{t('corporate.services.communication.description')}</p>
                             </div>
 
                             {/* Service 4 */}
@@ -287,10 +253,8 @@ export default function Corporate() {
                                     className="w-20 h-20 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-3xl flex items-center justify-center mb-6 shadow-xl transform hover:scale-110 hover:-rotate-12 transition-all duration-300">
                                     <Video className="w-8 h-8 text-white" strokeWidth={1.5}/>
                                 </div>
-                                <h3 className="text-2xl font-black mb-4 text-blue-200 drop-shadow-lg">Camera
-                                    Confidence</h3>
-                                <p className="text-white/90 leading-relaxed">Excel in video meetings, interviews, and
-                                    digital presentations with professional on-camera presence and delivery.</p>
+                                <h3 className="text-2xl font-black mb-4 text-blue-200 drop-shadow-lg">{t('corporate.services.camera.title')}</h3>
+                                <p className="text-white/90 leading-relaxed">{t('corporate.services.camera.description')}</p>
                             </div>
 
                             {/* Service 5 */}
@@ -300,10 +264,8 @@ export default function Corporate() {
                                     className="w-20 h-20 bg-gradient-to-br from-red-400 to-pink-500 rounded-3xl flex items-center justify-center mb-6 shadow-xl transform hover:scale-110 hover:rotate-12 transition-all duration-300">
                                     <Zap className="w-8 h-8 text-white" strokeWidth={1.5}/>
                                 </div>
-                                <h3 className="text-2xl font-black mb-4 text-red-200 drop-shadow-lg">Improvisation
-                                    Skills</h3>
-                                <p className="text-white/90 leading-relaxed">Build quick thinking, adaptability, and
-                                    creative problem-solving skills for dynamic business situations.</p>
+                                <h3 className="text-2xl font-black mb-4 text-red-200 drop-shadow-lg">{t('corporate.services.improvisation.title')}</h3>
+                                <p className="text-white/90 leading-relaxed">{t('corporate.services.improvisation.description')}</p>
                             </div>
 
                             {/* Service 6 */}
@@ -313,10 +275,8 @@ export default function Corporate() {
                                     className="w-20 h-20 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-3xl flex items-center justify-center mb-6 shadow-xl transform hover:scale-110 hover:-rotate-12 transition-all duration-300">
                                     <Heart className="w-8 h-8 text-white" strokeWidth={1.5}/>
                                 </div>
-                                <h3 className="text-2xl font-black mb-4 text-cyan-200 drop-shadow-lg">Stress
-                                    Management</h3>
-                                <p className="text-white/90 leading-relaxed">Learn breathing techniques and mindfulness
-                                    practices to maintain composure and clarity under pressure.</p>
+                                <h3 className="text-2xl font-black mb-4 text-cyan-200 drop-shadow-lg">{t('corporate.services.stress.title')}</h3>
+                                <p className="text-white/90 leading-relaxed">{t('corporate.services.stress.description')}</p>
                             </div>
                         </div>
                     </div>
@@ -336,11 +296,10 @@ export default function Corporate() {
                         <div className="max-w-4xl mx-auto">
                             <div className="text-center mb-16 relative z-10">
                                 <h2 className="text-4xl md:text-5xl font-black mb-6 text-white drop-shadow-2xl animate-fade-in-up">
-                                    Request a Custom Training Proposal
+                                    {t('corporate.form.title')}
                                 </h2>
                                 <p className="text-xl text-blue-200 max-w-3xl mx-auto font-semibold animate-fade-in-up delay-100">
-                                    ✨ Let's discuss how theater-based training can transform your team's communication
-                                    and performance
+                                    {t('corporate.form.subtitle')}
                                 </p>
                             </div>
 
@@ -348,10 +307,10 @@ export default function Corporate() {
                                 className="bg-white/10 backdrop-blur-sm shadow-2xl rounded-3xl p-8 md:p-12 border border-white/20 relative z-10 animate-fade-in-up delay-200">
                                 <div className="text-center mb-10">
                                     <h3 className="text-3xl font-black text-blue-200 drop-shadow-lg">
-                                        Get Your Free Consultation
+                                        {t('corporate.form.consultationTitle')}
                                     </h3>
                                     <p className="text-white/90 mt-3 font-semibold">
-                                        Tell us about your team's goals and we'll create a customized training program
+                                        {t('corporate.form.consultationSubtitle')}
                                     </p>
                                 </div>
 
@@ -368,7 +327,7 @@ export default function Corporate() {
                                         <div>
                                             <label htmlFor="companyName"
                                                    className="block text-blue-200 font-semibold mb-2">
-                                                Company Name *
+                                                {t('corporate.form.companyName')} *
                                             </label>
                                             <input
                                                 type="text"
@@ -389,7 +348,7 @@ export default function Corporate() {
                                         <div>
                                             <label htmlFor="contactPerson"
                                                    className="block text-blue-200 font-semibold mb-2">
-                                                Contact Person *
+                                                {t('corporate.form.contactPerson')} *
                                             </label>
                                             <input
                                                 type="text"
@@ -411,7 +370,7 @@ export default function Corporate() {
                                         {/* Email */}
                                         <div>
                                             <label htmlFor="email" className="block text-blue-200 font-semibold mb-2">
-                                                Email Address *
+                                                {t('corporate.form.email')} *
                                             </label>
                                             <input
                                                 type="email"
@@ -431,7 +390,7 @@ export default function Corporate() {
                                         {/* Phone */}
                                         <div>
                                             <label htmlFor="phone" className="block text-blue-200 font-semibold mb-2">
-                                                Phone Number
+                                                {t('corporate.form.phone')}
                                             </label>
                                             <input
                                                 type="tel"
@@ -449,7 +408,7 @@ export default function Corporate() {
                                         <div>
                                             <label htmlFor="teamSize"
                                                    className="block text-blue-200 font-semibold mb-2">
-                                                Team Size *
+                                                {t('corporate.form.teamSize')} *
                                             </label>
                                             <select
                                                 id="teamSize"
@@ -460,12 +419,12 @@ export default function Corporate() {
                                                     formErrors.teamSize ? 'border-red-400' : ''
                                                 }`}
                                             >
-                                                <option value="">Select team size</option>
-                                                <option value="5-15">5-15 people</option>
-                                                <option value="16-30">16-30 people</option>
-                                                <option value="31-50">31-50 people</option>
-                                                <option value="51-100">51-100 people</option>
-                                                <option value="100+">100+ people</option>
+                                                <option value="">{t('corporate.form.teamSizeOptions.placeholder')}</option>
+                                                <option value="5-15">{t('corporate.form.teamSizeOptions.small')}</option>
+                                                <option value="16-30">{t('corporate.form.teamSizeOptions.medium')}</option>
+                                                <option value="31-50">{t('corporate.form.teamSizeOptions.large')}</option>
+                                                <option value="51-100">{t('corporate.form.teamSizeOptions.xlarge')}</option>
+                                                <option value="100+">{t('corporate.form.teamSizeOptions.enterprise')}</option>
                                             </select>
                                             {formErrors.teamSize && (
                                                 <p className="mt-1 text-sm text-red-600">{formErrors.teamSize}</p>
@@ -475,7 +434,7 @@ export default function Corporate() {
                                         {/* Budget */}
                                         <div>
                                             <label htmlFor="budget" className="block text-blue-200 font-semibold mb-2">
-                                                Estimated Budget
+                                                {t('corporate.form.budget')}
                                             </label>
                                             <select
                                                 id="budget"
@@ -484,12 +443,12 @@ export default function Corporate() {
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-3 bg-white/10 border border-white/30 rounded-xl text-white backdrop-blur-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300"
                                             >
-                                                <option value="">Select budget range</option>
-                                                <option value="under-5k">Under €5,000</option>
-                                                <option value="5k-10k">€5,000 - €10,000</option>
-                                                <option value="10k-20k">€10,000 - €20,000</option>
-                                                <option value="20k+">€20,000+</option>
-                                                <option value="discuss">Let's discuss</option>
+                                                <option value="">{t('corporate.form.budgetOptions.placeholder')}</option>
+                                                <option value="under-5k">{t('corporate.form.budgetOptions.under5k')}</option>
+                                                <option value="5k-10k">{t('corporate.form.budgetOptions.5k10k')}</option>
+                                                <option value="10k-20k">{t('corporate.form.budgetOptions.10k20k')}</option>
+                                                <option value="20k+">{t('corporate.form.budgetOptions.20kplus')}</option>
+                                                <option value="discuss">{t('corporate.form.budgetOptions.discuss')}</option>
                                             </select>
                                         </div>
                                     </div>
@@ -498,7 +457,7 @@ export default function Corporate() {
                                     <div className="mb-6">
                                         <label htmlFor="trainingGoals"
                                                className="block text-blue-200 font-semibold mb-2">
-                                            Training Goals & Challenges *
+                                            {t('corporate.form.trainingGoals')} *
                                         </label>
                                         <textarea
                                             id="trainingGoals"
@@ -506,7 +465,7 @@ export default function Corporate() {
                                             value={formData.trainingGoals}
                                             onChange={handleChange}
                                             rows="4"
-                                            placeholder="What communication challenges does your team face? What outcomes are you hoping to achieve?"
+                                            placeholder={t('corporate.form.trainingGoalsPlaceholder')}
                                             className={`w-full px-4 py-3 bg-white/10 border border-white/30 rounded-xl text-white placeholder-white/60 backdrop-blur-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300 ${
                                                 formErrors.trainingGoals ? 'border-red-400' : ''
                                             }`}
@@ -520,7 +479,7 @@ export default function Corporate() {
                                     <div className="mb-6">
                                         <label htmlFor="preferredDates"
                                                className="block text-blue-200 font-semibold mb-2">
-                                            Preferred Training Dates
+                                            {t('corporate.form.preferredDates')}
                                         </label>
                                         <input
                                             type="text"
@@ -528,7 +487,7 @@ export default function Corporate() {
                                             name="preferredDates"
                                             value={formData.preferredDates}
                                             onChange={handleChange}
-                                            placeholder="e.g., March 2024, flexible, ASAP"
+                                            placeholder={t('corporate.form.preferredDatesPlaceholder')}
                                             className="w-full px-4 py-3 bg-white/10 border border-white/30 rounded-xl text-white placeholder-white/60 backdrop-blur-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300"
                                         />
                                     </div>
@@ -537,7 +496,7 @@ export default function Corporate() {
                                     <div className="mb-8">
                                         <label htmlFor="additionalInfo"
                                                className="block text-blue-200 font-semibold mb-2">
-                                            Additional Information
+                                            {t('corporate.form.additionalInfo')}
                                         </label>
                                         <textarea
                                             id="additionalInfo"
@@ -545,7 +504,7 @@ export default function Corporate() {
                                             value={formData.additionalInfo}
                                             onChange={handleChange}
                                             rows="3"
-                                            placeholder="Any specific requirements, team dynamics, or additional context we should know about?"
+                                            placeholder={t('corporate.form.additionalInfoPlaceholder')}
                                             className="w-full px-4 py-3 bg-white/10 border border-white/30 rounded-xl text-white placeholder-white/60 backdrop-blur-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300"
                                         ></textarea>
                                     </div>
@@ -568,7 +527,7 @@ export default function Corporate() {
                                                         <path className="opacity-75" fill="currentColor"
                                                               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                                     </svg>
-                                                    Sending Request...
+                                                    {t('corporate.form.submitting')}
                                                 </>
                                             ) : (
                                                 <>
@@ -577,12 +536,12 @@ export default function Corporate() {
                                                         <path strokeLinecap="round" strokeLinejoin="round"
                                                               strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                                                     </svg>
-                                                    Request Free Consultation
+                                                    {t('corporate.form.submitButton')}
                                                 </>
                                             )}
                                         </button>
                                         <p className="text-sm text-blue-200/80 mt-4 font-semibold">
-                                            ✨ We'll respond within 48 hours with a customized training proposal
+                                            {t('corporate.form.responseNote')}
                                         </p>
                                     </div>
                                 </form>
@@ -604,10 +563,10 @@ export default function Corporate() {
                     <div className="container mx-auto px-4">
                         <div className="text-center mb-16 relative z-10">
                             <h2 className="text-4xl md:text-5xl font-black mb-6 text-white drop-shadow-2xl animate-fade-in-up">
-                                Why Choose Play-Based Training?
+                                {t('corporate.benefits.title')}
                             </h2>
                             <p className="text-xl text-blue-200 max-w-3xl mx-auto font-semibold animate-fade-in-up delay-100">
-                                ✨ Proven techniques from the world of performance that create lasting behavioral change
+                                {t('corporate.benefits.subtitle')}
                             </p>
                         </div>
 
@@ -619,11 +578,9 @@ export default function Corporate() {
                                     className="w-20 h-20 bg-gradient-to-br from-slate-600 to-blue-700 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
                                     <GraduationCap className="w-8 h-8 text-white" strokeWidth={1.5}/>
                                 </div>
-                                <h3 className="text-2xl font-black mb-4 text-blue-200 drop-shadow-lg">Experiential
-                                    Learning</h3>
+                                <h3 className="text-2xl font-black mb-4 text-blue-200 drop-shadow-lg">{t('corporate.benefits.experiential.title')}</h3>
                                 <p className="text-white/90 leading-relaxed">
-                                    Learn by doing through interactive exercises that create muscle memory for confident
-                                    communication.
+                                    {t('corporate.benefits.experiential.description')}
                                 </p>
                             </div>
 
@@ -634,11 +591,9 @@ export default function Corporate() {
                                     className="w-20 h-20 bg-gradient-to-br from-green-400 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
                                     <Lightbulb className="w-8 h-8 text-white" strokeWidth={1.5}/>
                                 </div>
-                                <h3 className="text-2xl font-black mb-4 text-green-200 drop-shadow-lg">Immediate
-                                    Results</h3>
+                                <h3 className="text-2xl font-black mb-4 text-green-200 drop-shadow-lg">{t('corporate.benefits.immediate.title')}</h3>
                                 <p className="text-white/90 leading-relaxed">
-                                    See transformation in real-time as participants break through limiting beliefs and
-                                    discover their authentic presence.
+                                    {t('corporate.benefits.immediate.description')}
                                 </p>
                             </div>
 
@@ -649,11 +604,9 @@ export default function Corporate() {
                                     className="w-20 h-20 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
                                     <Handshake className="w-8 h-8 text-white" strokeWidth={1.5}/>
                                 </div>
-                                <h3 className="text-2xl font-black mb-4 text-purple-200 drop-shadow-lg">Team
-                                    Bonding</h3>
+                                <h3 className="text-2xl font-black mb-4 text-purple-200 drop-shadow-lg">{t('corporate.benefits.teamBonding.title')}</h3>
                                 <p className="text-white/90 leading-relaxed">
-                                    Build trust and collaboration as teams work together in a safe, supportive, and
-                                    energizing environment.
+                                    {t('corporate.benefits.teamBonding.description')}
                                 </p>
                             </div>
                         </div>

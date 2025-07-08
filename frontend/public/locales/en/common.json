@@ -6,7 +6,7 @@
       "title": "Transform Your Stage Presence with Confidence",
       "subtitle": "From theater stages to boardrooms - discover the authentic secrets that turn fear into fearless presence",
       "cta": "Make the Change",
-      "meetPetar": "Meet Petar",
+      "meetPetar": "Meet Peter",
       "stats": {
         "experience": "Years of Experience",
         "students": "Students Trained",
@@ -35,7 +35,7 @@
     },
     "video": {
       "title": "Video Introduction",
-      "description": "Watch Petar share his unique approach to stage presence and communication training.",
+      "description": "Watch Peter share his unique approach to stage presence and communication training.",
       "comingSoon": "Video Coming Soon",
       "preview": "Exclusive training preview",
       "quote": "Every person has a unique voice and presence. My role is to help you discover and amplify yours.",
@@ -86,22 +86,57 @@
       }
     },
     "testimonials": {
-      "title": "Testimonials",
-      "subtitle": "Hear from students who have transformed their communication skills.",
+      "title": "My Success Stories",
+      "subtitle": "Hear from students who have transformed their communication skills and stage presence.",
       "testimonial1": {
-        "name": "Maria Petrova",
-        "position": "Manager",
-        "text": "Petar helped me find confidence in my public speaking."
+        "name": "Iliana Peneva",
+        "position": "Legal Advisor @ Sofia TechPark",
+        "text": "This course is the perfect solution for anyone who wants to overcome their own limits and turn presenting into a pleasure."
       },
       "testimonial2": {
-        "name": "Georgi Nikolov",
-        "position": "Entrepreneur",
-        "text": "The breathing exercises changed how I communicate."
+        "name": "Maria Petrova",
+        "position": "Manager",
+        "text": "Peter helped me find confidence in my public speaking. The techniques are practical and immediately effective."
       },
       "testimonial3": {
-        "name": "Anna Stefanova",
+        "name": "Georgi Nikolov",
+        "position": "Entrepreneur",
+        "text": "The breathing exercises and stage presence techniques completely changed how I communicate with clients and investors."
+      },
+      "testimonial4": {
+        "name": "Ana Stoeva",
         "position": "Marketing Director",
-        "text": "The workshop gave me tools I use daily. My presentations are now engaging and confident."
+        "text": "The transformation was incredible. I went from avoiding presentations to actively seeking speaking opportunities."
+      },
+      "testimonial5": {
+        "name": "Dimitar Georgiev",
+        "position": "Sales Manager",
+        "text": "My sales presentations became so much more engaging. Clients actually listen and respond differently now."
+      },
+      "testimonial6": {
+        "name": "Elena Ivanova",
+        "position": "Teacher",
+        "text": "The voice techniques revolutionized my classroom presence. Even difficult students pay attention now."
+      },
+      "testimonial7": {
+        "name": "Stefan Petrov",
+        "position": "CEO",
+        "text": "Board meetings used to stress me out. Now I command the room with natural confidence and clarity."
+      },
+      "testimonial8": {
+        "name": "Kristina Todorova",
+        "position": "HR Director",
+        "text": "The body language techniques helped me become more effective in interviews and team meetings."
+      },
+      "testimonial9": {
+        "name": "Viktor Mihaylov",
+        "position": "Consultant",
+        "text": "Client presentations are now my strength instead of my weakness. The ROI on this training is incredible."
+      },
+      "testimonial10": {
+        "name": "Svetlana Nikolova",
+        "position": "Project Manager",
+        "text": "I finally feel authentic and confident when speaking. The fear is completely gone, replaced by excitement."
       }
     },
     "transformation": {
@@ -148,11 +183,11 @@
   },
   "about": {
     "title": "Who am I?",
-    "content": "My name is Petar Stoyanov, and I’m an actor, clown, director, and (...well, I’m not a fan of the word \"coach\" – it sounds too wishy-washy to me...). For over 20 years, I’ve worked with people from various cultures and professions – from actors to business leaders – helping them free their voice, overcome stage fright, and connect more deeply with themselves and, through that, with their audience. I teach through games, exercises, improvisation, and physical work. My approach is practical, fun, and liberating.",
+    "content": "My name is Peter Stoyanov, and I’m an actor, clown, director, and (...well, I’m not a fan of the word \"coach\" – it sounds too wishy-washy to me...). For over 20 years, I’ve worked with people from various cultures and professions – from actors to business leaders – helping them free their voice, overcome stage fright, and connect more deeply with themselves and, through that, with their audience. I teach through games, exercises, improvisation, and physical work. My approach is practical, fun, and liberating.",
 
     "hero": {
       "title": "Meet",
-      "name": "Petar Stoyanov",
+      "name": "Peter Stoyanov",
       "subtitle": "Actor • Clown • Coach • Director",
       "stats": {
         "experience": "Years Experience",
@@ -238,7 +273,7 @@
         "birdPricing": "Bird Pricing",
         "access": "Access"
       },
-      "quote": "Join a community of professionals who are transforming their communication skills and discovering their authentic voice."
+      "quote": "Communication is the skill to listen to your conversation partner, not just waiting for your turn to speak."
     },
     "understanding": {
       "title": "I Understand Your Challenge",
@@ -272,7 +307,7 @@
       "subtitle": "Join our exclusive community of aspiring speakers and performers",
       "fullName": "Full Name",
       "email": "Email",
-      "cityCountry": "City & Country",
+      "cityCountry": "Where are you from?",
       "occupation": "Occupation",
       "whyJoin": "Why do you want to join this workshop?",
       "skillsToImprove": "What communication skills do you want to improve?",
@@ -330,12 +365,12 @@
       "title": "Training Programs",
       "subtitle": "Customized workshops that address your team's specific communication and leadership challenges",
       "presentation": {
-        "title": "Presentation Excellence",
+        "title": "Presentation Mastery",
         "description": "Master the art of compelling presentations using voice, body language, and storytelling techniques that captivate audiences."
       },
       "leadership": {
-        "title": "Leadership Presence",
-        "description": "Develop commanding presence and authentic leadership communication that inspires teams and drives results."
+        "title": "Authentic Presence",
+        "description": "Develop commanding presence and authentic communication that inspires teams and drives results."
       },
       "communication": {
         "title": "Team Communication",
@@ -347,7 +382,7 @@
       },
       "improvisation": {
         "title": "Improvisation Skills",
-        "description": "Build quick thinking, adaptability, and creative problem-solving skills for dynamic business situations."
+        "description": "Build quick thinking, adaptability, and creative problem-solving skills for dynamic situations."
       },
       "stress": {
         "title": "Stress Management",
@@ -384,10 +419,10 @@
       },
       "budgetOptions": {
         "placeholder": "Select budget range",
-        "under5k": "Under €5,000",
-        "5k10k": "€5,000 - €10,000",
-        "10k20k": "€10,000 - €20,000",
-        "20kplus": "€20,000+",
+        "under5k": "Under 5,000 BGN",
+        "5k10k": "5,000 BGN - 10,000 BGN",
+      "10k20k": "10,000 BGN - 20,000 BGN",
+        "20kplus": "20,000+ BGN",
         "discuss": "Let's discuss"
       },
       "errors": {
@@ -455,7 +490,7 @@
     },
     "actions": {
       "returnHome": "Return Home",
-      "learnAbout": "Learn About Petar"
+      "learnAbout": "Learn About Peter"
     },
     "resources": {
       "title": "While You Wait...",
@@ -466,8 +501,8 @@
         "action": "Get Free Guide"
       },
       "aboutPetar": {
-        "title": "About Petar",
-        "description": "Learn about Petar's 20+ year journey from actor to international communication coach",
+        "title": "About Peter",
+        "description": "Learn about Peter's 20+ year journey from actor to international communication coach",
         "action": "Read His Story"
       },
       "shareInspire": {
@@ -489,10 +524,165 @@
     "contact": "Contact",
     "followUs": "Follow Us",
     "newsletter": "Newsletter",
-    "newsletterDescription": "Stay updated with our latest workshops, articles, and communication tips.",
+    "newsletterDescription": "Stay updated.",
     "subscribe": "Subscribe",
     "allRightsReserved": "All Rights Reserved",
     "privacyPolicy": "Privacy Policy",
     "termsOfService": "Terms of Service"
+  },
+  "privacyPolicy": {
+    "title": "Privacy Policy",
+    "subtitle": "Your privacy is important to us. This policy explains how we collect, use, and protect your personal information in compliance with Bulgarian and EU data protection laws.",
+    "description": "Learn how we handle your personal data and protect your privacy",
+    "lastUpdated": "Last Updated",
+    "introduction": {
+      "title": "Introduction",
+      "content1": "This Privacy Policy describes how Peter Stoyanov (\"we\", \"us\", or \"our\") collects, uses, and shares your personal information when you visit our website or use our services. We are committed to protecting your privacy and ensuring the security of your personal data in accordance with the General Data Protection Regulation (GDPR) and Bulgarian data protection laws.",
+      "content2": "By using our website or services, you agree to the collection and use of information in accordance with this policy. We will not use or share your information with anyone except as described in this Privacy Policy."
+    },
+    "dataController": {
+      "title": "Data Controller Information",
+      "name": "Name",
+      "address": "Address", 
+      "email": "Email"
+    },
+    "dataCollection": {
+      "title": "What Information We Collect",
+      "personal": {
+        "title": "Personal Information",
+        "name": "Full name",
+        "email": "Email address",
+        "phone": "Phone number (optional)",
+        "company": "Company name (for corporate inquiries)",
+        "location": "City and country",
+        "occupation": "Occupation/profession"
+      },
+      "technical": {
+        "title": "Technical Information",
+        "ip": "IP address",
+        "browser": "Browser type and version",
+        "device": "Device information",
+        "usage": "Website usage patterns",
+        "cookies": "Cookies and similar technologies"
+      }
+    },
+    "legalBasis": {
+      "title": "Legal Basis for Processing",
+      "consent": {
+        "title": "Consent",
+        "description": "When you voluntarily provide your information through our contact forms, newsletter signup, or workshop registration."
+      },
+      "contract": {
+        "title": "Contract Performance",
+        "description": "When processing is necessary to provide you with our coaching services or respond to your inquiries."
+      },
+      "legitimate": {
+        "title": "Legitimate Interest",
+        "description": "For improving our services, website analytics, and communicating about our workshops and services."
+      }
+    },
+    "dataUsage": {
+      "title": "How We Use Your Information",
+      "communication": "To respond to your inquiries and provide customer support",
+      "services": "To deliver our coaching services and workshops",
+      "marketing": "To send you information about our services (with your consent)",
+      "analytics": "To analyze website usage and improve our services",
+      "legal": "To comply with legal obligations and protect our rights"
+    },
+    "rights": {
+      "title": "Your Rights Under GDPR",
+      "access": {
+        "title": "Right to Access",
+        "description": "Request copies of your personal data"
+      },
+      "rectification": {
+        "title": "Right to Rectification", 
+        "description": "Request correction of inaccurate data"
+      },
+      "erasure": {
+        "title": "Right to Erasure",
+        "description": "Request deletion of your personal data"
+      },
+      "portability": {
+        "title": "Right to Data Portability",
+        "description": "Request transfer of your data"
+      },
+      "objection": {
+        "title": "Right to Object",
+        "description": "Object to processing of your data"
+      },
+      "complaint": {
+        "title": "Right to Complain",
+        "description": "Lodge a complaint with supervisory authority"
+      }
+    },
+    "contact": {
+      "title": "Contact Us About Privacy",
+      "description": "If you have any questions about this Privacy Policy or wish to exercise your rights, please contact us:",
+      "email": "Email",
+      "response": "Response time",
+      "responseTime": "Within 30 days as required by law"
+    }
+  },
+  "termsOfService": {
+    "title": "Terms of Service", 
+    "subtitle": "These terms govern your use of our website and services. Please read them carefully before using our services.",
+    "description": "Legal terms and conditions for using our coaching services",
+    "lastUpdated": "Last Updated",
+    "acceptance": {
+      "title": "Acceptance of Terms",
+      "content": "By accessing and using this website and our services, you accept and agree to be bound by these Terms of Service and our Privacy Policy. If you do not agree to these terms, please do not use our services."
+    },
+    "services": {
+      "title": "Description of Services",
+      "content": "Peter Stoyanov provides communication coaching, public speaking training, corporate workshops, and related educational services. All services are provided in accordance with Bulgarian law and professional standards."
+    },
+    "userObligations": {
+      "title": "User Obligations",
+      "respectful": "Use our services respectfully and lawfully",
+      "accurate": "Provide accurate information when requested",
+      "confidential": "Maintain confidentiality of workshop content",
+      "payment": "Make payments according to agreed terms",
+      "prohibited": "Do not use services for illegal purposes"
+    },
+    "intellectualProperty": {
+      "title": "Intellectual Property",
+      "content": "All content, materials, and methodologies provided through our services are the intellectual property of Pete  r Stoyanov. You may not reproduce, distribute, or use these materials without written permission."
+    },
+    "limitation": {
+      "title": "Limitation of Liability",
+      "content": "To the maximum extent permitted by Bulgarian law, Peter Stoyanov shall not be liable for any indirect, incidental, special, or consequential damages arising from the use of our services."
+    },
+    "termination": {
+      "title": "Termination",
+      "content": "Either party may terminate services with appropriate notice. Upon termination, your access to materials and ongoing support will cease, subject to any ongoing obligations."
+    },
+    "governingLaw": {
+      "title": "Governing Law",
+      "content": "These terms are governed by Bulgarian law. Any disputes will be resolved through Bulgarian courts or through mediation as appropriate."
+    },
+    "contact": {
+      "title": "Contact Information",
+      "content": "For questions about these terms, please contact us at peterstoyanov83@gmail.com"
+    }
+  },
+  "blog": {
+    "title": "Insights & Techniques",
+    "description": "Discover theater-based techniques, communication tips, and insights to transform your presence and voice.",
+    "hero": {
+      "title": "Communication Insights",
+      "subtitle": "Practical tips, techniques, and stories from the world of theater and communication coaching"
+    },
+    "search": "Search articles",
+    "searchPlaceholder": "Search for articles, techniques, tips...",
+    "filterByTag": "Filter by category",
+    "allTags": "All Categories",
+    "noPostsFound": "No articles found",
+    "tryDifferentSearch": "Try adjusting your search or filter to find what you're looking for.",
+    "clearFilters": "Clear all filters",
+    "readMore": "Read more",
+    "backToBlog": "Back to all articles",
+    "relatedPosts": "Related Articles",
+    "authorBio": "Actor, coach & communication expert with over 20 years of experience helping people transform their stage presence and communication skills."
   }
 }

@@ -15,7 +15,7 @@ export default function BlogPost({ post }) {
   return (
     <div className="min-h-screen bg-white">
       <Head>
-        <title>{post.title} | Petar Stoyanov</title>
+        <title>{post.title} | Peter Stoyanov</title>
         <meta name="description" content={post.excerpt} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -34,10 +34,8 @@ export default function BlogPost({ post }) {
                     <span className="text-gray-300">•</span>
                     <div className="flex flex-wrap gap-2 justify-center">
                       {post.tags.map(tag => (
-                        <Link key={tag} href={`/blog?tag=${tag}`}>
-                          <a className="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full">
-                            {tag}
-                          </a>
+                        <Link key={tag} href={`/blog?tag=${tag}`} className="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full">
+                          {tag}
                         </Link>
                       ))}
                     </div>
@@ -76,7 +74,7 @@ export default function BlogPost({ post }) {
                 <div className="flex items-center">
                   <div className="w-16 h-16 bg-gray-300 rounded-full mr-4"></div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">Petar Stoyanov</h3>
+                    <h3 className="font-semibold text-gray-900">Peter Stoyanov</h3>
                     <p className="text-gray-600">{t('blog.authorBio')}</p>
                   </div>
                 </div>
@@ -84,13 +82,11 @@ export default function BlogPost({ post }) {
               
               {/* Back to Blog */}
               <div className="mt-12 text-center">
-                <Link href="/blog">
-                  <a className="inline-flex items-center text-indigo-600 font-medium">
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                    </svg>
-                    {t('blog.backToBlog')}
-                  </a>
+                <Link href="/blog" className="inline-flex items-center text-indigo-600 font-medium">
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                  </svg>
+                  {t('blog.backToBlog')}
                 </Link>
               </div>
             </div>
@@ -108,20 +104,18 @@ export default function BlogPost({ post }) {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {post.relatedPosts && post.relatedPosts.map((relatedPost) => (
                   <div key={relatedPost.slug} className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-md transition duration-300 hover:shadow-lg">
-                    <Link href={`/blog/${relatedPost.slug}`}>
-                      <a className="block">
-                        {/* If you have featured images, add them here */}
-                        <div className="h-48 bg-gray-200"></div>
-                        
-                        <div className="p-6">
-                          <div className="flex items-center mb-2">
-                            <span className="text-sm text-gray-500">{relatedPost.date}</span>
-                          </div>
-                          <h3 className="text-xl font-semibold mb-2 text-gray-900">{relatedPost.title}</h3>
-                          <p className="text-gray-600 mb-4">{relatedPost.excerpt}</p>
-                          <span className="text-indigo-600 font-medium">{t('blog.readMore')} →</span>
+                    <Link href={`/blog/${relatedPost.slug}`} className="block">
+                      {/* If you have featured images, add them here */}
+                      <div className="h-48 bg-gray-200"></div>
+                      
+                      <div className="p-6">
+                        <div className="flex items-center mb-2">
+                          <span className="text-sm text-gray-500">{relatedPost.date}</span>
                         </div>
-                      </a>
+                        <h3 className="text-xl font-semibold mb-2 text-gray-900">{relatedPost.title}</h3>
+                        <p className="text-gray-600 mb-4">{relatedPost.excerpt}</p>
+                        <span className="text-indigo-600 font-medium">{t('blog.readMore')} →</span>
+                      </div>
                     </Link>
                   </div>
                 ))}

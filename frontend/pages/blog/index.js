@@ -28,9 +28,9 @@ export default function Blog({ posts }) {
   return (
     <div className="min-h-screen bg-white">
       <Head>
-        <title>{t('blog.title')} | Petar Stoyanov</title>
+        <title>{t('blog.title')} | Peter Stoyanov</title>
         <meta name="description" content={t('blog.description')} />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicons/favicon.ico" />
       </Head>
 
       <Header />
@@ -100,37 +100,35 @@ export default function Blog({ posts }) {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {filteredPosts.map((post) => (
                     <div key={post.slug} className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-md transition duration-300 hover:shadow-lg">
-                      <Link href={`/blog/${post.slug}`}>
-                        <a className="block">
-                          {/* If you have featured images, add them here */}
-                          <div className="h-48 bg-gray-200"></div>
-                          
-                          <div className="p-6">
-                            <div className="flex items-center mb-2">
-                              <span className="text-sm text-gray-500">{post.date}</span>
-                              {post.tags.length > 0 && (
-                                <span className="mx-2 text-gray-300">•</span>
-                              )}
-                              <div className="flex flex-wrap gap-2">
-                                {post.tags.map(tag => (
-                                  <span 
-                                    key={tag} 
-                                    className="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full"
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      setSelectedTag(tag);
-                                    }}
-                                  >
-                                    {tag}
-                                  </span>
-                                ))}
-                              </div>
+                      <Link href={`/blog/${post.slug}`} className="block">
+                        {/* If you have featured images, add them here */}
+                        <div className="h-48 bg-gray-200"></div>
+                        
+                        <div className="p-6">
+                          <div className="flex items-center mb-2">
+                            <span className="text-sm text-gray-500">{post.date}</span>
+                            {post.tags.length > 0 && (
+                              <span className="mx-2 text-gray-300">•</span>
+                            )}
+                            <div className="flex flex-wrap gap-2">
+                              {post.tags.map(tag => (
+                                <span 
+                                  key={tag} 
+                                  className="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    setSelectedTag(tag);
+                                  }}
+                                >
+                                  {tag}
+                                </span>
+                              ))}
                             </div>
-                            <h2 className="text-xl font-semibold mb-2 text-gray-900">{post.title}</h2>
-                            <p className="text-gray-600 mb-4">{post.excerpt}</p>
-                            <span className="text-indigo-600 font-medium">{t('blog.readMore')} →</span>
                           </div>
-                        </a>
+                          <h2 className="text-xl font-semibold mb-2 text-gray-900">{post.title}</h2>
+                          <p className="text-gray-600 mb-4">{post.excerpt}</p>
+                          <span className="text-indigo-600 font-medium">{t('blog.readMore')} →</span>
+                        </div>
                       </Link>
                     </div>
                   ))}
