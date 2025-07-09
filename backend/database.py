@@ -8,6 +8,9 @@ from models import Base, WaitlistRegistration, CorporateInquiry, LeadMagnetDownl
 # Get database URL from environment variable
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://peterstoyanov@localhost:5432/coaching_site")
 
+# Debug logging to see what DATABASE_URL is being used
+print(f"🔍 DATABASE_URL: {DATABASE_URL}")
+
 def get_db_url():
     """Get the database URL"""
     return DATABASE_URL
