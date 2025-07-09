@@ -1164,7 +1164,7 @@ def send_blog_newsletter(blog_newsletter: BlogNewsletterRequest, db = Depends(ge
 def admin_dashboard():
     """Admin dashboard with authentication"""
     
-    html_content = """
+    html_content = r"""
     <!DOCTYPE html>
     <html>
     <head>
