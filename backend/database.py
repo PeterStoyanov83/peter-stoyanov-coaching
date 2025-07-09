@@ -5,8 +5,8 @@ from sqlalchemy.orm import sessionmaker, Session
 
 from models import Base, WaitlistRegistration, CorporateInquiry, LeadMagnetDownload, BlogPost, MultilingualBlogPost
 
-# Get database URL from environment variable or use default SQLite URL
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./coaching_site.db")
+# Get database URL from environment variable
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://peterstoyanov@localhost:5432/coaching_site")
 
 def get_db_url():
     """Get the database URL"""
