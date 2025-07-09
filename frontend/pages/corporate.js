@@ -5,6 +5,7 @@ import Head from 'next/head';
 import {useRouter} from 'next/router';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import BackToTop from '../components/BackToTop';
 import {
     Presentation,
     Crown,
@@ -27,10 +28,7 @@ export default function Corporate() {
         contactPerson: '',
         email: '',
         phone: '',
-        teamSize: '',
         trainingGoals: '',
-        preferredDates: '',
-        budget: '',
         additionalInfo: ''
     });
 
@@ -70,9 +68,6 @@ export default function Corporate() {
             errors.email = t('corporate.form.errors.emailInvalid');
         }
 
-        if (!formData.teamSize.trim()) {
-            errors.teamSize = t('corporate.form.errors.teamSizeRequired');
-        }
 
         if (!formData.trainingGoals.trim()) {
             errors.trainingGoals = t('corporate.form.errors.trainingGoalsRequired');
@@ -137,18 +132,8 @@ export default function Corporate() {
             <main>
                 {/* Hero Section */}
                 <section
-                    className="relative pt-24 pb-20 md:pt-32 md:pb-32 overflow-hidden bg-gradient-to-br from-slate-700 via-blue-800 to-indigo-900">
-                    {/* Vibrant Background decoration */}
-                    <div className="absolute inset-0 overflow-hidden">
-                        <div
-                            className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-blue-300/8 to-teal-400/8 rounded-full blur-3xl animate-float"></div>
-                        <div
-                            className="absolute top-3/4 right-1/4 w-80 h-80 bg-gradient-to-br from-slate-300/8 to-blue-400/8 rounded-full blur-3xl animate-float-delayed"></div>
-                        <div
-                            className="absolute top-1/2 left-1/2 w-72 h-72 bg-gradient-to-br from-indigo-300/8 to-purple-400/8 rounded-full blur-3xl animate-float-slow"></div>
-                    </div>
-
-                    <div className="container mx-auto px-4 relative z-10">
+                    className="relative pt-24 pb-20 md:pt-32 md:pb-32 bg-gradient-to-br from-slate-700 via-blue-800 to-indigo-900">
+                    <div className="container mx-auto px-4">
                         <div className="max-w-5xl mx-auto text-center">
                             <h1 className="text-5xl md:text-6xl lg:text-7xl font-black mb-8 text-white leading-tight drop-shadow-2xl animate-fade-in-up">
                 <span
@@ -193,14 +178,7 @@ export default function Corporate() {
 
                 {/* Services Section */}
                 <section
-                    className="py-20 md:py-28 bg-gradient-to-br from-slate-600 via-blue-700 to-indigo-800 relative overflow-hidden">
-                    {/* Floating Background Elements */}
-                    <div className="absolute inset-0 overflow-hidden">
-                        <div
-                            className="absolute top-1/4 right-1/4 w-80 h-80 bg-gradient-to-br from-blue-300/8 to-teal-400/8 rounded-full blur-3xl animate-float"></div>
-                        <div
-                            className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-indigo-300/8 to-purple-400/8 rounded-full blur-3xl animate-float-delayed"></div>
-                    </div>
+                    className="py-20 md:py-28 bg-gradient-to-br from-slate-600 via-blue-700 to-indigo-800">
                     <div className="container mx-auto px-4">
                         <div className="text-center mb-20 relative z-10">
                             <h2 className="text-4xl md:text-5xl font-black mb-6 text-white drop-shadow-2xl animate-fade-in-up">
@@ -284,14 +262,7 @@ export default function Corporate() {
 
                 {/* Inquiry Form Section */}
                 <section
-                    className="py-20 md:py-28 bg-gradient-to-br from-slate-700 via-blue-800 to-indigo-900 relative overflow-hidden">
-                    {/* Floating Background Elements */}
-                    <div className="absolute inset-0 overflow-hidden">
-                        <div
-                            className="absolute top-1/4 left-1/4 w-80 h-80 bg-gradient-to-br from-blue-300/8 to-teal-400/8 rounded-full blur-3xl animate-float"></div>
-                        <div
-                            className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-slate-300/8 to-blue-400/8 rounded-full blur-3xl animate-float-delayed"></div>
-                    </div>
+                    className="py-20 md:py-28 bg-gradient-to-br from-slate-700 via-blue-800 to-indigo-900">
                     <div className="container mx-auto px-4">
                         <div className="max-w-4xl mx-auto">
                             <div className="text-center mb-16 relative z-10">
@@ -403,55 +374,6 @@ export default function Corporate() {
                                         </div>
                                     </div>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                                        {/* Team Size */}
-                                        <div>
-                                            <label htmlFor="teamSize"
-                                                   className="block text-blue-200 font-semibold mb-2">
-                                                {t('corporate.form.teamSize')} *
-                                            </label>
-                                            <select
-                                                id="teamSize"
-                                                name="teamSize"
-                                                value={formData.teamSize}
-                                                onChange={handleChange}
-                                                className={`w-full px-4 py-3 bg-white/10 border border-white/30 rounded-xl text-white backdrop-blur-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300 ${
-                                                    formErrors.teamSize ? 'border-red-400' : ''
-                                                }`}
-                                            >
-                                                <option value="">{t('corporate.form.teamSizeOptions.placeholder')}</option>
-                                                <option value="5-15">{t('corporate.form.teamSizeOptions.small')}</option>
-                                                <option value="16-30">{t('corporate.form.teamSizeOptions.medium')}</option>
-                                                <option value="31-50">{t('corporate.form.teamSizeOptions.large')}</option>
-                                                <option value="51-100">{t('corporate.form.teamSizeOptions.xlarge')}</option>
-                                                <option value="100+">{t('corporate.form.teamSizeOptions.enterprise')}</option>
-                                            </select>
-                                            {formErrors.teamSize && (
-                                                <p className="mt-1 text-sm text-red-600">{formErrors.teamSize}</p>
-                                            )}
-                                        </div>
-
-                                        {/* Budget */}
-                                        <div>
-                                            <label htmlFor="budget" className="block text-blue-200 font-semibold mb-2">
-                                                {t('corporate.form.budget')}
-                                            </label>
-                                            <select
-                                                id="budget"
-                                                name="budget"
-                                                value={formData.budget}
-                                                onChange={handleChange}
-                                                className="w-full px-4 py-3 bg-white/10 border border-white/30 rounded-xl text-white backdrop-blur-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300"
-                                            >
-                                                <option value="">{t('corporate.form.budgetOptions.placeholder')}</option>
-                                                <option value="under-5k">{t('corporate.form.budgetOptions.under5k')}</option>
-                                                <option value="5k-10k">{t('corporate.form.budgetOptions.5k10k')}</option>
-                                                <option value="10k-20k">{t('corporate.form.budgetOptions.10k20k')}</option>
-                                                <option value="20k+">{t('corporate.form.budgetOptions.20kplus')}</option>
-                                                <option value="discuss">{t('corporate.form.budgetOptions.discuss')}</option>
-                                            </select>
-                                        </div>
-                                    </div>
 
                                     {/* Training Goals */}
                                     <div className="mb-6">
@@ -475,22 +397,6 @@ export default function Corporate() {
                                         )}
                                     </div>
 
-                                    {/* Preferred Dates */}
-                                    <div className="mb-6">
-                                        <label htmlFor="preferredDates"
-                                               className="block text-blue-200 font-semibold mb-2">
-                                            {t('corporate.form.preferredDates')}
-                                        </label>
-                                        <input
-                                            type="text"
-                                            id="preferredDates"
-                                            name="preferredDates"
-                                            value={formData.preferredDates}
-                                            onChange={handleChange}
-                                            placeholder={t('corporate.form.preferredDatesPlaceholder')}
-                                            className="w-full px-4 py-3 bg-white/10 border border-white/30 rounded-xl text-white placeholder-white/60 backdrop-blur-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300"
-                                        />
-                                    </div>
 
                                     {/* Additional Info */}
                                     <div className="mb-8">
@@ -552,14 +458,7 @@ export default function Corporate() {
 
                 {/* Benefits Section */}
                 <section
-                    className="py-20 md:py-28 bg-gradient-to-br from-slate-600 via-blue-700 to-indigo-800 relative overflow-hidden">
-                    {/* Floating Background Elements */}
-                    <div className="absolute inset-0 overflow-hidden">
-                        <div
-                            className="absolute top-1/3 left-1/3 w-72 h-72 bg-yellow-300/20 rounded-full blur-3xl animate-float"></div>
-                        <div
-                            className="absolute bottom-1/3 right-1/3 w-96 h-96 bg-purple-300/20 rounded-full blur-3xl animate-float-delayed"></div>
-                    </div>
+                    className="py-20 md:py-28 bg-gradient-to-br from-slate-600 via-blue-700 to-indigo-800">
                     <div className="container mx-auto px-4">
                         <div className="text-center mb-16 relative z-10">
                             <h2 className="text-4xl md:text-5xl font-black mb-6 text-white drop-shadow-2xl animate-fade-in-up">
@@ -615,6 +514,7 @@ export default function Corporate() {
             </main>
 
             <Footer/>
+            <BackToTop/>
         </div>
     );
 }

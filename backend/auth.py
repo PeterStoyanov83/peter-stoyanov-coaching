@@ -22,7 +22,7 @@ security = HTTPBearer()
 
 # Superuser credentials (in production, store in database)
 SUPERUSER_USERNAME = "peterstoyanov"
-SUPERUSER_PASSWORD_HASH = "$2b$12$C8M1rgwWl/6bAqLn1F0geupNPeFnMB7iD9KOKX/kA2pOkjs6vRYtq"  # CoachingMaster2024!
+SUPERUSER_PASSWORD_HASH = "$2b$12$6ICZwS9TQeXQ72MQogryi.sVYANBGw5XRxM4fCBfGtbSqmhHx7fH2"  # admin123
 
 class Token(BaseModel):
     access_token: str

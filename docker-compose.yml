@@ -1,24 +1,38 @@
-version: '3.8'
-
 services:
+  # Backend API with Email Automation
   backend:
     build:
       context: ./backend
+    container_name: coaching_backend
     ports:
       - "8000:8000"
     volumes:
       - ./backend:/app
       - ./blog:/app/blog
+      - backend_data:/app/data
+      - backend_logs:/app/logs
     environment:
-      - DATABASE_URL=sqlite:///./coaching_site.db
+      - DATABASE_URL=sqlite:///./data/coaching_site.db
       - MAILERLITE_API_KEY=${MAILERLITE_API_KEY}
+      - MAILERLITE_WEBHOOK_SECRET=${MAILERLITE_WEBHOOK_SECRET}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-your-secret-key-here}
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin123}
     restart: unless-stopped
     networks:
       - coaching-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
+  # Frontend (Next.js)
   frontend:
     build:
       context: ./frontend
+    container_name: coaching_frontend
     ports:
       - "3000:3000"
     volumes:
@@ -33,6 +47,50 @@ services:
     restart: unless-stopped
     networks:
       - coaching-network
+
+  # Email Scheduler Service
+  email_scheduler:
+    build:
+      context: ./backend
+    container_name: coaching_scheduler
+    volumes:
+      - ./backend:/app
+      - backend_data:/app/data
+      - backend_logs:/app/logs
+    environment:
+      - DATABASE_URL=sqlite:///./data/coaching_site.db
+      - MAILERLITE_API_KEY=${MAILERLITE_API_KEY}
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - coaching-network
+    command: ["python", "email_scheduler.py", "--interval", "300"]
+
+  # Database backup service (optional)
+  db_backup:
+    build:
+      context: ./backend
+    container_name: coaching_backup
+    volumes:
+      - backend_data:/app/data
+      - ./backups:/app/backups
+    environment:
+      - DATABASE_URL=sqlite:///./data/coaching_site.db
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - coaching-network
+    command: ["sh", "-c", "while true; do sleep 3600; cp /app/data/coaching_site.db /app/backups/coaching_site_$(date +%Y%m%d_%H%M%S).db; find /app/backups -name '*.db' -mtime +7 -delete; done"]
+    profiles:
+      - production
+
+volumes:
+  backend_data:
+    driver: local
+  backend_logs:
+    driver: local
 
 networks:
   coaching-network:

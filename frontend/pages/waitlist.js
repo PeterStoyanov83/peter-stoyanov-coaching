@@ -5,6 +5,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import BackToTop from '../components/BackToTop';
 import { Sparkles, Brain, Star, Calendar, Users, Lightbulb } from 'lucide-react';
 
 export default function Waitlist() {
@@ -133,15 +134,8 @@ export default function Waitlist() {
 
       <main>
         {/* Hero Section */}
-        <section className="relative bg-gradient-to-br from-slate-700 via-blue-800 to-indigo-900 pt-24 pb-20 md:pt-32 md:pb-32 overflow-hidden">
-          {/* Background decoration */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-10 left-10 w-72 h-72 bg-blue-300/8 rounded-full blur-xl animate-float"></div>
-            <div className="absolute top-40 right-10 w-72 h-72 bg-slate-300/8 rounded-full blur-xl animate-float-delayed"></div>
-            <div className="absolute bottom-10 left-1/2 w-72 h-72 bg-indigo-300/8 rounded-full blur-xl animate-float-slow"></div>
-          </div>
-          
-          <div className="container mx-auto px-4 relative z-10">
+        <section className="relative bg-gradient-to-br from-slate-700 via-blue-800 to-indigo-900 pt-24 pb-20 md:pt-32 md:pb-32">
+          <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-black mb-8 text-white leading-tight drop-shadow-2xl animate-fade-in-up">
                 <span className="bg-gradient-to-r from-blue-300 via-teal-300 to-indigo-300 bg-clip-text text-transparent">
@@ -181,13 +175,8 @@ export default function Waitlist() {
         </section>
 
         {/* Understanding Section */}
-        <section className="py-20 md:py-28 bg-gradient-to-br from-slate-600 via-blue-700 to-indigo-800 relative overflow-hidden">
-          {/* Floating Background Elements */}
-            <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-1/4 right-1/4 w-80 h-80 bg-gradient-to-br from-blue-300/8 to-teal-400/8 rounded-full blur-3xl animate-float"></div>
-            <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-indigo-300/8 to-purple-400/8 rounded-full blur-3xl animate-float-delayed"></div>
-          </div>
-          <div className="container mx-auto px-4 relative z-10">
+        <section className="py-20 md:py-28 bg-gradient-to-br from-slate-600 via-blue-700 to-indigo-800">
+          <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
               <div className="text-center mb-16">
                 <h2 className="text-4xl md:text-5xl font-black mb-6 text-white drop-shadow-2xl animate-fade-in-up">
@@ -276,13 +265,8 @@ export default function Waitlist() {
         </section>
 
           {/* Registration Form Section */}
-        <section className="py-20 md:py-28 bg-gradient-to-br from-slate-700 via-blue-800 to-indigo-900 relative overflow-hidden">
-          {/* Floating Background Elements */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-gradient-to-br from-blue-300/8 to-teal-400/8 rounded-full blur-3xl animate-float"></div>
-            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-slate-300/8 to-blue-400/8 rounded-full blur-3xl animate-float-delayed"></div>
-          </div>
-          <div className="container mx-auto px-4 relative z-10">
+        <section className="py-20 md:py-28 bg-gradient-to-br from-slate-700 via-blue-800 to-indigo-900">
+          <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="bg-white/10 backdrop-blur-sm shadow-2xl rounded-3xl p-8 md:p-12 border border-white/20">
                 <div className="text-center mb-12">
@@ -463,13 +447,8 @@ export default function Waitlist() {
         </section>
 
         {/* Benefits Section */}
-        <section className="py-20 md:py-28 bg-gradient-to-br from-slate-600 via-blue-700 to-indigo-800 relative overflow-hidden">
-          {/* Floating Background Elements */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-1/3 left-1/3 w-72 h-72 bg-yellow-300/8 rounded-full blur-3xl animate-float"></div>
-            <div className="absolute bottom-1/3 right-1/3 w-96 h-96 bg-purple-300/8 rounded-full blur-3xl animate-float-delayed"></div>
-          </div>
-          <div className="container mx-auto px-4 relative z-10">
+        <section className="py-20 md:py-28 bg-gradient-to-br from-slate-600 via-blue-700 to-indigo-800">
+          <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
               <div className="text-center mb-16">
                 <h2 className="text-4xl md:text-5xl font-black mb-6 text-white drop-shadow-2xl animate-fade-in-up">
@@ -539,6 +518,7 @@ export default function Waitlist() {
       </main>
 
       <Footer />
+      <BackToTop />
     </div>
   );
 }

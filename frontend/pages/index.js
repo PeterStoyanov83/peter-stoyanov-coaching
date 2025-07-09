@@ -5,6 +5,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import BackToTop from '../components/BackToTop';
 
 export default function Home() {
   const { t } = useTranslation('common');
@@ -882,6 +883,7 @@ export default function Home() {
       </main>
 
       <Footer />
+      <BackToTop />
     </div>
   );
 }

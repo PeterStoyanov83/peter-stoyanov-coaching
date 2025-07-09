@@ -10,8 +10,40 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   
   // Toggle language between 'bg' (Bulgarian) and 'en' (English)
-  const toggleLanguage = () => {
+  const toggleLanguage = async () => {
     const newLocale = i18n.language === 'bg' ? 'en' : 'bg';
+    
+    // Check if we're on a blog post page
+    if (router.pathname === '/blog/[slug]' && router.query.slug) {
+      try {
+        // Get translations for the current post
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/posts/${router.query.slug}/translations`);
+        
+        if (response.ok) {
+          const translations = await response.json();
+          
+          // Find the translation in the target language
+          const targetTranslation = translations.find(t => t.language === newLocale);
+          
+          if (targetTranslation) {
+            // Redirect to the translated post
+            router.push(`/blog/${targetTranslation.slug}`, `/blog/${targetTranslation.slug}`, { locale: newLocale });
+            return;
+          } else {
+            // If no translation found, redirect to blog index in new language
+            router.push('/blog', '/blog', { locale: newLocale });
+            return;
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching translations:', error);
+        // If API call fails, redirect to blog index in new language
+        router.push('/blog', '/blog', { locale: newLocale });
+        return;
+      }
+    }
+    
+    // Default behavior for other pages
     router.push(router.pathname, router.asPath, { locale: newLocale });
   };
   

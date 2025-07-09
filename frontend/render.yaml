@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: peter-stoyanov-frontend
+    env: node
+    plan: free
+    buildCommand: "npm install && npm run build"
+    startCommand: "npm start"
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        sync: false
+      - key: NEXT_PUBLIC_SITE_URL
+        sync: false
+    healthCheckPath: "/"
+    domains:
+      - peter-stoyanov.com
+      - www.peter-stoyanov.com
+    
+  - type: static
+    name: peter-stoyanov-static
+    buildCommand: "npm install && npm run build && npm run export"
+    publishPath: "./out"
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        sync: false
+      - key: NEXT_PUBLIC_SITE_URL
+        sync: false

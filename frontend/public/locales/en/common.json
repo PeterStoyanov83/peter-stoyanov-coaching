@@ -94,19 +94,20 @@
         "text": "This course is the perfect solution for anyone who wants to overcome their own limits and turn presenting into a pleasure."
       },
       "testimonial2": {
-        "name": "Maria Petrova",
-        "position": "Manager",
-        "text": "Peter helped me find confidence in my public speaking. The techniques are practical and immediately effective."
+        "name": "Dinko Georgiev",
+        "position": "Software Engineer",
+        "text": "The course was amazing! Pepe didn’t just teach techniques on how to perform successfully in front of an audience — he truly helped me apply them in a way that suited me and my needs. An extremely valuable and inspiring experience, I highly recommend it!"
       },
       "testimonial3": {
-        "name": "Georgi Nikolov",
-        "position": "Entrepreneur",
-        "text": "The breathing exercises and stage presence techniques completely changed how I communicate with clients and investors."
+        "name": "Ivan Danchev",
+      "position": "Co-founder of PetConnect",
+        "text": "Professionalism and a personal approach, delivered by Pepe in an informal setting. I recommend it."
       },
       "testimonial4": {
-        "name": "Ana Stoeva",
-        "position": "Marketing Director",
-        "text": "The transformation was incredible. I went from avoiding presentations to actively seeking speaking opportunities."
+        "name": "Trifon Trifonov",
+        "position": "Software Engineer",
+        "text": "I’ve learned practical, easy-to-use techniques for public speaking that help prepare both my body and my emotional mindset for addressing a large audience. With Peter’s guidance, I discovered the methods that work best for me, and they help me warm up and overcome the state of paralysis and stage fright."
+
       },
       "testimonial5": {
         "name": "Dimitar Georgiev",
@@ -188,7 +189,7 @@
     "hero": {
       "title": "Meet",
       "name": "Peter Stoyanov",
-      "subtitle": "Actor • Clown • Coach • Director",
+      "subtitle": "Actor • Clown • Director • Teacher",
       "stats": {
         "experience": "Years Experience",
         "countries": "Countries"
@@ -683,6 +684,6 @@
     "readMore": "Read more",
     "backToBlog": "Back to all articles",
     "relatedPosts": "Related Articles",
-    "authorBio": "Actor, coach & communication expert with over 20 years of experience helping people transform their stage presence and communication skills."
+    "authorBio": "Actor & communication expert "
   }
 }

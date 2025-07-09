@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Dashboard Login</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .result { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .success { background: #d4edda; border-color: #c3e6cb; color: #155724; }
+        .error { background: #f8d7da; border-color: #f5c6cb; color: #721c24; }
+        button { padding: 10px 20px; margin: 10px 5px; cursor: pointer; }
+        .btn-primary { background: #007bff; color: white; border: none; border-radius: 4px; }
+        .btn-secondary { background: #6c757d; color: white; border: none; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>Dashboard Login Test</h1>
+    <p>This page tests the complete login flow for the admin dashboard.</p>
+    
+    <button class="btn-primary" onclick="testLogin()">Test Login Flow</button>
+    <button class="btn-secondary" onclick="openDashboard()">Open Dashboard</button>
+    
+    <div id="results"></div>
+
+    <script>
+        async function testLogin() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<div class="result">Testing login flow...</div>';
+            
+            try {
+                // Step 1: Test login endpoint
+                const formData = new FormData();
+                formData.append('username', 'peterstoyanov');
+                formData.append('password', 'CoachingMaster2024!');
+                
+                const loginResponse = await fetch('http://localhost:8000/auth/login', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!loginResponse.ok) {
+                    throw new Error(`Login failed: ${loginResponse.status} - ${await loginResponse.text()}`);
+                }
+                
+                const tokenData = await loginResponse.json();
+                
+                // Step 2: Test protected endpoint
+                const statsResponse = await fetch('http://localhost:8000/admin/stats', {
+                    headers: {
+                        'Authorization': `Bearer ${tokenData.access_token}`
+                    }
+                });
+                
+                if (!statsResponse.ok) {
+                    throw new Error(`Stats endpoint failed: ${statsResponse.status}`);
+                }
+                
+                const statsData = await statsResponse.json();
+                
+                // Step 3: Test dashboard HTML
+                const dashboardResponse = await fetch('http://localhost:8000/admin/dashboard');
+                
+                if (!dashboardResponse.ok) {
+                    throw new Error(`Dashboard HTML failed: ${dashboardResponse.status}`);
+                }
+                
+                const dashboardHTML = await dashboardResponse.text();
+                
+                // Success
+                resultsDiv.innerHTML = `
+                    <div class="result success">
+                        <h3>✅ All Tests Passed!</h3>
+                        <p><strong>Login:</strong> Success - Token received</p>
+                        <p><strong>Token:</strong> ${tokenData.access_token.substring(0, 50)}...</p>
+                        <p><strong>Stats API:</strong> Success - ${statsData.overview?.total_leads || 'N/A'} total leads</p>
+                        <p><strong>Dashboard HTML:</strong> Success - ${dashboardHTML.length} characters loaded</p>
+                        <p><strong>Authentication is working correctly!</strong></p>
+                    </div>
+                `;
+                
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="result error">
+                        <h3>❌ Test Failed</h3>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function openDashboard() {
+            window.open('http://localhost:8000/admin/dashboard', '_blank');
+        }
+    </script>
+</body>
+</html>
