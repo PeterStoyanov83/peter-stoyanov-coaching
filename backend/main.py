@@ -71,7 +71,7 @@ class CorporateInquiryRequest(BaseModel):
     contactPerson: str
     email: EmailStr
     phone: Optional[str] = None
-    teamSize: str
+    teamSize: Optional[str] = None
     budget: Optional[str] = None
     trainingGoals: str
     preferredDates: Optional[str] = None

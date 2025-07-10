@@ -28,6 +28,7 @@ export default function Corporate() {
         contactPerson: '',
         email: '',
         phone: '',
+        teamSize: '',
         trainingGoals: '',
         additionalInfo: ''
     });
