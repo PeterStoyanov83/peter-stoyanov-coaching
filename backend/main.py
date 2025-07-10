@@ -4103,6 +4103,15 @@ async def process_emails_manually(current_user: User = Depends(get_current_admin
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to process emails: {str(e)}")
 
+@app.post("/api/test-process-emails")
+async def test_process_emails():
+    """Test endpoint to manually trigger email processing - for testing only"""
+    try:
+        await process_emails_once()
+        return {"success": True, "message": "Test: Emails processed successfully"}
+    except Exception as e:
+        return {"success": False, "error": f"Failed to process emails: {str(e)}"}
+
 # Update existing subscribers endpoint to use new database functions
 @app.get("/admin/subscribers")
 def get_subscribers(
