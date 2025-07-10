@@ -21,12 +21,23 @@ def get_monday_morning_reality_check_sequence():
     return [
         {
             "week": 1,
-            "subject": "Your stage presence guide + the #1 mistake killing your presence",
-            "title": "Welcome to Your Stage Presence Journey",
+            "subject": "🎭 Thank you + Your Stage Presence Guide is here!",
+            "title": "Thank You - Your Journey Starts Now!",
             "content": """
+            <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 30px; text-align: center; margin-bottom: 30px; border-radius: 10px;">
+                <h2 style="margin: 0; color: white; font-size: 28px;">🎉 Thank You for Downloading!</h2>
+                <p style="margin: 10px 0 0 0; font-size: 18px; opacity: 0.9;">Your Stage Presence transformation starts right now</p>
+            </div>
+            
             <h2>Hello {{name}},</h2>
             
-            <p>Welcome to your journey toward commanding presence! I'm thrilled you downloaded the Stage Presence Guide.</p>
+            <p><strong>First things first - THANK YOU!</strong> 🙏</p>
+            
+            <p>You just took the first step toward commanding presence, and I'm absolutely thrilled to be part of your journey. Your "5 Theater Secrets" guide should be in your downloads folder right now.</p>
+            
+            <div style="background: #fef7cd; padding: 20px; border-left: 4px solid #f59e0b; margin: 20px 0; border-radius: 0 8px 8px 0;">
+                <p><strong>📥 Can't find your guide?</strong> Check your downloads folder or <a href="https://peterstoyanov.coach/guide" style="color: #f59e0b; font-weight: bold;">download it again here</a>.</p>
+            </div>
             
             <p><strong>Here's what most people don't realize:</strong> The #1 thing killing your stage presence isn't nerves, lack of experience, or even fear of judgment.</p>
             
@@ -39,15 +50,19 @@ def get_monday_morning_reality_check_sequence():
             <p>That "stuttering shadow" I mentioned in the guide? After just 3 sessions, he won a major pitching competition. Not by becoming someone else, but by unleashing who he already was.</p>
             
             <div style="background: #f0f9ff; padding: 20px; border-left: 4px solid #0ea5e9; margin: 20px 0;">
-                <p><strong>This week's reality check:</strong> Stop trying to copy other speakers. Your unique energy is what will make you unforgettable.</p>
+                <p><strong>Your first reality check:</strong> Stop trying to copy other speakers. Your unique energy is what will make you unforgettable.</p>
             </div>
             
-            <p>I'd love to hear from you - what's your biggest stage presence challenge right now? Hit reply and tell me. I read every email.</p>
+            <p>Over the next 10 weeks, I'll be sharing the exact methods I use with executives and leaders worldwide. Every Monday, you'll get practical insights that you can use immediately.</p>
+            
+            <p>But right now, I'd love to hear from you - what's your biggest stage presence challenge? Hit reply and tell me. I read every email personally.</p>
             
             <p>Ready to unlock your natural command?</p>
             
             <p><strong>Peter Stoyanov</strong><br>
             <em>The Street Performer Who Teaches Executives to Command Any Room</em></p>
+            
+            <p><em>P.S. Keep an eye out for my next email this Monday - I'll share how I hold 100+ strangers' attention for 1 hour without a microphone.</em></p>
             """,
             "cta": "Reply and tell me your biggest stage fear",
             "delay_days": 0
@@ -446,24 +461,48 @@ def get_priority_access_sequence():
     return [
         {
             "week": 1,
-            "subject": "You're on the inside track (priority access confirmed)",
-            "title": "Welcome to Priority Access",
+            "subject": "🎯 Thank you + You're on the inside track now!",
+            "title": "Thank You - Priority Access Confirmed!",
             "content": """
+            <div style="background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 30px; text-align: center; margin-bottom: 30px; border-radius: 10px;">
+                <h2 style="margin: 0; color: white; font-size: 28px;">🎉 Welcome to Priority Access!</h2>
+                <p style="margin: 10px 0 0 0; font-size: 18px; opacity: 0.9;">You're now on the inside track for transformational coaching</p>
+            </div>
+            
             <h2>{{name}}, you're in!</h2>
             
-            <p>Welcome to priority access for "The Power of Stage Presence."</p>
+            <p><strong>Thank you for joining the waitlist!</strong> 🙏</p>
             
-            <p>While others wait for public announcements, you'll get first access to:</p>
-            <ul>
-                <li>New program launches</li>
-                <li>Breakthrough session availability</li>
-                <li>Special pricing for waitlist members</li>
-                <li>Behind-the-scenes insights from my coaching work</li>
-            </ul>
+            <p>You've just secured priority access to "The Power of Stage Presence" - my flagship program that's transformed hundreds of leaders worldwide.</p>
             
-            <p>You're here because you're serious about transforming your presence. I respect that.</p>
+            <div style="background: #f0f9ff; padding: 20px; border-left: 4px solid #0ea5e9; margin: 20px 0; border-radius: 0 8px 8px 0;">
+                <p><strong>🎯 Your Priority Access Includes:</strong></p>
+                <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+                    <li>First access to new program launches (before public announcement)</li>
+                    <li>Exclusive breakthrough session availability</li>
+                    <li>Special waitlist-only pricing (up to 30% off)</li>
+                    <li>Behind-the-scenes insights from my coaching work</li>
+                    <li>Direct access to me via email for quick questions</li>
+                </ul>
+            </div>
             
-            <p><strong>Peter</strong></p>
+            <p>You're here because you're serious about transforming your presence and commanding respect in any room. I respect that commitment.</p>
+            
+            <p>Over the next few weeks, I'll be sharing exclusive insights, real client transformation stories, and giving you first access to coaching spots as they become available.</p>
+            
+            <p><strong>Here's what happens next:</strong></p>
+            <ol>
+                <li>Keep an eye on your inbox - priority announcements coming soon</li>
+                <li>I'll personally email you before any public program launch</li>
+                <li>You'll get exclusive access to breakthrough sessions</li>
+            </ol>
+            
+            <p>Ready to transform how you show up and command attention?</p>
+            
+            <p><strong>Peter Stoyanov</strong><br>
+            <em>The Street Performer Who Teaches Executives to Command Any Room</em></p>
+            
+            <p><em>P.S. Watch for my next email - I'll share the exact 3-session method that transformed my "stuttering shadow" client into a pitching champion.</em></p>
             """,
             "cta": "Complete your presence assessment",
             "delay_days": 0
@@ -564,12 +603,32 @@ def get_leadership_roi_sequence():
     return [
         {
             "week": 1,
-            "subject": "The hidden cost of invisible leaders in your organization",
-            "title": "The Leadership Presence Crisis",
+            "subject": "🏢 Thank you + The hidden cost of invisible leaders",
+            "title": "Thank You - Leadership Assessment Request Received",
             "content": """
+            <div style="background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%); color: white; padding: 30px; text-align: center; margin-bottom: 30px; border-radius: 10px;">
+                <h2 style="margin: 0; color: white; font-size: 28px;">🎉 Thank You for Your Interest!</h2>
+                <p style="margin: 10px 0 0 0; font-size: 18px; opacity: 0.9;">Corporate leadership development inquiry received</p>
+            </div>
+            
             <h2>Dear {{name}},</h2>
             
-            <p>Your company is losing money every day. Not from market conditions or competition, but from something much more fixable:</p>
+            <p><strong>Thank you for reaching out about corporate leadership development!</strong> 🙏</p>
+            
+            <p>I've received your inquiry and I'm excited about the possibility of working with your organization to develop executive presence across your leadership team.</p>
+            
+            <div style="background: #fef7cd; padding: 20px; border-left: 4px solid #f59e0b; margin: 20px 0; border-radius: 0 8px 8px 0;">
+                <p><strong>📋 What happens next:</strong></p>
+                <ol style="margin: 10px 0 0 0; padding-left: 20px;">
+                    <li>I'll personally review your specific needs and team size</li>
+                    <li>You'll receive a customized proposal within 48 hours</li>
+                    <li>We'll schedule a strategy call to discuss your leadership goals</li>
+                </ol>
+            </div>
+            
+            <p>In the meantime, let me share something that might shock you:</p>
+            
+            <p><strong>Your company is losing money every day.</strong> Not from market conditions or competition, but from something much more fixable:</p>
             
             <p><strong>Invisible leaders.</strong></p>
             
@@ -577,12 +636,24 @@ def get_leadership_roi_sequence():
             
             <p>The cost? Missed opportunities, delayed decisions, and leadership potential sitting on the bench.</p>
             
-            <p>As a performance coach with 15 years across 12 countries, I've seen this pattern in organizations worldwide.</p>
+            <div style="background: #f0f9ff; padding: 20px; border-left: 4px solid #0ea5e9; margin: 20px 0;">
+                <p><strong>🎯 What we typically see in corporate programs:</strong></p>
+                <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+                    <li>40% improvement in client presentation effectiveness</li>
+                    <li>60% increase in internal leadership confidence scores</li>
+                    <li>23% faster decision-making in leadership meetings</li>
+                    <li>300-400% ROI in the first year</li>
+                </ul>
+            </div>
             
-            <p>The solution is simpler than you think.</p>
+            <p>As a performance coach with 15 years across 12 countries, I've seen this pattern in organizations worldwide. The solution is simpler than you think.</p>
+            
+            <p>I'll be in touch soon with your customized proposal and next steps.</p>
             
             <p><strong>Peter Stoyanov</strong><br>
-            <em>Executive Presence Coach</em></p>
+            <em>Executive Presence & Leadership Development Coach</em></p>
+            
+            <p><em>P.S. Over the next few days, I'll share real case studies and ROI data from similar corporate transformations. Keep an eye on your inbox!</em></p>
             """,
             "cta": "Schedule a leadership assessment",
             "delay_days": 0
