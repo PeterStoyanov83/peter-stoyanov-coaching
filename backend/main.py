@@ -4112,6 +4112,66 @@ async def test_process_emails():
     except Exception as e:
         return {"success": False, "error": f"Failed to process emails: {str(e)}"}
 
+@app.get("/api/test-email-status")
+def test_email_status(db: Session = Depends(get_db)):
+    """Test endpoint to check email status - for testing only"""
+    try:
+        from models import EmailSubscriber, ScheduledEmail, SequenceEnrollment
+        
+        # Get recent subscribers with peterstoyanov83@gmail.com
+        subscribers = db.query(EmailSubscriber).filter(
+            EmailSubscriber.email == "peterstoyanov83@gmail.com"
+        ).all()
+        
+        result = {"subscribers": [], "scheduled_emails": []}
+        
+        for subscriber in subscribers:
+            # Get enrollments for this subscriber
+            enrollments = db.query(SequenceEnrollment).filter(
+                SequenceEnrollment.subscriber_id == subscriber.id
+            ).all()
+            
+            subscriber_data = {
+                "id": subscriber.id,
+                "email": subscriber.email,
+                "name": subscriber.name,
+                "source": subscriber.source,
+                "language": subscriber.language,
+                "created_at": subscriber.created_at.isoformat(),
+                "enrollments": []
+            }
+            
+            for enrollment in enrollments:
+                # Get scheduled emails for this enrollment
+                scheduled_emails = db.query(ScheduledEmail).filter(
+                    ScheduledEmail.enrollment_id == enrollment.id
+                ).all()
+                
+                enrollment_data = {
+                    "id": enrollment.id,
+                    "status": enrollment.status,
+                    "enrollment_date": enrollment.enrollment_date.isoformat(),
+                    "current_email_index": enrollment.current_email_index,
+                    "scheduled_emails": []
+                }
+                
+                for scheduled_email in scheduled_emails:
+                    enrollment_data["scheduled_emails"].append({
+                        "id": scheduled_email.id,
+                        "status": scheduled_email.status,
+                        "scheduled_for": scheduled_email.scheduled_for.isoformat(),
+                        "sent_at": scheduled_email.sent_at.isoformat() if scheduled_email.sent_at else None,
+                        "error_message": scheduled_email.error_message
+                    })
+                
+                subscriber_data["enrollments"].append(enrollment_data)
+            
+            result["subscribers"].append(subscriber_data)
+        
+        return result
+    except Exception as e:
+        return {"success": False, "error": f"Failed to get email status: {str(e)}"}
+
 # Update existing subscribers endpoint to use new database functions
 @app.get("/admin/subscribers")
 def get_subscribers(
