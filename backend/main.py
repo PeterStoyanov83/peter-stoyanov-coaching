@@ -49,10 +49,10 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://peter-stoyanov.com",
-        "https://www.peter-stoyanov.com",
+        "https://www.peter-stoyanov.com", 
         "https://peter-stoyanov-coaching.onrender.com",
-        "https://peter-stoyanov-backend.onrender.com",
         "http://localhost:3000",  # For local development
+        "http://localhost:8000",  # For local backend testing
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -92,39 +92,43 @@ async def register_waitlist(
     background_tasks: BackgroundTasks,
     db = Depends(get_db)
 ):
-    # Create model instance
-    reg_model = WaitlistRegistration(
-        full_name=registration.full_name,
-        email=registration.email,
-        city_country=registration.city_country,
-        occupation=registration.occupation,
-        why_join=registration.why_join,
-        skills_to_improve=registration.skills_to_improve
-    )
-    
-    # Determine language (could be from frontend or IP geolocation)
-    language = "en"  # Default to English, can be enhanced later
-    
-    # Auto-enroll in sequence (this will also handle MailerLite)
-    background_tasks.add_task(
-        auto_enroll_subscriber,
-        db,
-        registration.email,
-        registration.full_name,
-        "waitlist",
-        language,
-        {
-            "city_country": registration.city_country,
-            "occupation": registration.occupation,
-            "why_join": registration.why_join,
-            "skills_to_improve": registration.skills_to_improve
-        }
-    )
-    
-    # Store in SQLite as fallback
-    store_waitlist_registration(db, reg_model)
-    
-    return {"status": "success", "message": "Registration successful"}
+    try:
+        # Create model instance
+        reg_model = WaitlistRegistration(
+            full_name=registration.full_name,
+            email=registration.email,
+            city_country=registration.city_country,
+            occupation=registration.occupation,
+            why_join=registration.why_join,
+            skills_to_improve=registration.skills_to_improve
+        )
+        
+        # Determine language (could be from frontend or IP geolocation)
+        language = "en"  # Default to English, can be enhanced later
+        
+        # Auto-enroll in sequence (this will also handle MailerLite)
+        background_tasks.add_task(
+            auto_enroll_subscriber,
+            db,
+            registration.email,
+            registration.full_name,
+            "waitlist",
+            language,
+            {
+                "city_country": registration.city_country,
+                "occupation": registration.occupation,
+                "why_join": registration.why_join,
+                "skills_to_improve": registration.skills_to_improve
+            }
+        )
+        
+        # Store in database
+        store_waitlist_registration(db, reg_model)
+        
+        return {"status": "success", "message": "Registration successful"}
+    except Exception as e:
+        print(f"Error in register_waitlist: {e}")
+        raise HTTPException(status_code=500, detail=f"Registration failed: {str(e)}")
 
 @app.post("/api/corporate-inquiry")
 async def corporate_inquiry(
