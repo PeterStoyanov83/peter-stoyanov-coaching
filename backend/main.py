@@ -4112,6 +4112,23 @@ async def test_process_emails():
     except Exception as e:
         return {"success": False, "error": f"Failed to process emails: {str(e)}"}
 
+@app.post("/api/test-enrollment")
+def test_enrollment(db: Session = Depends(get_db)):
+    """Test endpoint to enroll in test mode (minutes instead of days)"""
+    try:
+        result = auto_enroll_subscriber(
+            db, 
+            "peterstoyanov83@gmail.com",
+            "Peter Stoyanov Test",
+            "lead_magnet",
+            "en",
+            {"test_mode": True},
+            test_mode=True
+        )
+        return result
+    except Exception as e:
+        return {"success": False, "error": f"Test enrollment failed: {str(e)}"}
+
 @app.get("/api/test-email-status")
 def test_email_status(db: Session = Depends(get_db)):
     """Test endpoint to check email status - for testing only"""
@@ -4172,6 +4189,32 @@ def test_email_status(db: Session = Depends(get_db)):
     except Exception as e:
         return {"success": False, "error": f"Failed to get email status: {str(e)}"}
 
+@app.post("/api/test-mailerlite-direct")
+def test_mailerlite_direct():
+    """Test MailerLite API directly to see what's happening"""
+    try:
+        import os
+        from mailerlite import create_and_send_newsletter
+        
+        # Test with a simple email
+        result = create_and_send_newsletter(
+            subject="Test Email - Thank You!",
+            content="<h1>Test Email</h1><p>This is a test email to check MailerLite integration.</p>",
+            from_name="Peter Stoyanov"
+        )
+        
+        return {
+            "success": True,
+            "api_key_exists": bool(os.getenv("MAILERLITE_API_KEY")),
+            "mailerlite_result": result
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e),
+            "api_key_exists": bool(os.getenv("MAILERLITE_API_KEY"))
+        }
+
 # Update existing subscribers endpoint to use new database functions
 @app.get("/admin/subscribers")
 def get_subscribers(
@@ -4219,7 +4262,7 @@ def get_sequence_analytics_endpoint(
 
 
 # MailerLite Webhook Endpoints
-@app.post("/webhooks/mailerlite")
+@app.post("/api/webhooks/mailerlite")
 async def mailerlite_webhook(request: Request):
     """Handle MailerLite webhook events"""
     try:
@@ -4259,13 +4302,13 @@ async def mailerlite_webhook(request: Request):
         raise HTTPException(status_code=500, detail=f"Webhook processing failed: {str(e)}")
 
 
-@app.get("/webhooks/mailerlite/verify")
+@app.get("/api/webhooks/mailerlite/verify")
 async def verify_mailerlite_webhook():
     """Verification endpoint for MailerLite webhook setup"""
     return {"status": "ok", "message": "MailerLite webhook endpoint is configured correctly"}
 
 
-@app.post("/webhooks/mailerlite/test")
+@app.post("/api/webhooks/mailerlite/test")
 async def test_webhook_locally(
     event_type: str,
     campaign_id: str = "test-campaign-123",
@@ -4336,6 +4379,97 @@ async def test_webhook_locally(
         }
         
     except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Test webhook failed: {str(e)}")
+
+
+# Mailgun Webhook Endpoints
+@app.post("/api/webhooks/mailgun")
+async def mailgun_webhook(request: Request):
+    """Handle Mailgun webhook events"""
+    try:
+        from mailgun_webhook_handlers import process_mailgun_webhook, verify_mailgun_signature
+        
+        # Get webhook secret from environment
+        webhook_secret = os.getenv("MAILGUN_WEBHOOK_SECRET", "")
+        
+        # Get request data
+        payload = await request.body()
+        form_data = await request.form()
+        
+        # Mailgun sends data as form-encoded
+        event_data = {}
+        for key, value in form_data.items():
+            event_data[key] = value
+        
+        # Verify webhook signature for security
+        token = event_data.get('token', '')
+        timestamp = event_data.get('timestamp', '')
+        signature = event_data.get('signature', '')
+        
+        if webhook_secret and not verify_mailgun_signature(token, timestamp, signature, webhook_secret):
+            raise HTTPException(status_code=401, detail="Invalid webhook signature")
+        
+        logger.info(f"📧 Mailgun webhook received: {event_data.get('event', 'unknown')}")
+        
+        # Process the webhook event
+        result = process_mailgun_webhook(event_data)
+        
+        return {
+            "status": "received",
+            "event_type": event_data.get('event'),
+            "result": result
+        }
+        
+    except Exception as e:
+        logger.error(f"Error processing Mailgun webhook: {e}")
+        raise HTTPException(status_code=500, detail=f"Webhook processing failed: {str(e)}")
+
+
+@app.get("/api/webhooks/mailgun/verify")
+async def verify_mailgun_webhook():
+    """Verification endpoint for Mailgun webhook setup"""
+    return {"status": "ok", "message": "Mailgun webhook endpoint is configured correctly"}
+
+
+@app.post("/api/webhooks/mailgun/test")
+async def test_mailgun_webhook_locally(
+    event_type: str,
+    message_id: str = "test-message-123",
+    recipient_email: str = "test@example.com"
+):
+    """Test Mailgun webhook processing locally"""
+    try:
+        from mailgun_webhook_handlers import process_mailgun_webhook
+        
+        # Create test event data
+        test_event = {
+            "event": event_type,
+            "timestamp": int(datetime.utcnow().timestamp()),
+            "recipient": recipient_email,
+            "message": {
+                "headers": {
+                    "message-id": message_id
+                }
+            }
+        }
+        
+        if event_type == "clicked":
+            test_event["url"] = "https://example.com/test-link"
+        elif event_type == "bounced":
+            test_event["reason"] = "Test bounce reason"
+        
+        # Process the test webhook event
+        result = process_mailgun_webhook(test_event)
+        
+        return {
+            "status": "success",
+            "message": f"Test {event_type} webhook processed successfully",
+            "test_event": test_event,
+            "result": result
+        }
+        
+    except Exception as e:
+        logger.error(f"Error in test Mailgun webhook: {e}")
         raise HTTPException(status_code=500, detail=f"Test webhook failed: {str(e)}")
 
 

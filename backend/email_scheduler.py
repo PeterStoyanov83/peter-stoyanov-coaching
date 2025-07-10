@@ -13,7 +13,7 @@ from sqlalchemy.orm import sessionmaker
 from database import get_db_url
 from models import ScheduledEmail, SequenceEnrollment, SequenceEmail, EmailSubscriber
 from sequence_automation import get_emails_to_send, mark_email_as_sent, get_failed_emails_for_retry
-from mailerlite import create_and_send_newsletter
+from mailgun_service import create_and_send_newsletter, send_individual_email
 from email_sequences import get_sequence_by_type_and_language
 
 # Set up logging
@@ -105,26 +105,17 @@ class EmailScheduler:
                 subscriber.custom_fields or {}
             )
             
-            # Ensure subscriber is in MailerLite and add to campaign group
-            from mailerlite import ensure_subscriber_in_campaign_group
-            
-            # Add subscriber to campaign group if not already there
-            ensure_subscriber_in_campaign_group(
-                email=subscriber.email,
-                name=subscriber.name or "Friend"
-            )
-            
-            # Send via MailerLite campaign
-            result = create_and_send_newsletter(
+            # Send individual email via Mailgun
+            result = send_individual_email(
+                to_email=subscriber.email,
                 subject=sequence_email.subject,
                 content=personalized_content,
-                group_ids=None,  # Will use default group
                 from_name="Peter Stoyanov"
             )
             
             if result.get("success"):
-                campaign_id = result.get("campaign_id")
-                mark_email_as_sent(db, scheduled_email, campaign_id=str(campaign_id))
+                message_id = result.get("message_id", result.get("campaign_id", ""))
+                mark_email_as_sent(db, scheduled_email, campaign_id=str(message_id))
                 logger.info(f"Email sent successfully: {scheduled_email.id}")
             else:
                 error_msg = result.get("error", "Unknown error")

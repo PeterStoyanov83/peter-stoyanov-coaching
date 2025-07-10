@@ -15,6 +15,12 @@ services:
           property: connectionString
       - key: MAILERLITE_API_KEY
         sync: false
+      - key: MAILGUN_API_KEY
+        sync: false
+      - key: MAILGUN_DOMAIN
+        sync: false
+      - key: MAILGUN_WEBHOOK_SECRET
+        sync: false
       - key: JWT_SECRET_KEY
         sync: false
       - key: ADMIN_PASSWORD
@@ -38,4 +44,10 @@ databases:
           name: peter-stoyanov-db
           property: connectionString
       - key: MAILERLITE_API_KEY
+        sync: false
+      - key: MAILGUN_API_KEY
+        sync: false
+      - key: MAILGUN_DOMAIN
+        sync: false
+      - key: MAILGUN_WEBHOOK_SECRET
         sync: false

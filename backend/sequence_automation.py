@@ -91,7 +91,7 @@ def create_or_get_sequence(db: Session, sequence_type: str, language: str = "en"
 
 
 def enroll_subscriber_in_sequence(db: Session, subscriber: EmailSubscriber, 
-                                 sequence_type: str, language: str = None) -> SequenceEnrollment:
+                                 sequence_type: str, language: str = None, test_mode: bool = False) -> SequenceEnrollment:
     """Enroll subscriber in an email sequence"""
     if language is None:
         language = subscriber.language
@@ -122,13 +122,19 @@ def enroll_subscriber_in_sequence(db: Session, subscriber: EmailSubscriber,
     db.refresh(enrollment)
     
     # Schedule all emails for this enrollment
-    schedule_sequence_emails(db, enrollment)
+    schedule_sequence_emails(db, enrollment, test_mode)
     
     return enrollment
 
 
-def schedule_sequence_emails(db: Session, enrollment: SequenceEnrollment):
-    """Schedule all emails for a sequence enrollment"""
+def schedule_sequence_emails(db: Session, enrollment: SequenceEnrollment, test_mode: bool = False):
+    """Schedule all emails for a sequence enrollment
+    
+    Args:
+        db: Database session
+        enrollment: The sequence enrollment
+        test_mode: If True, converts days to minutes for testing
+    """
     # Get sequence emails
     sequence_emails = db.query(SequenceEmail).filter(
         SequenceEmail.sequence_id == enrollment.sequence_id
@@ -138,7 +144,12 @@ def schedule_sequence_emails(db: Session, enrollment: SequenceEnrollment):
     
     for email in sequence_emails:
         # Calculate when this email should be sent
-        send_date = base_date + timedelta(days=email.delay_days)
+        if test_mode:
+            # Convert days to minutes for testing
+            send_date = base_date + timedelta(minutes=email.delay_days)
+        else:
+            # Normal operation: use days
+            send_date = base_date + timedelta(days=email.delay_days)
         
         # Create scheduled email
         scheduled_email = ScheduledEmail(
@@ -410,7 +421,7 @@ def schedule_remaining_emails(db: Session, enrollment: SequenceEnrollment):
 
 def auto_enroll_subscriber(db: Session, email: str, name: str = None, 
                          source: str = "lead_magnet", language: str = "en", 
-                         custom_fields: Dict = None) -> Dict[str, Any]:
+                         custom_fields: Dict = None, test_mode: bool = False) -> Dict[str, Any]:
     """Automatically enroll subscriber in appropriate sequence"""
     try:
         # Create or get subscriber
@@ -419,7 +430,7 @@ def auto_enroll_subscriber(db: Session, email: str, name: str = None,
         )
         
         # Enroll in appropriate sequence
-        enrollment = enroll_subscriber_in_sequence(db, subscriber, source, language)
+        enrollment = enroll_subscriber_in_sequence(db, subscriber, source, language, test_mode)
         
         return {
             "success": True,
@@ -427,7 +438,8 @@ def auto_enroll_subscriber(db: Session, email: str, name: str = None,
             "enrollment_id": enrollment.id,
             "sequence_type": source,
             "language": language,
-            "message": f"Subscriber {email} enrolled in {source} sequence"
+            "message": f"Subscriber {email} enrolled in {source} sequence",
+            "test_mode": test_mode
         }
         
     except Exception as e:

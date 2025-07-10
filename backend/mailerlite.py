@@ -687,7 +687,15 @@ def create_and_send_newsletter(subject: str, content: str, group_ids: list = Non
     try:
         # Try to create and send the campaign via MailerLite
         campaign = create_newsletter_campaign(subject, content, group_ids, from_name)
-        campaign_id = campaign["id"]
+        
+        # Handle different response formats - campaign ID might be in data.id or just id
+        campaign_id = None
+        if "data" in campaign and "id" in campaign["data"]:
+            campaign_id = campaign["data"]["id"]
+        elif "id" in campaign:
+            campaign_id = campaign["id"]
+        else:
+            raise Exception("Campaign ID not found in response")
         
         # Send the campaign
         send_result = send_newsletter_campaign(campaign_id)
