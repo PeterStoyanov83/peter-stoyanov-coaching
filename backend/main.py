@@ -51,6 +51,7 @@ app.add_middleware(
         "https://peter-stoyanov.com",
         "https://www.peter-stoyanov.com",
         "https://peter-stoyanov-coaching.onrender.com",
+        "https://peter-stoyanov-backend.onrender.com",
         "http://localhost:3000",  # For local development
     ],
     allow_credentials=True,
