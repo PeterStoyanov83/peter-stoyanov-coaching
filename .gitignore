@@ -2,6 +2,9 @@
 frontend/node_modules/
 backend/venv/
 backend/__pycache__/
+**/__pycache__/
+**/*.pyc
+**/*.pyo
 
 # Environment variables
 .env
@@ -13,6 +16,8 @@ backend/__pycache__/
 # Next.js build output
 frontend/.next/
 frontend/out/
+**/*.pack.gz
+**/*.pack.gz.old
 
 # Database
 backend/*.db
