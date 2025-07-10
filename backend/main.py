@@ -200,34 +200,37 @@ async def download_guide(
     - Auto-enroll in lead magnet sequence
     - Return download URL
     """
-    
-    # Store in database (tracks download count for returning users)
-    download_record = store_lead_magnet_download(db, request.email)
-    
-    # Determine language (could be from frontend or IP geolocation)
-    language = "en"  # Default to English, can be enhanced later
-    
-    # Auto-enroll in lead magnet sequence
-    background_tasks.add_task(
-        auto_enroll_subscriber,
-        db,
-        request.email,
-        "",  # Name not provided in lead magnet form
-        "lead_magnet",
-        language,
-        {
-            "guide": "5_theater_secrets",
-            "download_count": download_record.download_count
+    try:
+        # Store in database (tracks download count for returning users)
+        download_record = store_lead_magnet_download(db, request.email)
+        
+        # Determine language (could be from frontend or IP geolocation)
+        language = "en"  # Default to English, can be enhanced later
+        
+        # Auto-enroll in lead magnet sequence
+        background_tasks.add_task(
+            auto_enroll_subscriber,
+            db,
+            request.email,
+            "",  # Name not provided in lead magnet form
+            "lead_magnet",
+            language,
+            {
+                "guide": "5_theater_secrets",
+                "download_count": download_record.download_count
+            }
+        )
+        
+        # Return success response with download URL
+        return {
+            "success": True,
+            "message": "Thank you! Your guide is ready for download.",
+            "downloadUrl": "/guides/5-theater-secrets-guide.pdf",
+            "isReturningUser": download_record.download_count > 1
         }
-    )
-    
-    # Return success response with download URL
-    return {
-        "success": True,
-        "message": "Thank you! Your guide is ready for download.",
-        "downloadUrl": "/guides/5-theater-secrets-guide.pdf",
-        "isReturningUser": download_record.download_count > 1
-    }
+    except Exception as e:
+        print(f"Error in download_guide: {e}")
+        raise HTTPException(status_code=500, detail=f"Download failed: {str(e)}")
 
 @app.get("/api/posts")
 def api_get_blog_posts(published_only: bool = True, skip: int = 0, limit: int = 100, language: str = "en", db = Depends(get_db)):
