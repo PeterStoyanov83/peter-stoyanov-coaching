@@ -93,6 +93,9 @@ async def register_waitlist(
     db = Depends(get_db)
 ):
     try:
+        # Check if email already exists
+        from sqlalchemy.exc import IntegrityError
+        
         # Create model instance
         reg_model = WaitlistRegistration(
             full_name=registration.full_name,
@@ -106,7 +109,19 @@ async def register_waitlist(
         # Determine language (could be from frontend or IP geolocation)
         language = "en"  # Default to English, can be enhanced later
         
-        # Auto-enroll in sequence (this will also handle MailerLite)
+        # Store in database first to catch duplicate email
+        try:
+            store_waitlist_registration(db, reg_model)
+        except IntegrityError as e:
+            if "duplicate key" in str(e) and "email" in str(e):
+                # Email already exists - return success to avoid user confusion
+                print(f"Email {registration.email} already registered in waitlist")
+                return {"status": "success", "message": "Thank you! You're already on our waitlist."}
+            else:
+                # Re-raise if it's a different integrity error
+                raise e
+        
+        # Auto-enroll in sequence only if registration was successful
         background_tasks.add_task(
             auto_enroll_subscriber,
             db,
@@ -121,9 +136,6 @@ async def register_waitlist(
                 "skills_to_improve": registration.skills_to_improve
             }
         )
-        
-        # Store in database
-        store_waitlist_registration(db, reg_model)
         
         return {"status": "success", "message": "Registration successful"}
     except Exception as e:
