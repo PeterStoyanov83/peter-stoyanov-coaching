@@ -296,8 +296,8 @@ class EmailSchedulerService:
 async def process_emails_once():
     """Process emails once (for testing or manual triggers)"""
     scheduler = EmailScheduler()
-    await scheduler.process_scheduled_emails()
-    await scheduler.retry_failed_emails()
+    scheduler.process_scheduled_emails()
+    scheduler.retry_failed_emails()
 
 
 # CLI interface for running the scheduler
