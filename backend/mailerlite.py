@@ -571,7 +571,7 @@ def create_newsletter_campaign(subject: str, content: str, group_ids: list = Non
         "emails": [{
             "subject": subject,
             "from_name": from_name,
-            "from": "peter@peterstoyanov-pepe.com",  # Use the actual domain from the site
+            "from": "peterstoyanov83@gmail.com",  # Use verified sender email
             "content": content
         }]
     }
@@ -707,7 +707,7 @@ def create_and_send_newsletter(subject: str, content: str, group_ids: list = Non
             print(f"\n{'='*60}")
             print(f"📧 EMAIL READY TO SEND (Domain verification required)")
             print(f"{'='*60}")
-            print(f"From: {from_name} <peter@peterstoyanov-pepe.com>")
+            print(f"From: {from_name} <peterstoyanov83@gmail.com>")
             print(f"Subject: {subject}")
             print(f"Content: {content[:200]}...")
             print(f"{'='*60}\n")
