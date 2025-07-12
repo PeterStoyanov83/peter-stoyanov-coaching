@@ -6306,8 +6306,8 @@ def get_subscriber_details(
                 "sequence_name": sequence.name if sequence else "Unknown",
                 "sequence_type": sequence.sequence_type if sequence else "Unknown",
                 "status": enrollment.status,
-                "enrolled_at": enrollment.enrolled_at.isoformat(),
-                "completed_at": enrollment.completed_at.isoformat() if enrollment.completed_at else None,
+                "enrolled_at": enrollment.enrollment_date.isoformat(),
+                "completed_at": enrollment.completion_date.isoformat() if enrollment.completion_date else None,
                 "current_email_index": enrollment.current_email_index
             })
         
