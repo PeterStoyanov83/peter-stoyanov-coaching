@@ -206,19 +206,23 @@ async def download_guide(
         # Determine language (could be from frontend or IP geolocation)
         language = "en"  # Default to English, can be enhanced later
         
-        # Auto-enroll in lead magnet sequence
-        background_tasks.add_task(
-            auto_enroll_subscriber,
-            db,
-            request.email,
-            "",  # Name not provided in lead magnet form
-            "lead_magnet",
-            language,
-            {
-                "guide": "5_theater_secrets",
-                "download_count": download_record.download_count
-            }
-        )
+        # Auto-enroll in lead magnet sequence (sync for debugging)
+        try:
+            enrollment_result = auto_enroll_subscriber(
+                db,
+                request.email,
+                "",  # Name not provided in lead magnet form
+                "lead_magnet",
+                language,
+                {
+                    "guide": "5_theater_secrets",
+                    "download_count": download_record.download_count
+                }
+            )
+            print(f"Enrollment result: {enrollment_result}")
+        except Exception as enrollment_error:
+            print(f"Enrollment failed: {enrollment_error}")
+            # Continue anyway to provide download
         
         # Return success response with download URL
         return {
