@@ -13,7 +13,8 @@ from auth import admin_required, auth_service
 from models import (
     WaitlistRegistration, CorporateInquiry, LeadMagnetDownload, EmailLog,
     WaitlistRegistrationResponse, CorporateInquiryResponse, LeadMagnetResponse,
-    EmailLogResponse
+    EmailLogResponse, BlogPost, MultilingualBlogPost, BlogPostResponse, 
+    BlogPostListResponse, MultilingualBlogPostPublicResponse
 )
 from email_service import sendgrid_service
 
@@ -47,6 +48,41 @@ class ManualEmailRequest(BaseModel):
     subscriber_type: str  # "waitlist", "corporate", "lead_magnet"
     subject: str
     html_content: str
+
+class BlogPostCreate(BaseModel):
+    slug: str
+    title: str
+    excerpt: str
+    content: str
+    featured_image: Optional[str] = None
+    tags: Optional[List[str]] = None
+    language: str = "en"
+    translation_id: Optional[str] = None
+    is_published: bool = False
+
+class BlogPostUpdate(BaseModel):
+    slug: Optional[str] = None
+    title: Optional[str] = None
+    excerpt: Optional[str] = None
+    content: Optional[str] = None
+    featured_image: Optional[str] = None
+    tags: Optional[List[str]] = None
+    is_published: Optional[bool] = None
+
+class MultilingualBlogPostCreate(BaseModel):
+    slug_en: str
+    slug_bg: str
+    title_en: str
+    title_bg: str
+    excerpt_en: str
+    excerpt_bg: str
+    content_en: str
+    content_bg: str
+    tags_en: Optional[List[str]] = None
+    tags_bg: Optional[List[str]] = None
+    featured_image: Optional[str] = None
+    is_published_en: bool = False
+    is_published_bg: bool = False
 
 # Authentication endpoints
 @router.post("/login", response_model=AdminLoginResponse)
@@ -617,4 +653,314 @@ async def send_manual_email(
     return {
         "message": f"Manual email queued for {len(email_request.subscriber_ids)} subscribers",
         "recipient_count": len(email_request.subscriber_ids)
+    }
+
+# Blog Post Management
+@router.get("/blog-posts", response_model=List[BlogPostListResponse])
+async def get_blog_posts_admin(
+    skip: int = 0,
+    limit: int = 50,
+    language: Optional[str] = None,
+    current_admin: dict = Depends(admin_required),
+    db: Session = Depends(get_db)
+):
+    """Get all blog posts for admin management"""
+    query = db.query(BlogPost)
+    
+    if language:
+        query = query.filter(BlogPost.language == language)
+    
+    posts = query.order_by(desc(BlogPost.created_at)).offset(skip).limit(limit).all()
+    return posts
+
+@router.get("/blog-posts/{post_id}", response_model=BlogPostResponse)
+async def get_blog_post_admin(
+    post_id: int,
+    current_admin: dict = Depends(admin_required),
+    db: Session = Depends(get_db)
+):
+    """Get specific blog post for editing"""
+    post = db.query(BlogPost).filter(BlogPost.id == post_id).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="Blog post not found")
+    return post
+
+@router.post("/blog-posts", response_model=BlogPostResponse)
+async def create_blog_post(
+    post_data: BlogPostCreate,
+    current_admin: dict = Depends(admin_required),
+    db: Session = Depends(get_db)
+):
+    """Create new blog post"""
+    # Check if slug already exists
+    existing = db.query(BlogPost).filter(BlogPost.slug == post_data.slug).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="Slug already exists")
+    
+    blog_post = BlogPost(
+        slug=post_data.slug,
+        title=post_data.title,
+        excerpt=post_data.excerpt,
+        content=post_data.content,
+        featured_image=post_data.featured_image,
+        tags=post_data.tags,
+        language=post_data.language,
+        translation_id=post_data.translation_id,
+        is_published=post_data.is_published,
+        published_at=datetime.utcnow() if post_data.is_published else None
+    )
+    
+    db.add(blog_post)
+    db.commit()
+    db.refresh(blog_post)
+    
+    return blog_post
+
+@router.put("/blog-posts/{post_id}", response_model=BlogPostResponse)
+async def update_blog_post(
+    post_id: int,
+    post_data: BlogPostUpdate,
+    current_admin: dict = Depends(admin_required),
+    db: Session = Depends(get_db)
+):
+    """Update blog post"""
+    post = db.query(BlogPost).filter(BlogPost.id == post_id).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="Blog post not found")
+    
+    # Check slug uniqueness if changing
+    if post_data.slug and post_data.slug != post.slug:
+        existing = db.query(BlogPost).filter(BlogPost.slug == post_data.slug).first()
+        if existing:
+            raise HTTPException(status_code=400, detail="Slug already exists")
+    
+    # Update fields
+    for field, value in post_data.dict(exclude_unset=True).items():
+        setattr(post, field, value)
+    
+    # Update published_at if publishing
+    if post_data.is_published and not post.published_at:
+        post.published_at = datetime.utcnow()
+    elif post_data.is_published == False:
+        post.published_at = None
+    
+    post.updated_at = datetime.utcnow()
+    db.commit()
+    db.refresh(post)
+    
+    return post
+
+@router.delete("/blog-posts/{post_id}")
+async def delete_blog_post(
+    post_id: int,
+    current_admin: dict = Depends(admin_required),
+    db: Session = Depends(get_db)
+):
+    """Delete blog post"""
+    post = db.query(BlogPost).filter(BlogPost.id == post_id).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="Blog post not found")
+    
+    db.delete(post)
+    db.commit()
+    
+    return {"message": "Blog post deleted successfully"}
+
+# Multilingual Blog Post Management
+@router.get("/multilingual-blog-posts", response_model=List[MultilingualBlogPostPublicResponse])
+async def get_multilingual_blog_posts_admin(
+    skip: int = 0,
+    limit: int = 50,
+    current_admin: dict = Depends(admin_required),
+    db: Session = Depends(get_db)
+):
+    """Get all multilingual blog posts for admin management"""
+    posts = db.query(MultilingualBlogPost).order_by(
+        desc(MultilingualBlogPost.created_at)
+    ).offset(skip).limit(limit).all()
+    
+    # Convert to response format (showing English by default)
+    response_posts = []
+    for post in posts:
+        available_languages = []
+        if post.is_published_en or not post.is_published_bg:  # Show EN if available or as fallback
+            available_languages.append("en")
+        if post.is_published_bg:
+            available_languages.append("bg")
+        
+        response_post = MultilingualBlogPostPublicResponse(
+            id=post.id,
+            slug=post.slug_en,
+            title=post.title_en,
+            excerpt=post.excerpt_en,
+            content=post.content_en,
+            featured_image=post.featured_image,
+            tags=post.tags_en,
+            language="en",
+            available_languages=available_languages,
+            is_published=post.is_published_en,
+            published_at=post.published_at_en,
+            created_at=post.created_at,
+            updated_at=post.updated_at
+        )
+        response_posts.append(response_post)
+    
+    return response_posts
+
+@router.get("/multilingual-blog-posts/{post_id}")
+async def get_multilingual_blog_post_admin(
+    post_id: int,
+    current_admin: dict = Depends(admin_required),
+    db: Session = Depends(get_db)
+):
+    """Get specific multilingual blog post for editing"""
+    post = db.query(MultilingualBlogPost).filter(MultilingualBlogPost.id == post_id).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="Blog post not found")
+    
+    return {
+        "id": post.id,
+        "slug_en": post.slug_en,
+        "slug_bg": post.slug_bg,
+        "title_en": post.title_en,
+        "title_bg": post.title_bg,
+        "excerpt_en": post.excerpt_en,
+        "excerpt_bg": post.excerpt_bg,
+        "content_en": post.content_en,
+        "content_bg": post.content_bg,
+        "tags_en": post.tags_en,
+        "tags_bg": post.tags_bg,
+        "featured_image": post.featured_image,
+        "is_published_en": post.is_published_en,
+        "is_published_bg": post.is_published_bg,
+        "published_at_en": post.published_at_en,
+        "published_at_bg": post.published_at_bg,
+        "created_at": post.created_at,
+        "updated_at": post.updated_at
+    }
+
+@router.post("/multilingual-blog-posts")
+async def create_multilingual_blog_post(
+    post_data: MultilingualBlogPostCreate,
+    current_admin: dict = Depends(admin_required),
+    db: Session = Depends(get_db)
+):
+    """Create new multilingual blog post"""
+    # Check if slugs already exist
+    existing_en = db.query(MultilingualBlogPost).filter(
+        MultilingualBlogPost.slug_en == post_data.slug_en
+    ).first()
+    existing_bg = db.query(MultilingualBlogPost).filter(
+        MultilingualBlogPost.slug_bg == post_data.slug_bg
+    ).first()
+    
+    if existing_en:
+        raise HTTPException(status_code=400, detail="English slug already exists")
+    if existing_bg:
+        raise HTTPException(status_code=400, detail="Bulgarian slug already exists")
+    
+    blog_post = MultilingualBlogPost(
+        slug_en=post_data.slug_en,
+        slug_bg=post_data.slug_bg,
+        title_en=post_data.title_en,
+        title_bg=post_data.title_bg,
+        excerpt_en=post_data.excerpt_en,
+        excerpt_bg=post_data.excerpt_bg,
+        content_en=post_data.content_en,
+        content_bg=post_data.content_bg,
+        tags_en=post_data.tags_en,
+        tags_bg=post_data.tags_bg,
+        featured_image=post_data.featured_image,
+        is_published_en=post_data.is_published_en,
+        is_published_bg=post_data.is_published_bg,
+        published_at_en=datetime.utcnow() if post_data.is_published_en else None,
+        published_at_bg=datetime.utcnow() if post_data.is_published_bg else None
+    )
+    
+    db.add(blog_post)
+    db.commit()
+    db.refresh(blog_post)
+    
+    return {"message": "Multilingual blog post created successfully", "id": blog_post.id}
+
+@router.put("/multilingual-blog-posts/{post_id}")
+async def update_multilingual_blog_post(
+    post_id: int,
+    post_data: dict,
+    current_admin: dict = Depends(admin_required),
+    db: Session = Depends(get_db)
+):
+    """Update multilingual blog post"""
+    post = db.query(MultilingualBlogPost).filter(MultilingualBlogPost.id == post_id).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="Blog post not found")
+    
+    # Update fields
+    for field, value in post_data.items():
+        if hasattr(post, field):
+            setattr(post, field, value)
+    
+    # Update published_at fields
+    if post_data.get('is_published_en') and not post.published_at_en:
+        post.published_at_en = datetime.utcnow()
+    elif post_data.get('is_published_en') == False:
+        post.published_at_en = None
+        
+    if post_data.get('is_published_bg') and not post.published_at_bg:
+        post.published_at_bg = datetime.utcnow()
+    elif post_data.get('is_published_bg') == False:
+        post.published_at_bg = None
+    
+    post.updated_at = datetime.utcnow()
+    db.commit()
+    db.refresh(post)
+    
+    return {"message": "Multilingual blog post updated successfully"}
+
+@router.delete("/multilingual-blog-posts/{post_id}")
+async def delete_multilingual_blog_post(
+    post_id: int,
+    current_admin: dict = Depends(admin_required),
+    db: Session = Depends(get_db)
+):
+    """Delete multilingual blog post"""
+    post = db.query(MultilingualBlogPost).filter(MultilingualBlogPost.id == post_id).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="Blog post not found")
+    
+    db.delete(post)
+    db.commit()
+    
+    return {"message": "Multilingual blog post deleted successfully"}
+
+# Blog statistics
+@router.get("/blog-stats")
+async def get_blog_stats(
+    current_admin: dict = Depends(admin_required),
+    db: Session = Depends(get_db)
+):
+    """Get blog statistics"""
+    total_posts = db.query(BlogPost).count()
+    published_posts = db.query(BlogPost).filter(BlogPost.is_published == True).count()
+    draft_posts = total_posts - published_posts
+    
+    total_multilingual = db.query(MultilingualBlogPost).count()
+    published_en = db.query(MultilingualBlogPost).filter(
+        MultilingualBlogPost.is_published_en == True
+    ).count()
+    published_bg = db.query(MultilingualBlogPost).filter(
+        MultilingualBlogPost.is_published_bg == True
+    ).count()
+    
+    return {
+        "single_language_posts": {
+            "total": total_posts,
+            "published": published_posts,
+            "drafts": draft_posts
+        },
+        "multilingual_posts": {
+            "total": total_multilingual,
+            "published_en": published_en,
+            "published_bg": published_bg
+        }
     }

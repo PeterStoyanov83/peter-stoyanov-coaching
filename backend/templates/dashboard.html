@@ -372,6 +372,38 @@
             </div>
         </div>
 
+        <!-- Blog Post Management -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Blog Post Management</h2>
+                <div>
+                    <button class="btn btn-primary" onclick="showCreatePostModal()">New Post</button>
+                </div>
+            </div>
+            <div class="section-content">
+                <div id="blog-stats" style="margin-bottom: 20px;">
+                    <div class="loading">Loading blog statistics...</div>
+                </div>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="switchBlogTab('single')">Single Language</div>
+                    <div class="tab" onclick="switchBlogTab('multilingual')">Multilingual</div>
+                </div>
+
+                <div id="single-blog-content" class="tab-content active">
+                    <div id="single-blog-posts">
+                        <div class="loading">Loading blog posts...</div>
+                    </div>
+                </div>
+
+                <div id="multilingual-blog-content" class="tab-content">
+                    <div id="multilingual-blog-posts">
+                        <div class="loading">Loading multilingual blog posts...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Recent Emails -->
         <div class="section">
             <div class="section-header">
@@ -407,6 +439,8 @@
             await loadDashboardStats();
             await loadSequenceStatus();
             await loadSubscribers('waitlist');
+            await loadBlogStats();
+            await loadBlogPosts('single');
             await loadRecentEmails();
         });
 
@@ -701,6 +735,179 @@
             } catch (error) {
                 console.error('Error exporting subscribers:', error);
                 alert('Error exporting subscribers');
+            }
+        }
+
+        // Blog management functions
+        async function loadBlogStats() {
+            try {
+                const response = await fetch('/admin/blog-stats', {
+                    headers: getAuthHeaders()
+                });
+
+                if (!response.ok) {
+                    handleApiError(response);
+                    return;
+                }
+
+                const stats = await response.json();
+                
+                let html = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div style="background: #f7fafc; padding: 15px; border-radius: 8px; text-align: center;">
+                            <h4 style="margin: 0 0 8px 0; color: #4a5568;">Single Language Posts</h4>
+                            <div style="font-size: 24px; font-weight: bold; color: #2d3748;">${stats.single_language_posts.total}</div>
+                            <div style="font-size: 12px; color: #718096;">Published: ${stats.single_language_posts.published} | Drafts: ${stats.single_language_posts.drafts}</div>
+                        </div>
+                        <div style="background: #f7fafc; padding: 15px; border-radius: 8px; text-align: center;">
+                            <h4 style="margin: 0 0 8px 0; color: #4a5568;">Multilingual Posts</h4>
+                            <div style="font-size: 24px; font-weight: bold; color: #2d3748;">${stats.multilingual_posts.total}</div>
+                            <div style="font-size: 12px; color: #718096;">EN: ${stats.multilingual_posts.published_en} | BG: ${stats.multilingual_posts.published_bg}</div>
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('blog-stats').innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error loading blog stats:', error);
+                document.getElementById('blog-stats').innerHTML = 
+                    '<div class="error">Error loading blog statistics</div>';
+            }
+        }
+
+        async function loadBlogPosts(type) {
+            const endpoint = type === 'single' ? 'blog-posts' : 'multilingual-blog-posts';
+            const containerId = type === 'single' ? 'single-blog-posts' : 'multilingual-blog-posts';
+            
+            try {
+                const response = await fetch(`/admin/${endpoint}`, {
+                    headers: getAuthHeaders()
+                });
+
+                if (!response.ok) {
+                    handleApiError(response);
+                    return;
+                }
+
+                const posts = await response.json();
+                
+                if (posts.length === 0) {
+                    document.getElementById(containerId).innerHTML = 
+                        '<p style="text-align: center; color: #718096; padding: 40px;">No blog posts found</p>';
+                    return;
+                }
+
+                let html = '<table class="table"><thead><tr>';
+                
+                if (type === 'single') {
+                    html += '<th>Title</th><th>Slug</th><th>Language</th><th>Status</th><th>Created</th><th>Actions</th>';
+                } else {
+                    html += '<th>Title (EN)</th><th>Slug (EN)</th><th>Status EN/BG</th><th>Created</th><th>Actions</th>';
+                }
+                
+                html += '</tr></thead><tbody>';
+                
+                posts.forEach(post => {
+                    html += '<tr>';
+                    
+                    if (type === 'single') {
+                        html += `
+                            <td>${post.title}</td>
+                            <td>${post.slug}</td>
+                            <td>${post.language}</td>
+                            <td><span class="badge ${post.is_published ? 'badge-success' : 'badge-warning'}">${post.is_published ? 'Published' : 'Draft'}</span></td>
+                            <td>${new Date(post.created_at).toLocaleDateString()}</td>
+                            <td>
+                                <button class="btn btn-secondary" style="font-size: 12px; padding: 4px 8px;" onclick="editPost(${post.id}, 'single')">Edit</button>
+                                <button class="btn btn-danger" style="font-size: 12px; padding: 4px 8px;" onclick="deletePost(${post.id}, 'single')">Delete</button>
+                            </td>
+                        `;
+                    } else {
+                        const statusEN = post.is_published ? 'Published' : 'Draft';
+                        const statusBG = post.available_languages.includes('bg') ? 'Published' : 'Draft';
+                        html += `
+                            <td>${post.title}</td>
+                            <td>${post.slug}</td>
+                            <td>
+                                <span class="badge ${post.is_published ? 'badge-success' : 'badge-warning'}">${statusEN}</span>
+                                <span class="badge ${statusBG === 'Published' ? 'badge-success' : 'badge-warning'}">${statusBG}</span>
+                            </td>
+                            <td>${new Date(post.created_at).toLocaleDateString()}</td>
+                            <td>
+                                <button class="btn btn-secondary" style="font-size: 12px; padding: 4px 8px;" onclick="editPost(${post.id}, 'multilingual')">Edit</button>
+                                <button class="btn btn-danger" style="font-size: 12px; padding: 4px 8px;" onclick="deletePost(${post.id}, 'multilingual')">Delete</button>
+                            </td>
+                        `;
+                    }
+                    
+                    html += '</tr>';
+                });
+                
+                html += '</tbody></table>';
+                document.getElementById(containerId).innerHTML = html;
+                
+            } catch (error) {
+                console.error(`Error loading ${type} blog posts:`, error);
+                document.getElementById(containerId).innerHTML = 
+                    '<div class="error">Error loading blog posts</div>';
+            }
+        }
+
+        // Blog tab switching
+        function switchBlogTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                if (tab.textContent.includes('Language')) {
+                    tab.classList.remove('active');
+                }
+            });
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.getElementById('single-blog-content').classList.remove('active');
+            document.getElementById('multilingual-blog-content').classList.remove('active');
+            
+            if (tabName === 'single') {
+                document.getElementById('single-blog-content').classList.add('active');
+                loadBlogPosts('single');
+            } else {
+                document.getElementById('multilingual-blog-content').classList.add('active');
+                loadBlogPosts('multilingual');
+            }
+        }
+
+        // Blog post management functions
+        function showCreatePostModal() {
+            alert('Blog post creation interface coming soon! For now, use the API endpoints at /docs');
+        }
+
+        function editPost(postId, type) {
+            alert(`Edit ${type} post ${postId} - Interface coming soon! For now, use the API endpoints at /docs`);
+        }
+
+        async function deletePost(postId, type) {
+            if (!confirm('Are you sure you want to delete this blog post?')) {
+                return;
+            }
+
+            try {
+                const endpoint = type === 'single' ? 'blog-posts' : 'multilingual-blog-posts';
+                const response = await fetch(`/admin/${endpoint}/${postId}`, {
+                    method: 'DELETE',
+                    headers: getAuthHeaders()
+                });
+
+                if (response.ok) {
+                    alert('Blog post deleted successfully');
+                    await loadBlogPosts(type);
+                    await loadBlogStats();
+                } else {
+                    alert('Error deleting blog post');
+                }
+            } catch (error) {
+                console.error('Error deleting blog post:', error);
+                alert('Error deleting blog post');
             }
         }
 
