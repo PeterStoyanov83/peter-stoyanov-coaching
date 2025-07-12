@@ -17,7 +17,7 @@ import uuid
 
 from models import (WaitlistRegistration, CorporateInquiry, LeadMagnetDownload, BlogPost, BlogPostRequest, BlogPostResponse, BlogPostListResponse,
                    MultilingualBlogPost, MultilingualBlogPostRequest, MultilingualBlogPostUpdateRequest, MultilingualBlogPostResponse, MultilingualBlogPostPublicResponse,
-                   EmailSubscriber, SequenceEnrollment, SequenceEmail)
+                   EmailSubscriber, SequenceEnrollment, SequenceEmail, EmailSequence, EmailAnalytics, ScheduledEmail)
 from database import (get_db, store_waitlist_registration, store_corporate_inquiry, store_lead_magnet_download,
                      create_blog_post, get_blog_posts, get_blog_post_by_id, get_blog_post_by_slug, 
                      update_blog_post, delete_blog_post, search_blog_posts, get_post_translations, 
@@ -4945,6 +4945,53 @@ def get_system_status(
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to get system status: {str(e)}")
+
+
+@app.post("/admin/cleanup/database")
+def cleanup_database(
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Clean all database records (emergency cleanup)"""
+    try:
+        # Delete in correct order to avoid foreign key conflicts
+        tables_to_clean = [
+            ("EmailAnalytics", EmailAnalytics),
+            ("ScheduledEmail", ScheduledEmail),
+            ("SequenceEnrollment", SequenceEnrollment),
+            ("SequenceEmail", SequenceEmail),
+            ("EmailSequence", EmailSequence),
+            ("EmailSubscriber", EmailSubscriber),
+            ("LeadMagnetDownload", LeadMagnetDownload),
+            ("WaitlistRegistration", WaitlistRegistration),
+            ("CorporateInquiry", CorporateInquiry)
+        ]
+        
+        total_deleted = 0
+        deletion_summary = {}
+        
+        for table_name, model_class in tables_to_clean:
+            count = db.query(model_class).count()
+            if count > 0:
+                deleted = db.query(model_class).delete()
+                deletion_summary[table_name] = deleted
+                total_deleted += deleted
+            else:
+                deletion_summary[table_name] = 0
+        
+        # Commit all deletions
+        db.commit()
+        
+        return {
+            "success": True,
+            "message": f"Database cleanup completed. Total records deleted: {total_deleted}",
+            "deleted_records": deletion_summary,
+            "total_deleted": total_deleted
+        }
+        
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Database cleanup failed: {str(e)}")
 
 
 if __name__ == "__main__":
