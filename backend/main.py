@@ -25,6 +25,22 @@ app = FastAPI(title="Peter Stoyanov Coaching API", description="Clean API for co
 # Include admin routes
 app.include_router(admin_router)
 
+# Initialize database on startup
+@app.on_event("startup")
+async def startup_event():
+    """Initialize database tables on startup"""
+    try:
+        from models import Base
+        from database import engine
+        
+        # Create all tables if they don't exist
+        Base.metadata.create_all(bind=engine)
+        logger.info("✅ Database tables initialized successfully")
+        
+    except Exception as e:
+        logger.error(f"❌ Database initialization failed: {e}")
+        # Don't fail startup, just log the error
+
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
