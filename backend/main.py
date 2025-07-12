@@ -1274,6 +1274,20 @@ def admin_dashboard():
             .card-title { font-size: 18px; font-weight: 600; color: #1f2937; }
             .card-body { padding: 20px; }
             
+            /* Data Tables */
+            .table-container { overflow-x: auto; margin: 20px 0; }
+            .data-table { width: 100%; border-collapse: collapse; }
+            .data-table th, .data-table td { padding: 12px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+            .data-table th { background: #f9fafb; font-weight: 600; color: #374151; }
+            .data-table tr:hover { background: #f9fafb; }
+            .btn-small { padding: 4px 8px; margin: 0 2px; font-size: 12px; border: none; border-radius: 4px; cursor: pointer; }
+            .btn-primary { background: #3b82f6; color: white; }
+            .btn-danger { background: #ef4444; color: white; }
+            .btn-small:hover { opacity: 0.8; }
+            .status-pending { background: #fef3c7; color: #92400e; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+            .status-contacted { background: #dbeafe; color: #1e40af; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+            .status-completed { background: #d1fae5; color: #065f46; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+            
             /* Stats Grid */
             .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
             .stat-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
@@ -1606,6 +1620,30 @@ def admin_dashboard():
                         <div class="nav-item" onclick="showTab('performance')">
                             <span class="nav-icon">📈</span>
                             <span class="nav-text">Performance</span>
+                        </div>
+                    </div>
+                    
+                    <div class="nav-section">
+                        <div class="nav-section-title">Data Management</div>
+                        <div class="nav-item" onclick="showTab('lead-management')">
+                            <span class="nav-icon">📧</span>
+                            <span class="nav-text">Lead Management</span>
+                        </div>
+                        <div class="nav-item" onclick="showTab('waitlist-management')">
+                            <span class="nav-icon">👥</span>
+                            <span class="nav-text">Waitlist Management</span>
+                        </div>
+                        <div class="nav-item" onclick="showTab('corporate-management')">
+                            <span class="nav-icon">🏢</span>
+                            <span class="nav-text">Corporate Inquiries</span>
+                        </div>
+                        <div class="nav-item" onclick="showTab('email-editor')">
+                            <span class="nav-icon">✉️</span>
+                            <span class="nav-text">Email Sequences Editor</span>
+                        </div>
+                        <div class="nav-item" onclick="showTab('email-scheduler')">
+                            <span class="nav-icon">📅</span>
+                            <span class="nav-text">Email Scheduler</span>
                         </div>
                     </div>
                     
@@ -2433,6 +2471,11 @@ def admin_dashboard():
                     'sequence-analytics': { title: 'Sequence Analytics', subtitle: 'Track performance of automated email sequences' },
                     'leads': { title: 'Leads & Contacts', subtitle: 'Manage customer inquiries and contacts' },
                     'performance': { title: 'Performance', subtitle: 'Analytics and performance metrics' },
+                    'lead-management': { title: 'Lead Management', subtitle: 'View, edit, and delete lead magnet downloads' },
+                    'waitlist-management': { title: 'Waitlist Management', subtitle: 'View, edit, and delete waitlist registrations' },
+                    'corporate-management': { title: 'Corporate Inquiries', subtitle: 'View, edit, and manage corporate inquiries' },
+                    'email-editor': { title: 'Email Sequences Editor', subtitle: 'Edit email sequence content and templates' },
+                    'email-scheduler': { title: 'Email Scheduler', subtitle: 'Manage scheduled emails and automation' },
                     'profile': { title: 'Profile Settings', subtitle: 'Manage your account settings' },
                     'system': { title: 'System Settings', subtitle: 'Configure system preferences' }
                 };
@@ -2470,6 +2513,16 @@ def admin_dashboard():
                     const template = document.getElementById('sequence-analytics-template');
                     mainContentArea.innerHTML = template.innerHTML;
                     loadSequenceAnalytics();
+                } else if (tabName === 'lead-management') {
+                    loadLeadManagement();
+                } else if (tabName === 'waitlist-management') {
+                    loadWaitlistManagement();
+                } else if (tabName === 'corporate-management') {
+                    loadCorporateManagement();
+                } else if (tabName === 'email-editor') {
+                    loadEmailEditor();
+                } else if (tabName === 'email-scheduler') {
+                    loadEmailScheduler();
                 } else {
                     // Placeholder for other sections
                     mainContentArea.innerHTML = `
@@ -3992,6 +4045,246 @@ def admin_dashboard():
             if (document.getElementById('email-sequences-template')) {
                 loadSchedulerStatus();
             }
+            
+            // New Management Functions
+            async function loadLeadManagement() {
+                const mainContentArea = document.getElementById('main-content-area');
+                mainContentArea.innerHTML = `
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2>📧 Lead Management</h2>
+                            <p>View, edit, and delete lead magnet downloads</p>
+                        </div>
+                        <div class="card-body">
+                            <div id="lead-management-content">Loading...</div>
+                        </div>
+                    </div>
+                `;
+                
+                try {
+                    const response = await fetch('/admin/leads', {
+                        headers: { 'Authorization': 'Bearer ' + authToken }
+                    });
+                    const data = await response.json();
+                    
+                    let tableHtml = `
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Email</th>
+                                        <th>Created</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+                    
+                    data.leads.forEach(lead => {
+                        tableHtml += `
+                            <tr>
+                                <td>${lead.id}</td>
+                                <td>${lead.email}</td>
+                                <td>${new Date(lead.created_at).toLocaleDateString()}</td>
+                                <td>
+                                    <button onclick="editLead(${lead.id})" class="btn-small btn-primary">Edit</button>
+                                    <button onclick="deleteLead(${lead.id})" class="btn-small btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    
+                    tableHtml += `
+                                </tbody>
+                            </table>
+                        </div>
+                        <p>Total: ${data.total} leads</p>
+                    `;
+                    
+                    document.getElementById('lead-management-content').innerHTML = tableHtml;
+                } catch (error) {
+                    document.getElementById('lead-management-content').innerHTML = 'Error loading leads: ' + error.message;
+                }
+            }
+            
+            async function loadWaitlistManagement() {
+                const mainContentArea = document.getElementById('main-content-area');
+                mainContentArea.innerHTML = `
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2>👥 Waitlist Management</h2>
+                            <p>View, edit, and delete waitlist registrations</p>
+                        </div>
+                        <div class="card-body">
+                            <div id="waitlist-management-content">Loading...</div>
+                        </div>
+                    </div>
+                `;
+                
+                try {
+                    const response = await fetch('/admin/waitlist', {
+                        headers: { 'Authorization': 'Bearer ' + authToken }
+                    });
+                    const data = await response.json();
+                    
+                    let tableHtml = `
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Occupation</th>
+                                        <th>Created</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+                    
+                    data.waitlist.forEach(entry => {
+                        tableHtml += `
+                            <tr>
+                                <td>${entry.id}</td>
+                                <td>${entry.full_name}</td>
+                                <td>${entry.email}</td>
+                                <td>${entry.occupation}</td>
+                                <td>${new Date(entry.created_at).toLocaleDateString()}</td>
+                                <td>
+                                    <button onclick="editWaitlist(${entry.id})" class="btn-small btn-primary">Edit</button>
+                                    <button onclick="deleteWaitlist(${entry.id})" class="btn-small btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    
+                    tableHtml += `
+                                </tbody>
+                            </table>
+                        </div>
+                        <p>Total: ${data.total} waitlist entries</p>
+                    `;
+                    
+                    document.getElementById('waitlist-management-content').innerHTML = tableHtml;
+                } catch (error) {
+                    document.getElementById('waitlist-management-content').innerHTML = 'Error loading waitlist: ' + error.message;
+                }
+            }
+            
+            async function loadCorporateManagement() {
+                const mainContentArea = document.getElementById('main-content-area');
+                mainContentArea.innerHTML = `
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2>🏢 Corporate Inquiries Management</h2>
+                            <p>View, edit, and manage corporate inquiries</p>
+                        </div>
+                        <div class="card-body">
+                            <div id="corporate-management-content">Loading...</div>
+                        </div>
+                    </div>
+                `;
+                
+                try {
+                    const response = await fetch('/admin/corporate', {
+                        headers: { 'Authorization': 'Bearer ' + authToken }
+                    });
+                    const data = await response.json();
+                    
+                    let tableHtml = `
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Company</th>
+                                        <th>Status</th>
+                                        <th>Created</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+                    
+                    data.inquiries.forEach(inquiry => {
+                        tableHtml += `
+                            <tr>
+                                <td>${inquiry.id}</td>
+                                <td>${inquiry.full_name}</td>
+                                <td>${inquiry.email}</td>
+                                <td>${inquiry.company_name}</td>
+                                <td><span class="status-${inquiry.status}">${inquiry.status}</span></td>
+                                <td>${new Date(inquiry.created_at).toLocaleDateString()}</td>
+                                <td>
+                                    <button onclick="editCorporate(${inquiry.id})" class="btn-small btn-primary">Edit</button>
+                                    <button onclick="deleteCorporate(${inquiry.id})" class="btn-small btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    
+                    tableHtml += `
+                                </tbody>
+                            </table>
+                        </div>
+                        <p>Total: ${data.total} corporate inquiries</p>
+                    `;
+                    
+                    document.getElementById('corporate-management-content').innerHTML = tableHtml;
+                } catch (error) {
+                    document.getElementById('corporate-management-content').innerHTML = 'Error loading corporate inquiries: ' + error.message;
+                }
+            }
+            
+            function loadEmailEditor() {
+                const mainContentArea = document.getElementById('main-content-area');
+                mainContentArea.innerHTML = `
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2>✉️ Email Sequences Editor</h2>
+                            <p>Edit email sequence content and templates</p>
+                        </div>
+                        <div class="card-body">
+                            <div style="text-align: center; padding: 40px; color: #6b7280;">
+                                <h3>🚧 Advanced Editor Coming Soon</h3>
+                                <p>Email sequence editing interface is under development.</p>
+                                <p>API endpoints are available at <code>/admin/sequences/management</code></p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            function loadEmailScheduler() {
+                const mainContentArea = document.getElementById('main-content-area');
+                mainContentArea.innerHTML = `
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2>📅 Email Scheduler Management</h2>
+                            <p>Manage scheduled emails and automation</p>
+                        </div>
+                        <div class="card-body">
+                            <div style="text-align: center; padding: 40px; color: #6b7280;">
+                                <h3>🚧 Scheduler Interface Coming Soon</h3>
+                                <p>Email scheduler management interface is under development.</p>
+                                <p>API endpoints are available at <code>/admin/scheduler/emails</code></p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Placeholder functions for edit/delete actions
+            function editLead(id) { alert('Edit lead ' + id + ' - Interface coming soon'); }
+            function deleteLead(id) { alert('Delete lead ' + id + ' - Interface coming soon'); }
+            function editWaitlist(id) { alert('Edit waitlist ' + id + ' - Interface coming soon'); }
+            function deleteWaitlist(id) { alert('Delete waitlist ' + id + ' - Interface coming soon'); }
+            function editCorporate(id) { alert('Edit corporate ' + id + ' - Interface coming soon'); }
+            function deleteCorporate(id) { alert('Delete corporate ' + id + ' - Interface coming soon'); }
         </script>
     </body>
     </html>
@@ -5385,6 +5678,249 @@ def delete_corporate_inquiry(
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Failed to delete corporate inquiry: {str(e)}")
+
+# Email Sequences Editor Admin Endpoints
+@app.get("/admin/sequences/management")
+def get_sequences_management(
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Get all email sequences for management"""
+    try:
+        sequences = db.query(EmailSequence).order_by(EmailSequence.sequence_type, EmailSequence.language).all()
+        
+        result = []
+        for sequence in sequences:
+            email_count = db.query(SequenceEmail).filter(SequenceEmail.sequence_id == sequence.id).count()
+            
+            result.append({
+                "id": sequence.id,
+                "name": sequence.name,
+                "sequence_type": sequence.sequence_type,
+                "language": sequence.language,
+                "description": sequence.description,
+                "is_active": sequence.is_active,
+                "email_count": email_count,
+                "created_at": sequence.created_at.isoformat(),
+                "updated_at": sequence.updated_at.isoformat()
+            })
+        
+        return {"sequences": result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch sequences: {str(e)}")
+
+@app.get("/admin/sequences/management/{sequence_id}")
+def get_sequence_details(
+    sequence_id: int,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Get detailed sequence with all emails"""
+    try:
+        sequence = db.query(EmailSequence).filter(EmailSequence.id == sequence_id).first()
+        if not sequence:
+            raise HTTPException(status_code=404, detail="Sequence not found")
+        
+        emails = db.query(SequenceEmail).filter(
+            SequenceEmail.sequence_id == sequence_id
+        ).order_by(SequenceEmail.email_index).all()
+        
+        return {
+            "sequence": {
+                "id": sequence.id,
+                "name": sequence.name,
+                "sequence_type": sequence.sequence_type,
+                "language": sequence.language,
+                "description": sequence.description,
+                "is_active": sequence.is_active,
+                "created_at": sequence.created_at.isoformat(),
+                "updated_at": sequence.updated_at.isoformat()
+            },
+            "emails": [
+                {
+                    "id": email.id,
+                    "email_index": email.email_index,
+                    "subject": email.subject,
+                    "title": email.title,
+                    "content": email.content,
+                    "cta": email.cta,
+                    "delay_days": email.delay_days,
+                    "week_number": email.week_number,
+                    "is_active": email.is_active
+                } for email in emails
+            ]
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch sequence details: {str(e)}")
+
+@app.put("/admin/sequences/management/{sequence_id}")
+def update_sequence(
+    sequence_id: int,
+    name: str = Form(...),
+    description: str = Form(default=""),
+    is_active: bool = Form(default=True),
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Update email sequence metadata"""
+    try:
+        sequence = db.query(EmailSequence).filter(EmailSequence.id == sequence_id).first()
+        if not sequence:
+            raise HTTPException(status_code=404, detail="Sequence not found")
+        
+        sequence.name = name
+        sequence.description = description
+        sequence.is_active = is_active
+        sequence.updated_at = datetime.utcnow()
+        
+        db.commit()
+        
+        return {
+            "success": True,
+            "message": "Sequence updated successfully",
+            "sequence": {
+                "id": sequence.id,
+                "name": sequence.name,
+                "description": sequence.description,
+                "is_active": sequence.is_active
+            }
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to update sequence: {str(e)}")
+
+@app.put("/admin/sequences/management/{sequence_id}/emails/{email_id}")
+def update_sequence_email(
+    sequence_id: int,
+    email_id: int,
+    subject: str = Form(...),
+    title: str = Form(...),
+    content: str = Form(...),
+    cta: str = Form(...),
+    delay_days: int = Form(...),
+    week_number: int = Form(default=None),
+    is_active: bool = Form(default=True),
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Update individual email in sequence"""
+    try:
+        email = db.query(SequenceEmail).filter(
+            SequenceEmail.id == email_id,
+            SequenceEmail.sequence_id == sequence_id
+        ).first()
+        
+        if not email:
+            raise HTTPException(status_code=404, detail="Email not found")
+        
+        email.subject = subject
+        email.title = title
+        email.content = content
+        email.cta = cta
+        email.delay_days = delay_days
+        email.week_number = week_number
+        email.is_active = is_active
+        email.updated_at = datetime.utcnow()
+        
+        db.commit()
+        
+        return {
+            "success": True,
+            "message": "Email updated successfully",
+            "email": {
+                "id": email.id,
+                "subject": email.subject,
+                "title": email.title,
+                "delay_days": email.delay_days,
+                "is_active": email.is_active
+            }
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to update email: {str(e)}")
+
+@app.post("/admin/sequences/management/{sequence_id}/emails")
+def create_sequence_email(
+    sequence_id: int,
+    subject: str = Form(...),
+    title: str = Form(...),
+    content: str = Form(...),
+    cta: str = Form(...),
+    delay_days: int = Form(...),
+    week_number: int = Form(default=None),
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Add new email to sequence"""
+    try:
+        # Get next email index
+        max_index = db.query(func.max(SequenceEmail.email_index)).filter(
+            SequenceEmail.sequence_id == sequence_id
+        ).scalar() or -1
+        
+        new_email = SequenceEmail(
+            sequence_id=sequence_id,
+            email_index=max_index + 1,
+            subject=subject,
+            title=title,
+            content=content,
+            cta=cta,
+            delay_days=delay_days,
+            week_number=week_number
+        )
+        
+        db.add(new_email)
+        db.commit()
+        
+        return {
+            "success": True,
+            "message": "Email added to sequence successfully",
+            "email": {
+                "id": new_email.id,
+                "email_index": new_email.email_index,
+                "subject": new_email.subject,
+                "title": new_email.title
+            }
+        }
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to create email: {str(e)}")
+
+@app.delete("/admin/sequences/management/{sequence_id}/emails/{email_id}")
+def delete_sequence_email(
+    sequence_id: int,
+    email_id: int,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Delete email from sequence"""
+    try:
+        email = db.query(SequenceEmail).filter(
+            SequenceEmail.id == email_id,
+            SequenceEmail.sequence_id == sequence_id
+        ).first()
+        
+        if not email:
+            raise HTTPException(status_code=404, detail="Email not found")
+        
+        db.delete(email)
+        db.commit()
+        
+        return {
+            "success": True,
+            "message": "Email deleted successfully"
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to delete email: {str(e)}")
 
 @app.post("/admin/cleanup/database")
 def cleanup_database(
