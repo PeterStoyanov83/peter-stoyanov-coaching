@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends, BackgroundTasks, status, UploadFile, File, Request
+from fastapi import FastAPI, HTTPException, Depends, BackgroundTasks, status, UploadFile, File, Request, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.security import OAuth2PasswordRequestForm
@@ -11,9 +11,10 @@ from typing import List, Optional, Dict, Any
 import markdown
 import glob
 from datetime import datetime, timedelta
-from sqlalchemy import func, desc
+from sqlalchemy import func, desc, or_
 from sqlalchemy.orm import Session
 import uuid
+import re
 
 from models import (WaitlistRegistration, CorporateInquiry, LeadMagnetDownload, BlogPost, BlogPostRequest, BlogPostResponse, BlogPostListResponse,
                    MultilingualBlogPost, MultilingualBlogPostRequest, MultilingualBlogPostUpdateRequest, MultilingualBlogPostResponse, MultilingualBlogPostPublicResponse,
@@ -4946,6 +4947,444 @@ def get_system_status(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to get system status: {str(e)}")
 
+
+# Lead Management Admin Endpoints
+@app.get("/admin/leads")
+def get_all_leads(
+    skip: int = 0,
+    limit: int = 100,
+    search: str = None,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Get all lead magnet downloads with pagination and search"""
+    try:
+        query = db.query(LeadMagnetDownload)
+        
+        # Search functionality
+        if search:
+            query = query.filter(
+                or_(
+                    LeadMagnetDownload.email.contains(search),
+                    LeadMagnetDownload.source.contains(search) if hasattr(LeadMagnetDownload, 'source') else False
+                )
+            )
+        
+        # Get total count for pagination
+        total = query.count()
+        
+        # Apply pagination
+        leads = query.order_by(LeadMagnetDownload.created_at.desc()).offset(skip).limit(limit).all()
+        
+        return {
+            "leads": [
+                {
+                    "id": lead.id,
+                    "email": lead.email,
+                    "created_at": lead.created_at.isoformat(),
+                    "ip_address": getattr(lead, 'ip_address', None),
+                    "source": getattr(lead, 'source', None),
+                    "user_agent": getattr(lead, 'user_agent', None)
+                } for lead in leads
+            ],
+            "total": total,
+            "skip": skip,
+            "limit": limit
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch leads: {str(e)}")
+
+@app.get("/admin/leads/{lead_id}")
+def get_lead(
+    lead_id: int,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Get individual lead magnet download record"""
+    try:
+        lead = db.query(LeadMagnetDownload).filter(LeadMagnetDownload.id == lead_id).first()
+        if not lead:
+            raise HTTPException(status_code=404, detail="Lead not found")
+        
+        return {
+            "id": lead.id,
+            "email": lead.email,
+            "created_at": lead.created_at.isoformat(),
+            "ip_address": getattr(lead, 'ip_address', None),
+            "source": getattr(lead, 'source', None),
+            "user_agent": getattr(lead, 'user_agent', None)
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch lead: {str(e)}")
+
+@app.put("/admin/leads/{lead_id}")
+def update_lead(
+    lead_id: int,
+    email: str = Form(...),
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Update lead magnet download record"""
+    try:
+        lead = db.query(LeadMagnetDownload).filter(LeadMagnetDownload.id == lead_id).first()
+        if not lead:
+            raise HTTPException(status_code=404, detail="Lead not found")
+        
+        # Validate email format
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            raise HTTPException(status_code=400, detail="Invalid email format")
+        
+        lead.email = email
+        db.commit()
+        
+        return {
+            "success": True,
+            "message": "Lead updated successfully",
+            "lead": {
+                "id": lead.id,
+                "email": lead.email,
+                "created_at": lead.created_at.isoformat()
+            }
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to update lead: {str(e)}")
+
+@app.delete("/admin/leads/{lead_id}")
+def delete_lead(
+    lead_id: int,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Delete lead magnet download record"""
+    try:
+        lead = db.query(LeadMagnetDownload).filter(LeadMagnetDownload.id == lead_id).first()
+        if not lead:
+            raise HTTPException(status_code=404, detail="Lead not found")
+        
+        db.delete(lead)
+        db.commit()
+        
+        return {
+            "success": True,
+            "message": "Lead deleted successfully"
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to delete lead: {str(e)}")
+
+# Waitlist Management Admin Endpoints
+@app.get("/admin/waitlist")
+def get_all_waitlist(
+    skip: int = 0,
+    limit: int = 100,
+    search: str = None,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Get all waitlist registrations with pagination and search"""
+    try:
+        query = db.query(WaitlistRegistration)
+        
+        # Search functionality
+        if search:
+            query = query.filter(
+                or_(
+                    WaitlistRegistration.email.contains(search),
+                    WaitlistRegistration.full_name.contains(search),
+                    WaitlistRegistration.occupation.contains(search)
+                )
+            )
+        
+        # Get total count for pagination
+        total = query.count()
+        
+        # Apply pagination
+        waitlist = query.order_by(WaitlistRegistration.created_at.desc()).offset(skip).limit(limit).all()
+        
+        return {
+            "waitlist": [
+                {
+                    "id": entry.id,
+                    "full_name": entry.full_name,
+                    "email": entry.email,
+                    "city_country": entry.city_country,
+                    "occupation": entry.occupation,
+                    "why_join": entry.why_join,
+                    "skills_to_improve": entry.skills_to_improve,
+                    "created_at": entry.created_at.isoformat()
+                } for entry in waitlist
+            ],
+            "total": total,
+            "skip": skip,
+            "limit": limit
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch waitlist: {str(e)}")
+
+@app.get("/admin/waitlist/{waitlist_id}")
+def get_waitlist_entry(
+    waitlist_id: int,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Get individual waitlist registration record"""
+    try:
+        entry = db.query(WaitlistRegistration).filter(WaitlistRegistration.id == waitlist_id).first()
+        if not entry:
+            raise HTTPException(status_code=404, detail="Waitlist entry not found")
+        
+        return {
+            "id": entry.id,
+            "full_name": entry.full_name,
+            "email": entry.email,
+            "city_country": entry.city_country,
+            "occupation": entry.occupation,
+            "why_join": entry.why_join,
+            "skills_to_improve": entry.skills_to_improve,
+            "created_at": entry.created_at.isoformat()
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch waitlist entry: {str(e)}")
+
+@app.put("/admin/waitlist/{waitlist_id}")
+def update_waitlist_entry(
+    waitlist_id: int,
+    full_name: str = Form(...),
+    email: str = Form(...),
+    city_country: str = Form(...),
+    occupation: str = Form(...),
+    why_join: str = Form(...),
+    skills_to_improve: str = Form(...),
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Update waitlist registration record"""
+    try:
+        entry = db.query(WaitlistRegistration).filter(WaitlistRegistration.id == waitlist_id).first()
+        if not entry:
+            raise HTTPException(status_code=404, detail="Waitlist entry not found")
+        
+        # Validate email format
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            raise HTTPException(status_code=400, detail="Invalid email format")
+        
+        entry.full_name = full_name
+        entry.email = email
+        entry.city_country = city_country
+        entry.occupation = occupation
+        entry.why_join = why_join
+        entry.skills_to_improve = skills_to_improve
+        
+        db.commit()
+        
+        return {
+            "success": True,
+            "message": "Waitlist entry updated successfully",
+            "entry": {
+                "id": entry.id,
+                "full_name": entry.full_name,
+                "email": entry.email,
+                "created_at": entry.created_at.isoformat()
+            }
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to update waitlist entry: {str(e)}")
+
+@app.delete("/admin/waitlist/{waitlist_id}")
+def delete_waitlist_entry(
+    waitlist_id: int,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Delete waitlist registration record"""
+    try:
+        entry = db.query(WaitlistRegistration).filter(WaitlistRegistration.id == waitlist_id).first()
+        if not entry:
+            raise HTTPException(status_code=404, detail="Waitlist entry not found")
+        
+        db.delete(entry)
+        db.commit()
+        
+        return {
+            "success": True,
+            "message": "Waitlist entry deleted successfully"
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to delete waitlist entry: {str(e)}")
+
+# Corporate Inquiries Management Admin Endpoints
+@app.get("/admin/corporate")
+def get_all_corporate_inquiries(
+    skip: int = 0,
+    limit: int = 100,
+    search: str = None,
+    status_filter: str = None,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Get all corporate inquiries with pagination, search, and status filtering"""
+    try:
+        query = db.query(CorporateInquiry)
+        
+        # Search functionality
+        if search:
+            query = query.filter(
+                or_(
+                    CorporateInquiry.email.contains(search),
+                    CorporateInquiry.full_name.contains(search),
+                    CorporateInquiry.company_name.contains(search)
+                )
+            )
+        
+        # Status filtering (if status field exists)
+        if status_filter and hasattr(CorporateInquiry, 'status'):
+            query = query.filter(CorporateInquiry.status == status_filter)
+        
+        # Get total count for pagination
+        total = query.count()
+        
+        # Apply pagination
+        inquiries = query.order_by(CorporateInquiry.created_at.desc()).offset(skip).limit(limit).all()
+        
+        return {
+            "inquiries": [
+                {
+                    "id": inquiry.id,
+                    "full_name": inquiry.full_name,
+                    "email": inquiry.email,
+                    "company_name": inquiry.company_name,
+                    "message": inquiry.message,
+                    "status": getattr(inquiry, 'status', 'pending'),
+                    "created_at": inquiry.created_at.isoformat()
+                } for inquiry in inquiries
+            ],
+            "total": total,
+            "skip": skip,
+            "limit": limit
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch corporate inquiries: {str(e)}")
+
+@app.get("/admin/corporate/{inquiry_id}")
+def get_corporate_inquiry(
+    inquiry_id: int,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Get individual corporate inquiry record"""
+    try:
+        inquiry = db.query(CorporateInquiry).filter(CorporateInquiry.id == inquiry_id).first()
+        if not inquiry:
+            raise HTTPException(status_code=404, detail="Corporate inquiry not found")
+        
+        return {
+            "id": inquiry.id,
+            "full_name": inquiry.full_name,
+            "email": inquiry.email,
+            "company_name": inquiry.company_name,
+            "message": inquiry.message,
+            "status": getattr(inquiry, 'status', 'pending'),
+            "created_at": inquiry.created_at.isoformat()
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch corporate inquiry: {str(e)}")
+
+@app.put("/admin/corporate/{inquiry_id}")
+def update_corporate_inquiry(
+    inquiry_id: int,
+    full_name: str = Form(...),
+    email: str = Form(...),
+    company_name: str = Form(...),
+    message: str = Form(...),
+    status: str = Form(default="pending"),
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Update corporate inquiry record"""
+    try:
+        inquiry = db.query(CorporateInquiry).filter(CorporateInquiry.id == inquiry_id).first()
+        if not inquiry:
+            raise HTTPException(status_code=404, detail="Corporate inquiry not found")
+        
+        # Validate email format
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            raise HTTPException(status_code=400, detail="Invalid email format")
+        
+        # Validate status
+        valid_statuses = ["pending", "contacted", "in_progress", "completed", "rejected"]
+        if status not in valid_statuses:
+            raise HTTPException(status_code=400, detail=f"Invalid status. Must be one of: {', '.join(valid_statuses)}")
+        
+        inquiry.full_name = full_name
+        inquiry.email = email
+        inquiry.company_name = company_name
+        inquiry.message = message
+        
+        # Set status if field exists
+        if hasattr(inquiry, 'status'):
+            inquiry.status = status
+        
+        db.commit()
+        
+        return {
+            "success": True,
+            "message": "Corporate inquiry updated successfully",
+            "inquiry": {
+                "id": inquiry.id,
+                "full_name": inquiry.full_name,
+                "email": inquiry.email,
+                "company_name": inquiry.company_name,
+                "status": getattr(inquiry, 'status', status),
+                "created_at": inquiry.created_at.isoformat()
+            }
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to update corporate inquiry: {str(e)}")
+
+@app.delete("/admin/corporate/{inquiry_id}")
+def delete_corporate_inquiry(
+    inquiry_id: int,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Delete corporate inquiry record"""
+    try:
+        inquiry = db.query(CorporateInquiry).filter(CorporateInquiry.id == inquiry_id).first()
+        if not inquiry:
+            raise HTTPException(status_code=404, detail="Corporate inquiry not found")
+        
+        db.delete(inquiry)
+        db.commit()
+        
+        return {
+            "success": True,
+            "message": "Corporate inquiry deleted successfully"
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to delete corporate inquiry: {str(e)}")
 
 @app.post("/admin/cleanup/database")
 def cleanup_database(
