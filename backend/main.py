@@ -4475,7 +4475,8 @@ def admin_dashboard():
                                     <td style="padding: 12px;">${new Date(sub.created_at).toLocaleDateString()}</td>
                                     <td style="padding: 12px;">
                                         <button onclick="viewSubscriberDetails(${sub.id})" class="btn-small btn-primary" style="margin-right: 5px;">View Details</button>
-                                        <button onclick="editSubscriber(${sub.id})" class="btn-small btn-secondary">Edit</button>
+                                        <button onclick="editSubscriber(${sub.id})" class="btn-small btn-secondary" style="margin-right: 5px;">Edit</button>
+                                        <button onclick="deleteSubscriber(${sub.id})" class="btn-small btn-danger">Delete</button>
                                     </td>
                                 </tr>
                             `).join('')}
@@ -4677,8 +4678,7 @@ def admin_dashboard():
                                 <td>${lead.email}</td>
                                 <td>${new Date(lead.created_at).toLocaleDateString()}</td>
                                 <td>
-                                    <button onclick="editLead(${lead.id})" class="btn-small btn-primary">Edit</button>
-                                    <button onclick="deleteLead(${lead.id})" class="btn-small btn-danger">Delete</button>
+                                    <span style="color: #6b7280; font-style: italic; font-size: 12px;">View only</span>
                                 </td>
                             </tr>
                         `;
@@ -4742,8 +4742,7 @@ def admin_dashboard():
                                 <td>${entry.occupation}</td>
                                 <td>${new Date(entry.created_at).toLocaleDateString()}</td>
                                 <td>
-                                    <button onclick="editWaitlist(${entry.id})" class="btn-small btn-primary">Edit</button>
-                                    <button onclick="deleteWaitlist(${entry.id})" class="btn-small btn-danger">Delete</button>
+                                    <span style="color: #6b7280; font-style: italic; font-size: 12px;">View only</span>
                                 </td>
                             </tr>
                         `;
@@ -4809,8 +4808,7 @@ def admin_dashboard():
                                 <td><span class="status-${inquiry.status}">${inquiry.status}</span></td>
                                 <td>${new Date(inquiry.created_at).toLocaleDateString()}</td>
                                 <td>
-                                    <button onclick="editCorporate(${inquiry.id})" class="btn-small btn-primary">Edit</button>
-                                    <button onclick="deleteCorporate(${inquiry.id})" class="btn-small btn-danger">Delete</button>
+                                    <span style="color: #6b7280; font-style: italic; font-size: 12px;">View only</span>
                                 </td>
                             </tr>
                         `;
@@ -4867,13 +4865,83 @@ def admin_dashboard():
                 `;
             }
             
-            // Placeholder functions for edit/delete actions
-            function editLead(id) { alert('Edit lead ' + id + ' - Interface coming soon'); }
-            function deleteLead(id) { alert('Delete lead ' + id + ' - Interface coming soon'); }
-            function editWaitlist(id) { alert('Edit waitlist ' + id + ' - Interface coming soon'); }
-            function deleteWaitlist(id) { alert('Delete waitlist ' + id + ' - Interface coming soon'); }
-            function editCorporate(id) { alert('Edit corporate ' + id + ' - Interface coming soon'); }
-            function deleteCorporate(id) { alert('Delete corporate ' + id + ' - Interface coming soon'); }
+            // Notification system
+            function showNotification(message, type = 'info') {
+                // Remove any existing notifications
+                const existing = document.querySelector('.notification-toast');
+                if (existing) existing.remove();
+                
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.className = 'notification-toast';
+                
+                // Set colors based on type
+                const colors = {
+                    'success': 'background: linear-gradient(135deg, #10b981, #059669); color: white;',
+                    'error': 'background: linear-gradient(135deg, #ef4444, #dc2626); color: white;',
+                    'info': 'background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white;',
+                    'warning': 'background: linear-gradient(135deg, #f59e0b, #d97706); color: white;'
+                };
+                
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 24px;
+                    right: 24px;
+                    padding: 16px 24px;
+                    border-radius: 12px;
+                    ${colors[type] || colors.info}
+                    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+                    z-index: 1100;
+                    max-width: 400px;
+                    font-weight: 500;
+                    opacity: 0;
+                    transform: translateX(100%);
+                    transition: all 0.3s ease;
+                    backdrop-filter: blur(10px);
+                `;
+                
+                notification.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 18px;">
+                            ${type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : 'ℹ️'}
+                        </span>
+                        <span>${message}</span>
+                    </div>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Animate in
+                setTimeout(() => {
+                    notification.style.opacity = '1';
+                    notification.style.transform = 'translateX(0)';
+                }, 100);
+                
+                // Auto remove after 5 seconds
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.style.opacity = '0';
+                        notification.style.transform = 'translateX(100%)';
+                        setTimeout(() => {
+                            if (notification.parentNode) {
+                                notification.remove();
+                            }
+                        }, 300);
+                    }
+                }, 5000);
+                
+                // Allow manual close by clicking
+                notification.addEventListener('click', () => {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'translateX(100%)';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.remove();
+                        }
+                    }, 300);
+                });
+            }
+            
             
             // Subscriber Management Functions
             function getEngagementColor(level) {
@@ -5126,8 +5194,493 @@ def admin_dashboard():
                 }
             }
             
-            function editSubscriber(id) {
-                alert('Edit subscriber ' + id + ' - Interface coming soon. Use API: PUT /admin/subscribers/management/' + id);
+            async function editSubscriber(subscriberId) {
+                if (!authToken) return;
+                
+                try {
+                    // First, get current subscriber data
+                    const response = await fetch(`/admin/subscribers/management/${subscriberId}`, {
+                        headers: { 'Authorization': 'Bearer ' + authToken }
+                    });
+                    
+                    if (!response.ok) throw new Error('Failed to load subscriber data');
+                    
+                    const data = await response.json();
+                    const subscriber = data.subscriber;
+                    
+                    // Create edit modal
+                    showEditModal(subscriber);
+                    
+                } catch (error) {
+                    console.error('Error loading subscriber for edit:', error);
+                    showNotification('Failed to load subscriber data: ' + error.message, 'error');
+                }
+            }
+            
+            function showEditModal(subscriber) {
+                // Create modal overlay
+                const modalOverlay = document.createElement('div');
+                modalOverlay.id = 'edit-modal-overlay';
+                modalOverlay.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.5);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 1000;
+                    backdrop-filter: blur(4px);
+                    animation: fadeIn 0.3s ease;
+                `;
+                
+                modalOverlay.innerHTML = `
+                    <div class="edit-modal" style="
+                        background: white;
+                        border-radius: 16px;
+                        padding: 0;
+                        width: 90%;
+                        max-width: 500px;
+                        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                        transform: scale(0.95);
+                        animation: modalSlideIn 0.3s ease forwards;
+                        overflow: hidden;
+                    ">
+                        <div style="
+                            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+                            padding: 24px;
+                            border-bottom: 1px solid #e2e8f0;
+                        ">
+                            <h3 style="
+                                margin: 0;
+                                font-size: 20px;
+                                font-weight: 700;
+                                color: #1e293b;
+                                display: flex;
+                                align-items: center;
+                                gap: 8px;
+                            ">
+                                ✏️ Edit Subscriber
+                                <span class="engagement-badge engagement-${subscriber.engagement_level}">${subscriber.engagement_level}</span>
+                            </h3>
+                            <p style="margin: 8px 0 0 0; color: #64748b; font-weight: 500;">${subscriber.email}</p>
+                        </div>
+                        
+                        <form id="edit-subscriber-form" style="padding: 24px;">
+                            <div style="margin-bottom: 20px;">
+                                <label for="edit-name" style="
+                                    display: block;
+                                    font-weight: 600;
+                                    color: #374151;
+                                    margin-bottom: 8px;
+                                    font-size: 14px;
+                                ">Name:</label>
+                                <input type="text" id="edit-name" value="${subscriber.name || ''}" 
+                                       placeholder="Enter subscriber name"
+                                       style="
+                                           width: 100%;
+                                           padding: 12px 16px;
+                                           border: 2px solid #d1d5db;
+                                           border-radius: 8px;
+                                           font-size: 14px;
+                                           transition: border-color 0.2s ease;
+                                           background: #f9fafb;
+                                       "
+                                       onmouseover="this.style.borderColor='#9ca3af'"
+                                       onmouseout="this.style.borderColor='#d1d5db'"
+                                       onfocus="this.style.borderColor='#3b82f6'; this.style.background='#ffffff'"
+                                       onblur="this.style.borderColor='#d1d5db'; this.style.background='#f9fafb'" />
+                            </div>
+                            
+                            <div style="margin-bottom: 20px;">
+                                <label for="edit-engagement" style="
+                                    display: block;
+                                    font-weight: 600;
+                                    color: #374151;
+                                    margin-bottom: 8px;
+                                    font-size: 14px;
+                                ">Engagement Level:</label>
+                                <select id="edit-engagement" style="
+                                    width: 100%;
+                                    padding: 12px 16px;
+                                    border: 2px solid #d1d5db;
+                                    border-radius: 8px;
+                                    font-size: 14px;
+                                    transition: border-color 0.2s ease;
+                                    background: #f9fafb;
+                                    cursor: pointer;
+                                "
+                                onmouseover="this.style.borderColor='#9ca3af'"
+                                onmouseout="this.style.borderColor='#d1d5db'"
+                                onfocus="this.style.borderColor='#3b82f6'; this.style.background='#ffffff'"
+                                onblur="this.style.borderColor='#d1d5db'; this.style.background='#f9fafb'">
+                                    <option value="new" ${subscriber.engagement_level === 'new' ? 'selected' : ''}>🆕 New</option>
+                                    <option value="warm" ${subscriber.engagement_level === 'warm' ? 'selected' : ''}>🔥 Warm</option>
+                                    <option value="hot" ${subscriber.engagement_level === 'hot' ? 'selected' : ''}>🌟 Hot</option>
+                                    <option value="cold" ${subscriber.engagement_level === 'cold' ? 'selected' : ''}>❄️ Cold</option>
+                                </select>
+                            </div>
+                            
+                            <div style="margin-bottom: 20px;">
+                                <label for="edit-active" style="
+                                    display: block;
+                                    font-weight: 600;
+                                    color: #374151;
+                                    margin-bottom: 8px;
+                                    font-size: 14px;
+                                ">Status:</label>
+                                <select id="edit-active" style="
+                                    width: 100%;
+                                    padding: 12px 16px;
+                                    border: 2px solid #d1d5db;
+                                    border-radius: 8px;
+                                    font-size: 14px;
+                                    transition: border-color 0.2s ease;
+                                    background: #f9fafb;
+                                    cursor: pointer;
+                                "
+                                onmouseover="this.style.borderColor='#9ca3af'"
+                                onmouseout="this.style.borderColor='#d1d5db'"
+                                onfocus="this.style.borderColor='#3b82f6'; this.style.background='#ffffff'"
+                                onblur="this.style.borderColor='#d1d5db'; this.style.background='#f9fafb'">
+                                    <option value="true" ${subscriber.is_active ? 'selected' : ''}>✅ Active</option>
+                                    <option value="false" ${!subscriber.is_active ? 'selected' : ''}>⏸️ Inactive</option>
+                                </select>
+                            </div>
+                            
+                            <div style="
+                                display: flex;
+                                gap: 12px;
+                                justify-content: flex-end;
+                                margin-top: 32px;
+                                padding-top: 24px;
+                                border-top: 1px solid #e2e8f0;
+                            ">
+                                <button type="button" onclick="closeEditModal()" class="btn-secondary">
+                                    Cancel
+                                </button>
+                                <button type="submit" class="btn-primary">
+                                    <span id="save-btn-text">Save Changes</span>
+                                    <div id="save-btn-loading" class="loading-spinner" style="display: none; width: 16px; height: 16px; margin-left: 8px;"></div>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                `;
+                
+                document.body.appendChild(modalOverlay);
+                
+                // Add event listener for form submission
+                document.getElementById('edit-subscriber-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    
+                    // Validate form
+                    if (validateEditForm()) {
+                        saveSubscriberChanges(subscriber.id);
+                    }
+                });
+                
+                // Close modal when clicking outside
+                modalOverlay.addEventListener('click', (e) => {
+                    if (e.target === modalOverlay) {
+                        closeEditModal();
+                    }
+                });
+            }
+            
+            function validateEditForm() {
+                // Clear any existing error styling
+                const formInputs = document.querySelectorAll('#edit-subscriber-form input, #edit-subscriber-form select');
+                formInputs.forEach(input => {
+                    input.style.borderColor = '#d1d5db';
+                });
+                
+                let isValid = true;
+                const errors = [];
+                
+                // Validate name (optional but if provided, should be at least 2 characters)
+                const name = document.getElementById('edit-name').value.trim();
+                if (name && name.length < 2) {
+                    document.getElementById('edit-name').style.borderColor = '#ef4444';
+                    errors.push('Name must be at least 2 characters long');
+                    isValid = false;
+                }
+                
+                // Validate name doesn't contain only numbers or special characters
+                if (name && !/^[a-zA-Z\s]+$/.test(name)) {
+                    document.getElementById('edit-name').style.borderColor = '#ef4444';
+                    errors.push('Name should only contain letters and spaces');
+                    isValid = false;
+                }
+                
+                // Validate engagement level is selected
+                const engagementLevel = document.getElementById('edit-engagement').value;
+                if (!engagementLevel || !['new', 'warm', 'hot', 'cold'].includes(engagementLevel)) {
+                    document.getElementById('edit-engagement').style.borderColor = '#ef4444';
+                    errors.push('Please select a valid engagement level');
+                    isValid = false;
+                }
+                
+                // Validate active status is selected
+                const activeStatus = document.getElementById('edit-active').value;
+                if (!activeStatus || !['true', 'false'].includes(activeStatus)) {
+                    document.getElementById('edit-active').style.borderColor = '#ef4444';
+                    errors.push('Please select a valid status');
+                    isValid = false;
+                }
+                
+                // Show validation errors
+                if (!isValid) {
+                    showNotification(errors.join(' • '), 'error');
+                }
+                
+                return isValid;
+            }
+            
+            async function saveSubscriberChanges(subscriberId) {
+                const saveBtn = document.querySelector('#edit-subscriber-form button[type="submit"]');
+                const saveBtnText = document.getElementById('save-btn-text');
+                const saveBtnLoading = document.getElementById('save-btn-loading');
+                
+                // Show loading state
+                saveBtn.disabled = true;
+                saveBtnText.textContent = 'Saving...';
+                saveBtnLoading.style.display = 'inline-block';
+                
+                try {
+                    const name = document.getElementById('edit-name').value;
+                    const engagementLevel = document.getElementById('edit-engagement').value;
+                    const isActive = document.getElementById('edit-active').value === 'true';
+                    
+                    const formData = new FormData();
+                    if (name.trim()) formData.append('name', name.trim());
+                    formData.append('engagement_level', engagementLevel);
+                    formData.append('is_active', isActive);
+                    
+                    const response = await fetch(`/admin/subscribers/management/${subscriberId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': 'Bearer ' + authToken
+                        },
+                        body: formData
+                    });
+                    
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.detail || 'Failed to update subscriber');
+                    }
+                    
+                    const result = await response.json();
+                    
+                    // Show success message
+                    showNotification('Subscriber updated successfully!', 'success');
+                    
+                    // Close modal
+                    closeEditModal();
+                    
+                    // Reload subscribers list
+                    loadSubscribers();
+                    
+                } catch (error) {
+                    console.error('Error saving subscriber changes:', error);
+                    showNotification('Failed to save changes: ' + error.message, 'error');
+                    
+                    // Reset button state
+                    saveBtn.disabled = false;
+                    saveBtnText.textContent = 'Save Changes';
+                    saveBtnLoading.style.display = 'none';
+                }
+            }
+            
+            function closeEditModal() {
+                const modal = document.getElementById('edit-modal-overlay');
+                if (modal) {
+                    modal.style.animation = 'fadeOut 0.3s ease forwards';
+                    setTimeout(() => {
+                        modal.remove();
+                    }, 300);
+                }
+            }
+            
+            function deleteSubscriber(subscriberId) {
+                if (!authToken) return;
+                
+                // Show confirmation dialog
+                showDeleteConfirmation(subscriberId);
+            }
+            
+            function showDeleteConfirmation(subscriberId) {
+                // Create modal overlay
+                const modalOverlay = document.createElement('div');
+                modalOverlay.id = 'delete-modal-overlay';
+                modalOverlay.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.5);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 1000;
+                    backdrop-filter: blur(4px);
+                    animation: fadeIn 0.3s ease;
+                `;
+                
+                modalOverlay.innerHTML = `
+                    <div class="delete-modal" style="
+                        background: white;
+                        border-radius: 16px;
+                        padding: 0;
+                        width: 90%;
+                        max-width: 420px;
+                        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                        transform: scale(0.95);
+                        animation: modalSlideIn 0.3s ease forwards;
+                        overflow: hidden;
+                    ">
+                        <div style="
+                            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+                            padding: 24px;
+                            border-bottom: 1px solid #fecaca;
+                            text-align: center;
+                        ">
+                            <div style="
+                                width: 48px;
+                                height: 48px;
+                                background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+                                border-radius: 50%;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                margin: 0 auto 16px auto;
+                                color: white;
+                                font-size: 24px;
+                            ">
+                                ⚠️
+                            </div>
+                            <h3 style="
+                                margin: 0;
+                                font-size: 20px;
+                                font-weight: 700;
+                                color: #dc2626;
+                                margin-bottom: 8px;
+                            ">
+                                Delete Subscriber
+                            </h3>
+                            <p style="margin: 0; color: #7f1d1d; font-weight: 500;">
+                                This action cannot be undone
+                            </p>
+                        </div>
+                        
+                        <div style="padding: 24px; text-align: center;">
+                            <p style="
+                                margin: 0 0 24px 0;
+                                color: #374151;
+                                font-size: 16px;
+                                line-height: 1.5;
+                            ">
+                                Are you sure you want to delete this subscriber?<br>
+                                <strong>All related data will be permanently removed:</strong>
+                            </p>
+                            
+                            <ul style="
+                                text-align: left;
+                                margin: 16px 0 24px 0;
+                                padding-left: 24px;
+                                color: #6b7280;
+                                font-size: 14px;
+                            ">
+                                <li>Sequence enrollments</li>
+                                <li>Scheduled emails</li>
+                                <li>Email analytics</li>
+                                <li>All subscriber data</li>
+                            </ul>
+                            
+                            <div style="
+                                display: flex;
+                                gap: 12px;
+                                justify-content: center;
+                                margin-top: 32px;
+                            ">
+                                <button type="button" onclick="closeDeleteModal()" class="btn-secondary">
+                                    Cancel
+                                </button>
+                                <button type="button" onclick="confirmDeleteSubscriber(${subscriberId})" class="btn-danger">
+                                    <span id="delete-btn-text">Delete Subscriber</span>
+                                    <div id="delete-btn-loading" class="loading-spinner" style="display: none; width: 16px; height: 16px; margin-left: 8px;"></div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modalOverlay);
+                
+                // Close modal when clicking outside
+                modalOverlay.addEventListener('click', (e) => {
+                    if (e.target === modalOverlay) {
+                        closeDeleteModal();
+                    }
+                });
+            }
+            
+            async function confirmDeleteSubscriber(subscriberId) {
+                const deleteBtn = document.querySelector('#delete-modal-overlay .btn-danger');
+                const deleteBtnText = document.getElementById('delete-btn-text');
+                const deleteBtnLoading = document.getElementById('delete-btn-loading');
+                
+                // Show loading state
+                deleteBtn.disabled = true;
+                deleteBtnText.textContent = 'Deleting...';
+                deleteBtnLoading.style.display = 'inline-block';
+                
+                try {
+                    const response = await fetch(`/admin/subscribers/management/${subscriberId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': 'Bearer ' + authToken
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.detail || 'Failed to delete subscriber');
+                    }
+                    
+                    const result = await response.json();
+                    
+                    // Show success message
+                    showNotification('Subscriber deleted successfully!', 'success');
+                    
+                    // Close modal
+                    closeDeleteModal();
+                    
+                    // Reload subscribers list
+                    loadSubscribers();
+                    
+                } catch (error) {
+                    console.error('Error deleting subscriber:', error);
+                    showNotification('Failed to delete subscriber: ' + error.message, 'error');
+                    
+                    // Reset button state
+                    deleteBtn.disabled = false;
+                    deleteBtnText.textContent = 'Delete Subscriber';
+                    deleteBtnLoading.style.display = 'none';
+                }
+            }
+            
+            function closeDeleteModal() {
+                const modal = document.getElementById('delete-modal-overlay');
+                if (modal) {
+                    modal.style.animation = 'fadeOut 0.3s ease forwards';
+                    setTimeout(() => {
+                        modal.remove();
+                    }, 300);
+                }
             }
         </script>
     </body>
