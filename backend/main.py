@@ -1287,6 +1287,29 @@ def admin_dashboard():
             .status-pending { background: #fef3c7; color: #92400e; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
             .status-contacted { background: #dbeafe; color: #1e40af; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
             .status-completed { background: #d1fae5; color: #065f46; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+            .status-active { background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+            .status-inactive { background: #fee2e2; color: #dc2626; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+            
+            /* Subscriber Details Styles */
+            .info-grid { display: grid; gap: 15px; }
+            .info-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f3f4f6; }
+            .info-item label { font-weight: 600; color: #374151; }
+            .info-item span { color: #6b7280; }
+            .source-badge { background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+            .engagement-badge { padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+            .engagement-new { background: #fef3c7; color: #92400e; }
+            .engagement-warm { background: #dbeafe; color: #1e40af; }
+            .engagement-hot { background: #fee2e2; color: #dc2626; }
+            .engagement-cold { background: #f3f4f6; color: #6b7280; }
+            .analytics-event { background: #f0f9ff; color: #0c4a6e; padding: 2px 6px; border-radius: 4px; font-size: 12px; }
+            
+            /* Mini Stats Grid */
+            .stats-mini-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; }
+            .stat-mini-card { background: #f8fafc; padding: 15px; border-radius: 6px; text-align: center; }
+            .stat-mini-number { font-size: 1.5em; font-weight: bold; color: #2563eb; }
+            .stat-mini-label { color: #6b7280; margin-top: 5px; font-size: 12px; }
+            .btn-secondary { background: #6b7280; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; }
+            .btn-secondary:hover { background: #4b5563; }
             
             /* Stats Grid */
             .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
@@ -3843,16 +3866,17 @@ def admin_dashboard():
                     const source = document.getElementById('subscriber-source')?.value || '';
                     
                     const params = new URLSearchParams();
-                    if (language) params.append('language', language);
-                    if (source) params.append('source', source);
+                    if (language) params.append('language_filter', language);
+                    if (source) params.append('source_filter', source);
                     
-                    const response = await fetch(`/admin/subscribers?${params}`, {
+                    const response = await fetch(`/admin/subscribers/management?${params}`, {
                         headers: { 'Authorization': 'Bearer ' + authToken }
                     });
                     
                     if (!response.ok) throw new Error('Failed to load subscribers');
                     
-                    const subscribers = await response.json();
+                    const data = await response.json();
+                    const subscribers = data.subscribers;
                     
                     const subscribersList = document.getElementById('subscribers-list');
                     subscribersList.innerHTML = '';
@@ -3872,8 +3896,11 @@ def admin_dashboard():
                                 <th style="padding: 12px; text-align: left;">Name</th>
                                 <th style="padding: 12px; text-align: left;">Source</th>
                                 <th style="padding: 12px; text-align: left;">Language</th>
+                                <th style="padding: 12px; text-align: left;">Engagement</th>
+                                <th style="padding: 12px; text-align: left;">Enrollments</th>
+                                <th style="padding: 12px; text-align: left;">Pending Emails</th>
                                 <th style="padding: 12px; text-align: left;">Date Added</th>
-                                <th style="padding: 12px; text-align: left;">Status</th>
+                                <th style="padding: 12px; text-align: left;">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -3887,11 +3914,21 @@ def admin_dashboard():
                                         </span>
                                     </td>
                                     <td style="padding: 12px;">${sub.language === 'en' ? '🇺🇸' : '🇧🇬'} ${sub.language.toUpperCase()}</td>
-                                    <td style="padding: 12px;">${new Date(sub.signup_date).toLocaleDateString()}</td>
                                     <td style="padding: 12px;">
-                                        <span style="background: #dcfce7; color: #166534; padding: 2px 6px; border-radius: 4px; font-size: 12px;">
+                                        <span style="background: ${getEngagementColor(sub.engagement_level)}; padding: 2px 6px; border-radius: 4px; font-size: 12px;">
                                             ${sub.engagement_level}
                                         </span>
+                                    </td>
+                                    <td style="padding: 12px;">
+                                        <span style="font-weight: 600; color: #374151;">${sub.stats.active_enrollments}</span>/${sub.stats.total_enrollments}
+                                    </td>
+                                    <td style="padding: 12px;">
+                                        <span style="font-weight: 600; color: ${sub.stats.pending_emails > 0 ? '#dc2626' : '#16a34a'};">${sub.stats.pending_emails}</span>
+                                    </td>
+                                    <td style="padding: 12px;">${new Date(sub.created_at).toLocaleDateString()}</td>
+                                    <td style="padding: 12px;">
+                                        <button onclick="viewSubscriberDetails(${sub.id})" class="btn-small btn-primary" style="margin-right: 5px;">View Details</button>
+                                        <button onclick="editSubscriber(${sub.id})" class="btn-small btn-secondary">Edit</button>
                                     </td>
                                 </tr>
                             `).join('')}
@@ -4285,6 +4322,223 @@ def admin_dashboard():
             function deleteWaitlist(id) { alert('Delete waitlist ' + id + ' - Interface coming soon'); }
             function editCorporate(id) { alert('Edit corporate ' + id + ' - Interface coming soon'); }
             function deleteCorporate(id) { alert('Delete corporate ' + id + ' - Interface coming soon'); }
+            
+            // Subscriber Management Functions
+            function getEngagementColor(level) {
+                const colors = {
+                    'new': '#fef3c7; color: #92400e',
+                    'warm': '#dbeafe; color: #1e40af', 
+                    'hot': '#fee2e2; color: #dc2626',
+                    'cold': '#f3f4f6; color: #6b7280'
+                };
+                return colors[level] || colors['new'];
+            }
+            
+            async function viewSubscriberDetails(subscriberId) {
+                if (!authToken) return;
+                
+                try {
+                    const response = await fetch(`/admin/subscribers/management/${subscriberId}`, {
+                        headers: { 'Authorization': 'Bearer ' + authToken }
+                    });
+                    
+                    if (!response.ok) throw new Error('Failed to load subscriber details');
+                    
+                    const data = await response.json();
+                    const subscriber = data.subscriber;
+                    
+                    // Create detailed view modal or replace main content
+                    const mainContentArea = document.getElementById('main-content-area');
+                    mainContentArea.innerHTML = `
+                        <div class="content-card">
+                            <div class="card-header">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <h2>👥 Subscriber Details</h2>
+                                        <p>Complete information and activity for ${subscriber.email}</p>
+                                    </div>
+                                    <button onclick="showTab('subscribers')" class="btn-secondary">← Back to Subscribers</button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+                                    <!-- Subscriber Info -->
+                                    <div>
+                                        <h3 style="margin-bottom: 15px; color: #374151;">📋 Subscriber Information</h3>
+                                        <div class="info-grid">
+                                            <div class="info-item">
+                                                <label>Email:</label>
+                                                <span>${subscriber.email}</span>
+                                            </div>
+                                            <div class="info-item">
+                                                <label>Name:</label>
+                                                <span>${subscriber.name || 'Not provided'}</span>
+                                            </div>
+                                            <div class="info-item">
+                                                <label>Source:</label>
+                                                <span class="source-badge">${subscriber.source}</span>
+                                            </div>
+                                            <div class="info-item">
+                                                <label>Language:</label>
+                                                <span>${subscriber.language === 'en' ? '🇺🇸 English' : '🇧🇬 Bulgarian'}</span>
+                                            </div>
+                                            <div class="info-item">
+                                                <label>Engagement Level:</label>
+                                                <span class="engagement-badge engagement-${subscriber.engagement_level}">${subscriber.engagement_level}</span>
+                                            </div>
+                                            <div class="info-item">
+                                                <label>Status:</label>
+                                                <span class="${subscriber.is_active ? 'status-active' : 'status-inactive'}">${subscriber.is_active ? 'Active' : 'Inactive'}</span>
+                                            </div>
+                                            <div class="info-item">
+                                                <label>Signup Date:</label>
+                                                <span>${new Date(subscriber.signup_date || subscriber.created_at).toLocaleString()}</span>
+                                            </div>
+                                            <div class="info-item">
+                                                <label>Last Updated:</label>
+                                                <span>${new Date(subscriber.updated_at).toLocaleString()}</span>
+                                            </div>
+                                            ${subscriber.mailerlite_id ? `<div class="info-item"><label>MailerLite ID:</label><span>${subscriber.mailerlite_id}</span></div>` : ''}
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Statistics -->
+                                    <div>
+                                        <h3 style="margin-bottom: 15px; color: #374151;">📊 Activity Statistics</h3>
+                                        <div class="stats-mini-grid">
+                                            <div class="stat-mini-card">
+                                                <div class="stat-mini-number">${data.stats.total_enrollments}</div>
+                                                <div class="stat-mini-label">Total Enrollments</div>
+                                            </div>
+                                            <div class="stat-mini-card">
+                                                <div class="stat-mini-number">${data.stats.active_enrollments}</div>
+                                                <div class="stat-mini-label">Active Enrollments</div>
+                                            </div>
+                                            <div class="stat-mini-card">
+                                                <div class="stat-mini-number">${data.stats.total_emails}</div>
+                                                <div class="stat-mini-label">Total Emails</div>
+                                            </div>
+                                            <div class="stat-mini-card">
+                                                <div class="stat-mini-number">${data.stats.sent_emails}</div>
+                                                <div class="stat-mini-label">Sent Emails</div>
+                                            </div>
+                                            <div class="stat-mini-card">
+                                                <div class="stat-mini-number">${data.stats.pending_emails}</div>
+                                                <div class="stat-mini-label">Pending Emails</div>
+                                            </div>
+                                            <div class="stat-mini-card">
+                                                <div class="stat-mini-number">${data.stats.failed_emails}</div>
+                                                <div class="stat-mini-label">Failed Emails</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Enrollments Section -->
+                                <div style="margin-bottom: 30px;">
+                                    <h3 style="margin-bottom: 15px; color: #374151;">🤖 Email Sequence Enrollments</h3>
+                                    ${data.enrollments.length > 0 ? `
+                                        <div class="table-container">
+                                            <table class="data-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Sequence</th>
+                                                        <th>Type</th>
+                                                        <th>Status</th>
+                                                        <th>Current Email</th>
+                                                        <th>Enrolled</th>
+                                                        <th>Completed</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    ${data.enrollments.map(enrollment => `
+                                                        <tr>
+                                                            <td>${enrollment.sequence_name}</td>
+                                                            <td><span class="source-badge">${enrollment.sequence_type}</span></td>
+                                                            <td><span class="status-${enrollment.status}">${enrollment.status}</span></td>
+                                                            <td>${enrollment.current_email_index + 1}</td>
+                                                            <td>${new Date(enrollment.enrolled_at).toLocaleDateString()}</td>
+                                                            <td>${enrollment.completed_at ? new Date(enrollment.completed_at).toLocaleDateString() : '-'}</td>
+                                                        </tr>
+                                                    `).join('')}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    ` : '<p style="color: #6b7280; font-style: italic;">No sequence enrollments found.</p>'}
+                                </div>
+                                
+                                <!-- Scheduled Emails Section -->
+                                <div style="margin-bottom: 30px;">
+                                    <h3 style="margin-bottom: 15px; color: #374151;">📧 Scheduled & Sent Emails</h3>
+                                    ${data.scheduled_emails.length > 0 ? `
+                                        <div class="table-container">
+                                            <table class="data-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Subject</th>
+                                                        <th>Type</th>
+                                                        <th>Email #</th>
+                                                        <th>Status</th>
+                                                        <th>Scheduled For</th>
+                                                        <th>Sent At</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    ${data.scheduled_emails.map(email => `
+                                                        <tr>
+                                                            <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">${email.subject}</td>
+                                                            <td><span class="source-badge">${email.sequence_type}</span></td>
+                                                            <td>${email.email_index + 1}</td>
+                                                            <td><span class="status-${email.status}">${email.status}</span></td>
+                                                            <td>${new Date(email.scheduled_for).toLocaleString()}</td>
+                                                            <td>${email.sent_at ? new Date(email.sent_at).toLocaleString() : '-'}</td>
+                                                        </tr>
+                                                    `).join('')}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    ` : '<p style="color: #6b7280; font-style: italic;">No emails found for this subscriber.</p>'}
+                                </div>
+                                
+                                ${data.analytics.length > 0 ? `
+                                    <!-- Analytics Section -->
+                                    <div>
+                                        <h3 style="margin-bottom: 15px; color: #374151;">📈 Email Analytics Events</h3>
+                                        <div class="table-container">
+                                            <table class="data-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Event Type</th>
+                                                        <th>Event Data</th>
+                                                        <th>Date</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    ${data.analytics.slice(0, 10).map(event => `
+                                                        <tr>
+                                                            <td><span class="analytics-event">${event.event_type}</span></td>
+                                                            <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;">${JSON.stringify(event.event_data)}</td>
+                                                            <td>${new Date(event.created_at).toLocaleString()}</td>
+                                                        </tr>
+                                                    `).join('')}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        ${data.analytics.length > 10 ? `<p style="color: #6b7280; margin-top: 10px;">Showing latest 10 events out of ${data.analytics.length} total.</p>` : ''}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                    
+                } catch (error) {
+                    alert('Error loading subscriber details: ' + error.message);
+                }
+            }
+            
+            function editSubscriber(id) {
+                alert('Edit subscriber ' + id + ' - Interface coming soon. Use API: PUT /admin/subscribers/management/' + id);
+            }
         </script>
     </body>
     </html>
@@ -5921,6 +6175,300 @@ def delete_sequence_email(
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Failed to delete email: {str(e)}")
+
+# Enhanced Subscriber Management Endpoints
+@app.get("/admin/subscribers/management")
+def get_subscribers_management(
+    skip: int = 0,
+    limit: int = 100,
+    search: str = None,
+    source_filter: str = None,
+    language_filter: str = None,
+    engagement_filter: str = None,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Get all subscribers with detailed information and filtering"""
+    try:
+        query = db.query(EmailSubscriber)
+        
+        # Search functionality
+        if search:
+            query = query.filter(
+                or_(
+                    EmailSubscriber.email.contains(search),
+                    EmailSubscriber.name.contains(search) if EmailSubscriber.name.isnot(None) else False
+                )
+            )
+        
+        # Source filtering
+        if source_filter:
+            query = query.filter(EmailSubscriber.source == source_filter)
+        
+        # Language filtering
+        if language_filter:
+            query = query.filter(EmailSubscriber.language == language_filter)
+        
+        # Engagement filtering
+        if engagement_filter:
+            query = query.filter(EmailSubscriber.engagement_level == engagement_filter)
+        
+        # Get total count
+        total = query.count()
+        
+        # Apply pagination
+        subscribers = query.order_by(EmailSubscriber.created_at.desc()).offset(skip).limit(limit).all()
+        
+        result = []
+        for subscriber in subscribers:
+            # Get enrollment count
+            enrollment_count = db.query(SequenceEnrollment).filter(
+                SequenceEnrollment.subscriber_id == subscriber.id
+            ).count()
+            
+            # Get active enrollments
+            active_enrollments = db.query(SequenceEnrollment).filter(
+                SequenceEnrollment.subscriber_id == subscriber.id,
+                SequenceEnrollment.status == "active"
+            ).count()
+            
+            # Get scheduled emails count
+            scheduled_emails = db.query(ScheduledEmail).filter(
+                ScheduledEmail.subscriber_id == subscriber.id,
+                ScheduledEmail.sent_at.is_(None),
+                ScheduledEmail.failed_at.is_(None)
+            ).count()
+            
+            result.append({
+                "id": subscriber.id,
+                "email": subscriber.email,
+                "name": subscriber.name,
+                "source": subscriber.source,
+                "language": subscriber.language,
+                "engagement_level": subscriber.engagement_level,
+                "is_active": subscriber.is_active,
+                "signup_date": subscriber.signup_date.isoformat() if subscriber.signup_date else None,
+                "created_at": subscriber.created_at.isoformat(),
+                "updated_at": subscriber.updated_at.isoformat(),
+                "mailerlite_id": subscriber.mailerlite_id,
+                "stats": {
+                    "total_enrollments": enrollment_count,
+                    "active_enrollments": active_enrollments,
+                    "pending_emails": scheduled_emails
+                }
+            })
+        
+        return {
+            "subscribers": result,
+            "total": total,
+            "skip": skip,
+            "limit": limit
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch subscribers: {str(e)}")
+
+@app.get("/admin/subscribers/management/{subscriber_id}")
+def get_subscriber_details(
+    subscriber_id: int,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Get detailed information about a specific subscriber"""
+    try:
+        subscriber = db.query(EmailSubscriber).filter(EmailSubscriber.id == subscriber_id).first()
+        if not subscriber:
+            raise HTTPException(status_code=404, detail="Subscriber not found")
+        
+        # Get all enrollments
+        enrollments = db.query(SequenceEnrollment).filter(
+            SequenceEnrollment.subscriber_id == subscriber_id
+        ).all()
+        
+        # Get all scheduled emails
+        scheduled_emails = db.query(ScheduledEmail).filter(
+            ScheduledEmail.subscriber_id == subscriber_id
+        ).order_by(ScheduledEmail.scheduled_for.desc()).all()
+        
+        # Get email analytics
+        email_analytics = db.query(EmailAnalytics).join(ScheduledEmail).filter(
+            ScheduledEmail.subscriber_id == subscriber_id
+        ).all()
+        
+        # Format enrollments
+        enrollment_data = []
+        for enrollment in enrollments:
+            sequence = db.query(EmailSequence).filter(
+                EmailSequence.id == enrollment.sequence_id
+            ).first()
+            
+            enrollment_data.append({
+                "id": enrollment.id,
+                "sequence_name": sequence.name if sequence else "Unknown",
+                "sequence_type": sequence.sequence_type if sequence else "Unknown",
+                "status": enrollment.status,
+                "enrolled_at": enrollment.enrolled_at.isoformat(),
+                "completed_at": enrollment.completed_at.isoformat() if enrollment.completed_at else None,
+                "current_email_index": enrollment.current_email_index
+            })
+        
+        # Format scheduled emails
+        email_data = []
+        for email in scheduled_emails:
+            status = "pending"
+            if email.sent_at:
+                status = "sent"
+            elif email.failed_at:
+                status = "failed"
+            
+            email_data.append({
+                "id": email.id,
+                "subject": email.subject,
+                "sequence_type": email.sequence_type,
+                "email_index": email.email_index,
+                "scheduled_for": email.scheduled_for.isoformat(),
+                "sent_at": email.sent_at.isoformat() if email.sent_at else None,
+                "failed_at": email.failed_at.isoformat() if email.failed_at else None,
+                "status": status,
+                "error_message": email.error_message
+            })
+        
+        # Format analytics
+        analytics_data = []
+        for analytics in email_analytics:
+            analytics_data.append({
+                "event_type": analytics.event_type,
+                "event_data": analytics.event_data,
+                "created_at": analytics.created_at.isoformat()
+            })
+        
+        return {
+            "subscriber": {
+                "id": subscriber.id,
+                "email": subscriber.email,
+                "name": subscriber.name,
+                "source": subscriber.source,
+                "language": subscriber.language,
+                "engagement_level": subscriber.engagement_level,
+                "is_active": subscriber.is_active,
+                "signup_date": subscriber.signup_date.isoformat() if subscriber.signup_date else None,
+                "created_at": subscriber.created_at.isoformat(),
+                "updated_at": subscriber.updated_at.isoformat(),
+                "mailerlite_id": subscriber.mailerlite_id,
+                "custom_fields": subscriber.custom_fields
+            },
+            "enrollments": enrollment_data,
+            "scheduled_emails": email_data,
+            "analytics": analytics_data,
+            "stats": {
+                "total_enrollments": len(enrollment_data),
+                "active_enrollments": len([e for e in enrollment_data if e["status"] == "active"]),
+                "completed_enrollments": len([e for e in enrollment_data if e["status"] == "completed"]),
+                "total_emails": len(email_data),
+                "sent_emails": len([e for e in email_data if e["status"] == "sent"]),
+                "pending_emails": len([e for e in email_data if e["status"] == "pending"]),
+                "failed_emails": len([e for e in email_data if e["status"] == "failed"]),
+                "total_analytics_events": len(analytics_data)
+            }
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch subscriber details: {str(e)}")
+
+@app.put("/admin/subscribers/management/{subscriber_id}")
+def update_subscriber(
+    subscriber_id: int,
+    name: str = Form(default=None),
+    engagement_level: str = Form(default=None),
+    is_active: bool = Form(default=None),
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Update subscriber information"""
+    try:
+        subscriber = db.query(EmailSubscriber).filter(EmailSubscriber.id == subscriber_id).first()
+        if not subscriber:
+            raise HTTPException(status_code=404, detail="Subscriber not found")
+        
+        # Validate engagement level
+        if engagement_level and engagement_level not in ["new", "warm", "hot", "cold"]:
+            raise HTTPException(status_code=400, detail="Invalid engagement level")
+        
+        # Update fields if provided
+        if name is not None:
+            subscriber.name = name
+        if engagement_level is not None:
+            subscriber.engagement_level = engagement_level
+        if is_active is not None:
+            subscriber.is_active = is_active
+        
+        subscriber.updated_at = datetime.utcnow()
+        db.commit()
+        
+        return {
+            "success": True,
+            "message": "Subscriber updated successfully",
+            "subscriber": {
+                "id": subscriber.id,
+                "email": subscriber.email,
+                "name": subscriber.name,
+                "engagement_level": subscriber.engagement_level,
+                "is_active": subscriber.is_active
+            }
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to update subscriber: {str(e)}")
+
+@app.delete("/admin/subscribers/management/{subscriber_id}")
+def delete_subscriber(
+    subscriber_id: int,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Delete subscriber and all related data"""
+    try:
+        subscriber = db.query(EmailSubscriber).filter(EmailSubscriber.id == subscriber_id).first()
+        if not subscriber:
+            raise HTTPException(status_code=404, detail="Subscriber not found")
+        
+        # Delete related data in correct order
+        # Delete analytics first
+        analytics_deleted = db.query(EmailAnalytics).join(ScheduledEmail).filter(
+            ScheduledEmail.subscriber_id == subscriber_id
+        ).delete(synchronize_session=False)
+        
+        # Delete scheduled emails
+        emails_deleted = db.query(ScheduledEmail).filter(
+            ScheduledEmail.subscriber_id == subscriber_id
+        ).delete()
+        
+        # Delete enrollments
+        enrollments_deleted = db.query(SequenceEnrollment).filter(
+            SequenceEnrollment.subscriber_id == subscriber_id
+        ).delete()
+        
+        # Delete subscriber
+        db.delete(subscriber)
+        db.commit()
+        
+        return {
+            "success": True,
+            "message": "Subscriber and all related data deleted successfully",
+            "deleted_items": {
+                "subscriber": 1,
+                "enrollments": enrollments_deleted,
+                "scheduled_emails": emails_deleted,
+                "analytics": analytics_deleted
+            }
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to delete subscriber: {str(e)}")
 
 @app.post("/admin/cleanup/database")
 def cleanup_database(
