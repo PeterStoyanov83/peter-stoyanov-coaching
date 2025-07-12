@@ -289,6 +289,39 @@ async def download_guide(
         db.rollback()
         raise HTTPException(status_code=500, detail="Download request failed")
 
+# Database initialization endpoint
+@app.post("/admin/init-database")
+async def init_database():
+    """Initialize database tables - run this once after deployment"""
+    try:
+        from models import Base
+        from database import engine
+        
+        # Create all tables
+        Base.metadata.create_all(bind=engine)
+        
+        # Test connection
+        from database import SessionLocal
+        db = SessionLocal()
+        
+        # Check if tables exist by trying a simple query
+        from models import WaitlistRegistration
+        count = db.query(WaitlistRegistration).count()
+        db.close()
+        
+        return {
+            "success": True,
+            "message": "Database initialized successfully",
+            "waitlist_count": count
+        }
+        
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e),
+            "message": "Database initialization failed"
+        }
+
 # Health check
 @app.get("/health")
 def health_check():
