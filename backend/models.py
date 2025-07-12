@@ -20,6 +20,18 @@ class WaitlistRegistration(Base):
     skills_to_improve = Column(Text, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     
+    # Enhanced tracking fields
+    status = Column(String(20), default="new")  # new, contacted, qualified, converted, not_interested, rejected
+    notes = Column(Text, nullable=True)  # Admin notes
+    priority = Column(String(10), default="medium")  # low, medium, high
+    last_contacted = Column(DateTime, nullable=True)
+    follow_up_date = Column(DateTime, nullable=True)
+    conversion_source = Column(String(50), nullable=True)  # how they converted to subscriber
+    updated_by = Column(String(100), nullable=True)  # admin who last updated
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    lead_score = Column(Integer, default=0)  # calculated lead score
+    tags = Column(JSON, nullable=True)  # flexible tagging system
+    
 class CorporateInquiry(Base):
     __tablename__ = "corporate_inquiries"
     
@@ -34,6 +46,23 @@ class CorporateInquiry(Base):
     preferred_dates = Column(Text, nullable=True)
     additional_info = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Enhanced tracking fields
+    status = Column(String(20), default="new")  # new, qualified, proposal_sent, negotiation, closed_won, closed_lost, on_hold
+    priority = Column(String(10), default="medium")  # low, medium, high, urgent
+    estimated_value = Column(Integer, nullable=True)  # estimated deal value in euros
+    proposal_sent_date = Column(DateTime, nullable=True)
+    follow_up_date = Column(DateTime, nullable=True)
+    expected_close_date = Column(DateTime, nullable=True)
+    notes = Column(Text, nullable=True)  # Admin notes
+    assigned_to = Column(String(100), nullable=True)  # admin assigned to this inquiry
+    last_contacted = Column(DateTime, nullable=True)
+    updated_by = Column(String(100), nullable=True)  # admin who last updated
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    lead_score = Column(Integer, default=0)  # calculated lead score based on company size, budget, etc.
+    tags = Column(JSON, nullable=True)  # flexible tagging system
+    probability = Column(Integer, default=50)  # probability of closing (0-100%)
+    lost_reason = Column(String(100), nullable=True)  # reason if status is closed_lost
 
 class LeadMagnetDownload(Base):
     __tablename__ = "lead_magnet_downloads"
@@ -43,6 +72,41 @@ class LeadMagnetDownload(Base):
     download_count = Column(Integer, default=1)
     created_at = Column(DateTime, default=datetime.utcnow)
     last_downloaded_at = Column(DateTime, default=datetime.utcnow)
+
+class Communication(Base):
+    __tablename__ = "communications"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    contact_type = Column(String(20), nullable=False)  # waitlist, corporate, subscriber
+    contact_id = Column(Integer, nullable=False)  # reference to waitlist/corporate/subscriber ID
+    communication_type = Column(String(20), nullable=False)  # email, call, meeting, note
+    subject = Column(String(200), nullable=True)
+    content = Column(Text, nullable=True)
+    sent_at = Column(DateTime, default=datetime.utcnow)
+    sent_by = Column(String(100), nullable=False)  # admin name
+    response_received = Column(Boolean, default=False)
+    response_date = Column(DateTime, nullable=True)
+    follow_up_required = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+class Task(Base):
+    __tablename__ = "tasks"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String(200), nullable=False)
+    description = Column(Text, nullable=True)
+    task_type = Column(String(20), nullable=False)  # follow_up, call, email, meeting
+    contact_type = Column(String(20), nullable=False)  # waitlist, corporate, subscriber
+    contact_id = Column(Integer, nullable=False)
+    assigned_to = Column(String(100), nullable=False)  # admin assigned
+    due_date = Column(DateTime, nullable=False)
+    status = Column(String(20), default="pending")  # pending, completed, overdue, cancelled
+    priority = Column(String(10), default="medium")  # low, medium, high, urgent
+    completed_at = Column(DateTime, nullable=True)
+    completed_by = Column(String(100), nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 class BlogPost(Base):
     __tablename__ = "blog_posts"
@@ -213,9 +277,28 @@ class WaitlistRegistrationResponse(BaseModel):
     why_join: str
     skills_to_improve: str
     created_at: datetime
+    status: str
+    notes: Optional[str]
+    priority: str
+    last_contacted: Optional[datetime]
+    follow_up_date: Optional[datetime]
+    conversion_source: Optional[str]
+    updated_by: Optional[str]
+    updated_at: datetime
+    lead_score: int
+    tags: Optional[List[str]]
     
     class Config:
         from_attributes = True
+
+class WaitlistUpdateRequest(BaseModel):
+    status: Optional[str] = None
+    notes: Optional[str] = None
+    priority: Optional[str] = None
+    follow_up_date: Optional[datetime] = None
+    conversion_source: Optional[str] = None
+    lead_score: Optional[int] = None
+    tags: Optional[List[str]] = None
 
 class CorporateInquiryResponse(BaseModel):
     id: int
@@ -229,6 +312,90 @@ class CorporateInquiryResponse(BaseModel):
     preferred_dates: Optional[str]
     additional_info: Optional[str]
     created_at: datetime
+    status: str
+    priority: str
+    estimated_value: Optional[int]
+    proposal_sent_date: Optional[datetime]
+    follow_up_date: Optional[datetime]
+    expected_close_date: Optional[datetime]
+    notes: Optional[str]
+    assigned_to: Optional[str]
+    last_contacted: Optional[datetime]
+    updated_by: Optional[str]
+    updated_at: datetime
+    lead_score: int
+    tags: Optional[List[str]]
+    probability: int
+    lost_reason: Optional[str]
+    
+    class Config:
+        from_attributes = True
+
+class CorporateUpdateRequest(BaseModel):
+    status: Optional[str] = None
+    priority: Optional[str] = None
+    estimated_value: Optional[int] = None
+    proposal_sent_date: Optional[datetime] = None
+    follow_up_date: Optional[datetime] = None
+    expected_close_date: Optional[datetime] = None
+    notes: Optional[str] = None
+    assigned_to: Optional[str] = None
+    lead_score: Optional[int] = None
+    tags: Optional[List[str]] = None
+    probability: Optional[int] = None
+    lost_reason: Optional[str] = None
+
+class CommunicationRequest(BaseModel):
+    contact_type: str  # waitlist, corporate, subscriber
+    contact_id: int
+    communication_type: str  # email, call, meeting, note
+    subject: Optional[str] = None
+    content: Optional[str] = None
+    follow_up_required: bool = False
+
+class CommunicationResponse(BaseModel):
+    id: int
+    contact_type: str
+    contact_id: int
+    communication_type: str
+    subject: Optional[str]
+    content: Optional[str]
+    sent_at: datetime
+    sent_by: str
+    response_received: bool
+    response_date: Optional[datetime]
+    follow_up_required: bool
+    created_at: datetime
+    updated_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+class TaskRequest(BaseModel):
+    title: str
+    description: Optional[str] = None
+    task_type: str  # follow_up, call, email, meeting
+    contact_type: str  # waitlist, corporate, subscriber
+    contact_id: int
+    assigned_to: str
+    due_date: datetime
+    priority: str = "medium"
+
+class TaskResponse(BaseModel):
+    id: int
+    title: str
+    description: Optional[str]
+    task_type: str
+    contact_type: str
+    contact_id: int
+    assigned_to: str
+    due_date: datetime
+    status: str
+    priority: str
+    completed_at: Optional[datetime]
+    completed_by: Optional[str]
+    created_at: datetime
+    updated_at: datetime
     
     class Config:
         from_attributes = True

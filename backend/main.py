@@ -18,7 +18,9 @@ import re
 
 from models import (WaitlistRegistration, CorporateInquiry, LeadMagnetDownload, BlogPost, BlogPostRequest, BlogPostResponse, BlogPostListResponse,
                    MultilingualBlogPost, MultilingualBlogPostRequest, MultilingualBlogPostUpdateRequest, MultilingualBlogPostResponse, MultilingualBlogPostPublicResponse,
-                   EmailSubscriber, SequenceEnrollment, SequenceEmail, EmailSequence, EmailAnalytics, ScheduledEmail)
+                   EmailSubscriber, SequenceEnrollment, SequenceEmail, EmailSequence, EmailAnalytics, ScheduledEmail,
+                   Communication, Task, WaitlistUpdateRequest, CorporateUpdateRequest, CommunicationRequest, TaskRequest,
+                   WaitlistRegistrationResponse, CorporateInquiryResponse, CommunicationResponse, TaskResponse)
 from database import (get_db, store_waitlist_registration, store_corporate_inquiry, store_lead_magnet_download,
                      create_blog_post, get_blog_posts, get_blog_post_by_id, get_blog_post_by_slug, 
                      update_blog_post, delete_blog_post, search_blog_posts, get_post_translations, 
@@ -1497,10 +1499,36 @@ def admin_dashboard():
                 padding: 10px 16px;
                 border: none;
                 border-radius: 8px;
-                cursor: pointer;
+            }
+            
+            /* Status and Priority Badges */
+            .status-badge, .priority-badge {
+                padding: 4px 8px;
+                border-radius: 6px;
+                font-size: 11px;
                 font-weight: 600;
-                transition: all 0.2s ease;
-                box-shadow: 0 2px 4px rgba(107, 114, 128, 0.3);
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+            
+            /* Status badge colors */
+            .status-new { background: #ddd6fe; color: #5b21b6; }
+            .status-contacted { background: #fef3c7; color: #92400e; }
+            .status-qualified { background: #bfdbfe; color: #1e40af; }
+            .status-converted { background: #bbf7d0; color: #065f46; }
+            .status-not_interested { background: #fecaca; color: #991b1b; }
+            .status-rejected { background: #f3f4f6; color: #374151; }
+            .status-proposal_sent { background: #dbeafe; color: #1d4ed8; }
+            .status-negotiation { background: #fde68a; color: #92400e; }
+            .status-closed_won { background: #bbf7d0; color: #065f46; }
+            .status-closed_lost { background: #fecaca; color: #991b1b; }
+            .status-on_hold { background: #f3f4f6; color: #6b7280; }
+            
+            /* Priority badge colors */
+            .priority-low { background: #f3f4f6; color: #6b7280; }
+            .priority-medium { background: #fef3c7; color: #92400e; }
+            .priority-high { background: #fed7aa; color: #ea580c; }
+            .priority-urgent { background: #fecaca; color: #dc2626; }
             }
             .btn-secondary:hover {
                 transform: translateY(-1px);
@@ -2181,6 +2209,14 @@ def admin_dashboard():
                     </div>
                     
                     <div class="nav-section">
+                        <div class="nav-section-title">Overview</div>
+                        <div class="nav-item" onclick="showTab('dashboard')">
+                            <span class="nav-icon">📊</span>
+                            <span class="nav-text">Dashboard</span>
+                        </div>
+                    </div>
+                    
+                    <div class="nav-section">
                         <div class="nav-section-title">Data Management</div>
                         <div class="nav-item" onclick="showTab('lead-management')">
                             <span class="nav-icon">📧</span>
@@ -2452,6 +2488,45 @@ def admin_dashboard():
                             <button type="submit" class="btn-save">Save Post</button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dashboard Content Template -->
+        <div id="dashboard-content-template" style="display: none;">
+            <div class="content-card">
+                <div class="card-header">
+                    <h2>📊 Analytics Overview</h2>
+                    <p>Key metrics and conversion funnel performance</p>
+                </div>
+                <div class="card-body">
+                    <div id="dashboard-analytics" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+                        <!-- Analytics widgets will be loaded here -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-card">
+                <div class="card-header">
+                    <h2>📋 Today's Tasks & Follow-ups</h2>
+                    <p>Items requiring your attention</p>
+                </div>
+                <div class="card-body">
+                    <div id="dashboard-tasks">
+                        <!-- Tasks will be loaded here -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-card">
+                <div class="card-header">
+                    <h2>💰 Corporate Pipeline</h2>
+                    <p>Sales pipeline and deal values</p>
+                </div>
+                <div class="card-body">
+                    <div id="dashboard-pipeline">
+                        <!-- Pipeline will be loaded here -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -4723,9 +4798,10 @@ def admin_dashboard():
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Occupation</th>
+                                        <th>Contact</th>
+                                        <th>Details</th>
+                                        <th>Status</th>
+                                        <th>Priority</th>
                                         <th>Created</th>
                                         <th>Actions</th>
                                     </tr>
@@ -4737,12 +4813,25 @@ def admin_dashboard():
                         tableHtml += `
                             <tr>
                                 <td>${entry.id}</td>
-                                <td>${entry.full_name}</td>
-                                <td>${entry.email}</td>
-                                <td>${entry.occupation}</td>
+                                <td>
+                                    <div style="font-weight: 600;">${entry.full_name}</div>
+                                    <div style="font-size: 12px; color: #6b7280;">${entry.city_country}</div>
+                                </td>
+                                <td>
+                                    <div>${entry.email}</div>
+                                    <div style="font-size: 12px; color: #6b7280;">${entry.occupation}</div>
+                                </td>
+                                <td>
+                                    <span class="status-badge status-${entry.status || 'new'}">${entry.status || 'new'}</span>
+                                </td>
+                                <td>
+                                    <span class="priority-badge priority-${entry.priority || 'medium'}">${entry.priority || 'medium'}</span>
+                                </td>
                                 <td>${new Date(entry.created_at).toLocaleDateString()}</td>
                                 <td>
-                                    <span style="color: #6b7280; font-style: italic; font-size: 12px;">View only</span>
+                                    <button onclick="viewWaitlistDetails(${entry.id})" class="btn-small btn-primary" style="margin-right: 5px;">View</button>
+                                    <button onclick="editWaitlistEntry(${entry.id})" class="btn-small btn-secondary" style="margin-right: 5px;">Edit</button>
+                                    <button onclick="deleteWaitlistEntry(${entry.id})" class="btn-small btn-danger">Delete</button>
                                 </td>
                             </tr>
                         `;
@@ -4787,11 +4876,11 @@ def admin_dashboard():
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Company</th>
+                                        <th>Contact</th>
+                                        <th>Details</th>
                                         <th>Status</th>
-                                        <th>Created</th>
+                                        <th>Priority</th>
+                                        <th>Value & Date</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -4802,13 +4891,28 @@ def admin_dashboard():
                         tableHtml += `
                             <tr>
                                 <td>${inquiry.id}</td>
-                                <td>${inquiry.full_name}</td>
-                                <td>${inquiry.email}</td>
-                                <td>${inquiry.company_name}</td>
-                                <td><span class="status-${inquiry.status}">${inquiry.status}</span></td>
-                                <td>${new Date(inquiry.created_at).toLocaleDateString()}</td>
                                 <td>
-                                    <span style="color: #6b7280; font-style: italic; font-size: 12px;">View only</span>
+                                    <div style="font-weight: 600;">${inquiry.contact_person}</div>
+                                    <div style="font-size: 12px; color: #6b7280;">${inquiry.company_name}</div>
+                                </td>
+                                <td>
+                                    <div>${inquiry.email}</div>
+                                    <div style="font-size: 12px; color: #6b7280;">Team: ${inquiry.team_size}</div>
+                                </td>
+                                <td>
+                                    <span class="status-badge status-${inquiry.status || 'new'}">${inquiry.status || 'new'}</span>
+                                </td>
+                                <td>
+                                    <span class="priority-badge priority-${inquiry.priority || 'medium'}">${inquiry.priority || 'medium'}</span>
+                                </td>
+                                <td>
+                                    <div>${new Date(inquiry.created_at).toLocaleDateString()}</div>
+                                    ${inquiry.estimated_value ? `<div style="font-size: 12px; color: #059669; font-weight: 600;">€${inquiry.estimated_value}</div>` : ''}
+                                </td>
+                                <td>
+                                    <button onclick="viewCorporateDetails(${inquiry.id})" class="btn-small btn-primary" style="margin-right: 5px;">View</button>
+                                    <button onclick="editCorporateInquiry(${inquiry.id})" class="btn-small btn-secondary" style="margin-right: 5px;">Edit</button>
+                                    <button onclick="deleteCorporateInquiry(${inquiry.id})" class="btn-small btn-danger">Delete</button>
                                 </td>
                             </tr>
                         `;
@@ -5681,6 +5785,544 @@ def admin_dashboard():
                         modal.remove();
                     }, 300);
                 }
+            }
+            
+            // ============================================================================
+            // ENHANCED WAITLIST MANAGEMENT FUNCTIONS
+            // ============================================================================
+            
+            function viewWaitlistDetails(entryId) {
+                if (!authToken) return;
+                showNotification('Waitlist details view coming soon!', 'info');
+            }
+            
+            async function editWaitlistEntry(entryId) {
+                if (!authToken) return;
+                
+                try {
+                    const response = await fetch(`/admin/waitlist/management/${entryId}`, {
+                        headers: { 'Authorization': 'Bearer ' + authToken }
+                    });
+                    
+                    if (!response.ok) throw new Error('Failed to load waitlist entry');
+                    const entry = await response.json();
+                    
+                    showWaitlistEditModal(entry);
+                    
+                } catch (error) {
+                    console.error('Error loading waitlist entry:', error);
+                    showNotification('Failed to load waitlist entry: ' + error.message, 'error');
+                }
+            }
+            
+            function showWaitlistEditModal(entry) {
+                const modalOverlay = document.createElement('div');
+                modalOverlay.id = 'waitlist-edit-modal-overlay';
+                modalOverlay.style.cssText = `
+                    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                    background: rgba(0, 0, 0, 0.5); display: flex; align-items: center;
+                    justify-content: center; z-index: 1000; backdrop-filter: blur(4px);
+                `;
+                
+                modalOverlay.innerHTML = `
+                    <div style="background: white; border-radius: 16px; width: 90%; max-width: 600px;
+                                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); padding: 24px; border-bottom: 1px solid #e2e8f0;">
+                            <h3 style="margin: 0; font-size: 20px; font-weight: 700; color: #1e293b;">
+                                Edit Waitlist Entry - ${entry.full_name}
+                            </h3>
+                            <p style="margin: 8px 0 0 0; color: #64748b;">${entry.email}</p>
+                        </div>
+                        
+                        <form id="waitlist-edit-form" style="padding: 24px;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                                <div>
+                                    <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 8px;">Status:</label>
+                                    <select id="waitlist-status" style="width: 100%; padding: 12px; border: 2px solid #d1d5db; border-radius: 8px;">
+                                        <option value="new" ${entry.status === 'new' ? 'selected' : ''}>🆕 New</option>
+                                        <option value="contacted" ${entry.status === 'contacted' ? 'selected' : ''}>📞 Contacted</option>
+                                        <option value="qualified" ${entry.status === 'qualified' ? 'selected' : ''}>✅ Qualified</option>
+                                        <option value="converted" ${entry.status === 'converted' ? 'selected' : ''}>🎉 Converted</option>
+                                        <option value="not_interested" ${entry.status === 'not_interested' ? 'selected' : ''}>❌ Not Interested</option>
+                                        <option value="rejected" ${entry.status === 'rejected' ? 'selected' : ''}>🚫 Rejected</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 8px;">Priority:</label>
+                                    <select id="waitlist-priority" style="width: 100%; padding: 12px; border: 2px solid #d1d5db; border-radius: 8px;">
+                                        <option value="low" ${entry.priority === 'low' ? 'selected' : ''}>🔹 Low</option>
+                                        <option value="medium" ${entry.priority === 'medium' ? 'selected' : ''}>🔸 Medium</option>
+                                        <option value="high" ${entry.priority === 'high' ? 'selected' : ''}>🔶 High</option>
+                                        <option value="urgent" ${entry.priority === 'urgent' ? 'selected' : ''}>🚨 Urgent</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-bottom: 20px;">
+                                <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 8px;">Follow-up Date:</label>
+                                <input type="date" id="waitlist-followup" value="${entry.follow_up_date ? entry.follow_up_date.split('T')[0] : ''}"
+                                       style="width: 100%; padding: 12px; border: 2px solid #d1d5db; border-radius: 8px;" />
+                            </div>
+                            
+                            <div style="margin-bottom: 20px;">
+                                <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 8px;">Notes:</label>
+                                <textarea id="waitlist-notes" rows="4" placeholder="Add notes about this contact..."
+                                          style="width: 100%; padding: 12px; border: 2px solid #d1d5db; border-radius: 8px;">${entry.notes || ''}</textarea>
+                            </div>
+                            
+                            <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 32px; padding-top: 24px; border-top: 1px solid #e2e8f0;">
+                                <button type="button" onclick="closeWaitlistEditModal()" class="btn-secondary">Cancel</button>
+                                <button type="submit" class="btn-primary">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                `;
+                
+                document.body.appendChild(modalOverlay);
+                
+                document.getElementById('waitlist-edit-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    saveWaitlistChanges(entry.id);
+                });
+                
+                modalOverlay.addEventListener('click', (e) => {
+                    if (e.target === modalOverlay) closeWaitlistEditModal();
+                });
+            }
+            
+            async function saveWaitlistChanges(entryId) {
+                try {
+                    const data = {
+                        status: document.getElementById('waitlist-status').value,
+                        priority: document.getElementById('waitlist-priority').value,
+                        follow_up_date: document.getElementById('waitlist-followup').value || null,
+                        notes: document.getElementById('waitlist-notes').value.trim() || null
+                    };
+                    
+                    const response = await fetch(`/admin/waitlist/management/${entryId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': 'Bearer ' + authToken,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    
+                    if (!response.ok) throw new Error('Failed to update waitlist entry');
+                    
+                    showNotification('Waitlist entry updated successfully!', 'success');
+                    closeWaitlistEditModal();
+                    loadWaitlist();
+                    
+                } catch (error) {
+                    console.error('Error updating waitlist entry:', error);
+                    showNotification('Failed to update waitlist entry: ' + error.message, 'error');
+                }
+            }
+            
+            function deleteWaitlistEntry(entryId) {
+                if (!authToken) return;
+                
+                if (confirm('Are you sure you want to delete this waitlist entry? This will also remove all related communications and tasks.')) {
+                    deleteWaitlistEntryConfirmed(entryId);
+                }
+            }
+            
+            async function deleteWaitlistEntryConfirmed(entryId) {
+                try {
+                    const response = await fetch(`/admin/waitlist/management/${entryId}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': 'Bearer ' + authToken }
+                    });
+                    
+                    if (!response.ok) throw new Error('Failed to delete waitlist entry');
+                    
+                    showNotification('Waitlist entry deleted successfully!', 'success');
+                    loadWaitlist();
+                    
+                } catch (error) {
+                    console.error('Error deleting waitlist entry:', error);
+                    showNotification('Failed to delete waitlist entry: ' + error.message, 'error');
+                }
+            }
+            
+            function closeWaitlistEditModal() {
+                const modal = document.getElementById('waitlist-edit-modal-overlay');
+                if (modal) modal.remove();
+            }
+            
+            // ============================================================================
+            // ENHANCED CORPORATE MANAGEMENT FUNCTIONS
+            // ============================================================================
+            
+            function viewCorporateDetails(inquiryId) {
+                if (!authToken) return;
+                showNotification('Corporate details view coming soon!', 'info');
+            }
+            
+            async function editCorporateInquiry(inquiryId) {
+                if (!authToken) return;
+                
+                try {
+                    const response = await fetch(`/admin/corporate/management/${inquiryId}`, {
+                        headers: { 'Authorization': 'Bearer ' + authToken }
+                    });
+                    
+                    if (!response.ok) throw new Error('Failed to load corporate inquiry');
+                    const inquiry = await response.json();
+                    
+                    showCorporateEditModal(inquiry);
+                    
+                } catch (error) {
+                    console.error('Error loading corporate inquiry:', error);
+                    showNotification('Failed to load corporate inquiry: ' + error.message, 'error');
+                }
+            }
+            
+            function showCorporateEditModal(inquiry) {
+                const modalOverlay = document.createElement('div');
+                modalOverlay.id = 'corporate-edit-modal-overlay';
+                modalOverlay.style.cssText = `
+                    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                    background: rgba(0, 0, 0, 0.5); display: flex; align-items: center;
+                    justify-content: center; z-index: 1000; backdrop-filter: blur(4px);
+                `;
+                
+                modalOverlay.innerHTML = `
+                    <div style="background: white; border-radius: 16px; width: 90%; max-width: 700px;
+                                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); padding: 24px; border-bottom: 1px solid #e2e8f0;">
+                            <h3 style="margin: 0; font-size: 20px; font-weight: 700; color: #1e293b;">
+                                Edit Corporate Inquiry - ${inquiry.company_name}
+                            </h3>
+                            <p style="margin: 8px 0 0 0; color: #64748b;">${inquiry.contact_person} • ${inquiry.email}</p>
+                        </div>
+                        
+                        <form id="corporate-edit-form" style="padding: 24px;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                                <div>
+                                    <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 8px;">Status:</label>
+                                    <select id="corporate-status" style="width: 100%; padding: 12px; border: 2px solid #d1d5db; border-radius: 8px;">
+                                        <option value="new" ${inquiry.status === 'new' ? 'selected' : ''}>🆕 New</option>
+                                        <option value="qualified" ${inquiry.status === 'qualified' ? 'selected' : ''}>✅ Qualified</option>
+                                        <option value="proposal_sent" ${inquiry.status === 'proposal_sent' ? 'selected' : ''}>📄 Proposal Sent</option>
+                                        <option value="negotiation" ${inquiry.status === 'negotiation' ? 'selected' : ''}>💬 Negotiation</option>
+                                        <option value="closed_won" ${inquiry.status === 'closed_won' ? 'selected' : ''}>🎉 Closed Won</option>
+                                        <option value="closed_lost" ${inquiry.status === 'closed_lost' ? 'selected' : ''}>❌ Closed Lost</option>
+                                        <option value="on_hold" ${inquiry.status === 'on_hold' ? 'selected' : ''}>⏸️ On Hold</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 8px;">Priority:</label>
+                                    <select id="corporate-priority" style="width: 100%; padding: 12px; border: 2px solid #d1d5db; border-radius: 8px;">
+                                        <option value="low" ${inquiry.priority === 'low' ? 'selected' : ''}>🔹 Low</option>
+                                        <option value="medium" ${inquiry.priority === 'medium' ? 'selected' : ''}>🔸 Medium</option>
+                                        <option value="high" ${inquiry.priority === 'high' ? 'selected' : ''}>🔶 High</option>
+                                        <option value="urgent" ${inquiry.priority === 'urgent' ? 'selected' : ''}>🚨 Urgent</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                                <div>
+                                    <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 8px;">Estimated Value (€):</label>
+                                    <input type="number" id="corporate-value" value="${inquiry.estimated_value || ''}" placeholder="5000"
+                                           style="width: 100%; padding: 12px; border: 2px solid #d1d5db; border-radius: 8px;" />
+                                </div>
+                                <div>
+                                    <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 8px;">Probability (%):</label>
+                                    <input type="number" min="0" max="100" id="corporate-probability" value="${inquiry.probability || 50}"
+                                           style="width: 100%; padding: 12px; border: 2px solid #d1d5db; border-radius: 8px;" />
+                                </div>
+                                <div>
+                                    <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 8px;">Follow-up Date:</label>
+                                    <input type="date" id="corporate-followup" value="${inquiry.follow_up_date ? inquiry.follow_up_date.split('T')[0] : ''}"
+                                           style="width: 100%; padding: 12px; border: 2px solid #d1d5db; border-radius: 8px;" />
+                                </div>
+                            </div>
+                            
+                            <div style="margin-bottom: 20px;">
+                                <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 8px;">Notes:</label>
+                                <textarea id="corporate-notes" rows="4" placeholder="Add notes about this inquiry..."
+                                          style="width: 100%; padding: 12px; border: 2px solid #d1d5db; border-radius: 8px;">${inquiry.notes || ''}</textarea>
+                            </div>
+                            
+                            <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 32px; padding-top: 24px; border-top: 1px solid #e2e8f0;">
+                                <button type="button" onclick="closeCorporateEditModal()" class="btn-secondary">Cancel</button>
+                                <button type="submit" class="btn-primary">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                `;
+                
+                document.body.appendChild(modalOverlay);
+                
+                document.getElementById('corporate-edit-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    saveCorporateChanges(inquiry.id);
+                });
+                
+                modalOverlay.addEventListener('click', (e) => {
+                    if (e.target === modalOverlay) closeCorporateEditModal();
+                });
+            }
+            
+            async function saveCorporateChanges(inquiryId) {
+                try {
+                    const data = {
+                        status: document.getElementById('corporate-status').value,
+                        priority: document.getElementById('corporate-priority').value,
+                        estimated_value: parseInt(document.getElementById('corporate-value').value) || null,
+                        probability: parseInt(document.getElementById('corporate-probability').value) || 50,
+                        follow_up_date: document.getElementById('corporate-followup').value || null,
+                        notes: document.getElementById('corporate-notes').value.trim() || null
+                    };
+                    
+                    const response = await fetch(`/admin/corporate/management/${inquiryId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': 'Bearer ' + authToken,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    
+                    if (!response.ok) throw new Error('Failed to update corporate inquiry');
+                    
+                    showNotification('Corporate inquiry updated successfully!', 'success');
+                    closeCorporateEditModal();
+                    loadCorporateInquiries();
+                    
+                } catch (error) {
+                    console.error('Error updating corporate inquiry:', error);
+                    showNotification('Failed to update corporate inquiry: ' + error.message, 'error');
+                }
+            }
+            
+            function deleteCorporateInquiry(inquiryId) {
+                if (!authToken) return;
+                
+                if (confirm('Are you sure you want to delete this corporate inquiry? This will also remove all related communications and tasks.')) {
+                    deleteCorporateInquiryConfirmed(inquiryId);
+                }
+            }
+            
+            async function deleteCorporateInquiryConfirmed(inquiryId) {
+                try {
+                    const response = await fetch(`/admin/corporate/management/${inquiryId}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': 'Bearer ' + authToken }
+                    });
+                    
+                    if (!response.ok) throw new Error('Failed to delete corporate inquiry');
+                    
+                    showNotification('Corporate inquiry deleted successfully!', 'success');
+                    loadCorporateInquiries();
+                    
+                } catch (error) {
+                    console.error('Error deleting corporate inquiry:', error);
+                    showNotification('Failed to delete corporate inquiry: ' + error.message, 'error');
+                }
+            }
+            
+            function closeCorporateEditModal() {
+                const modal = document.getElementById('corporate-edit-modal-overlay');
+                if (modal) modal.remove();
+            }
+            
+            // ============================================================================
+            // DASHBOARD ANALYTICS AND WIDGETS
+            // ============================================================================
+            
+            async function loadData() {
+                if (!authToken) return;
+                
+                try {
+                    // Load all analytics data in parallel
+                    const [conversionFunnel, corporatePipeline, followUps] = await Promise.all([
+                        fetch('/admin/analytics/conversion-funnel', {
+                            headers: { 'Authorization': 'Bearer ' + authToken }
+                        }).then(res => res.json()),
+                        fetch('/admin/analytics/corporate-pipeline', {
+                            headers: { 'Authorization': 'Bearer ' + authToken }
+                        }).then(res => res.json()),
+                        fetch('/admin/analytics/follow-ups', {
+                            headers: { 'Authorization': 'Bearer ' + authToken }
+                        }).then(res => res.json())
+                    ]);
+                    
+                    loadDashboardAnalytics(conversionFunnel);
+                    loadDashboardTasks(followUps);
+                    loadDashboardPipeline(corporatePipeline);
+                    
+                } catch (error) {
+                    console.error('Error loading dashboard data:', error);
+                    showNotification('Failed to load dashboard data: ' + error.message, 'error');
+                }
+            }
+            
+            function loadDashboardAnalytics(data) {
+                const analyticsContainer = document.getElementById('dashboard-analytics');
+                
+                analyticsContainer.innerHTML = `
+                    <!-- Waitlist Funnel -->
+                    <div style="background: linear-gradient(135deg, #f3e8ff 0%, #e0e7ff 100%); padding: 24px; border-radius: 12px; border: 1px solid #e5e7eb;">
+                        <h3 style="margin: 0 0 16px 0; color: #5b21b6; display: flex; align-items: center; gap: 8px;">
+                            📝 Waitlist Funnel
+                        </h3>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 24px; font-weight: 700; color: #1f2937;">${data.waitlist_funnel.total}</div>
+                                <div style="font-size: 12px; color: #6b7280;">Total Entries</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 24px; font-weight: 700; color: #059669;">${data.waitlist_funnel.converted}</div>
+                                <div style="font-size: 12px; color: #6b7280;">Converted</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 18px; font-weight: 600; color: #dc2626;">${data.waitlist_funnel.new}</div>
+                                <div style="font-size: 12px; color: #6b7280;">New</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 18px; font-weight: 600; color: #2563eb;">${data.waitlist_funnel.contacted}</div>
+                                <div style="font-size: 12px; color: #6b7280;">Contacted</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Corporate Funnel -->
+                    <div style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); padding: 24px; border-radius: 12px; border: 1px solid #e5e7eb;">
+                        <h3 style="margin: 0 0 16px 0; color: #059669; display: flex; align-items: center; gap: 8px;">
+                            🏢 Corporate Pipeline
+                        </h3>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 24px; font-weight: 700; color: #1f2937;">${data.corporate_funnel.total}</div>
+                                <div style="font-size: 12px; color: #6b7280;">Total Inquiries</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 24px; font-weight: 700; color: #059669;">${data.corporate_funnel.closed_won}</div>
+                                <div style="font-size: 12px; color: #6b7280;">Closed Won</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 18px; font-weight: 600; color: #dc2626;">${data.corporate_funnel.new}</div>
+                                <div style="font-size: 12px; color: #6b7280;">New</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 18px; font-weight: 600; color: #2563eb;">${data.corporate_funnel.proposal_sent}</div>
+                                <div style="font-size: 12px; color: #6b7280;">Proposals Sent</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Conversion Rates -->
+                    <div style="background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%); padding: 24px; border-radius: 12px; border: 1px solid #e5e7eb;">
+                        <h3 style="margin: 0 0 16px 0; color: #ea580c; display: flex; align-items: center; gap: 8px;">
+                            📈 Conversion Rates
+                        </h3>
+                        <div style="display: grid; grid-template-columns: 1fr; gap: 12px;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 24px; font-weight: 700; color: #1f2937;">
+                                    ${data.waitlist_funnel.total > 0 ? Math.round((data.waitlist_funnel.converted / data.waitlist_funnel.total) * 100) : 0}%
+                                </div>
+                                <div style="font-size: 12px; color: #6b7280;">Waitlist → Subscriber</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 24px; font-weight: 700; color: #1f2937;">
+                                    ${data.corporate_funnel.total > 0 ? Math.round((data.corporate_funnel.closed_won / data.corporate_funnel.total) * 100) : 0}%
+                                </div>
+                                <div style="font-size: 12px; color: #6b7280;">Corporate Win Rate</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            function loadDashboardTasks(data) {
+                const tasksContainer = document.getElementById('dashboard-tasks');
+                const totalOverdue = data.overdue.waitlist_follow_ups + data.overdue.corporate_follow_ups + data.overdue.tasks;
+                const totalToday = data.today.waitlist_follow_ups + data.today.corporate_follow_ups;
+                
+                tasksContainer.innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                        <!-- Overdue Items -->
+                        <div style="background: ${totalOverdue > 0 ? 'linear-gradient(135deg, #fef2f2 0%, #fecaca 100%)' : 'linear-gradient(135deg, #f0fdf4 0%, #bbf7d0 100%)'}; 
+                                    padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb;">
+                            <h4 style="margin: 0 0 12px 0; color: ${totalOverdue > 0 ? '#dc2626' : '#059669'}; display: flex; align-items: center; gap: 8px;">
+                                ${totalOverdue > 0 ? '⚠️' : '✅'} Overdue Items
+                            </h4>
+                            <div style="font-size: 32px; font-weight: 700; color: #1f2937; margin-bottom: 8px;">${totalOverdue}</div>
+                            <div style="font-size: 12px; color: #6b7280;">
+                                ${data.overdue.waitlist_follow_ups} waitlist, ${data.overdue.corporate_follow_ups} corporate, ${data.overdue.tasks} tasks
+                            </div>
+                        </div>
+                        
+                        <!-- Today's Items -->
+                        <div style="background: linear-gradient(135deg, #f0f9ff 0%, #dbeafe 100%); 
+                                    padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb;">
+                            <h4 style="margin: 0 0 12px 0; color: #1d4ed8; display: flex; align-items: center; gap: 8px;">
+                                📅 Today's Follow-ups
+                            </h4>
+                            <div style="font-size: 32px; font-weight: 700; color: #1f2937; margin-bottom: 8px;">${totalToday}</div>
+                            <div style="font-size: 12px; color: #6b7280;">
+                                ${data.today.waitlist_follow_ups} waitlist, ${data.today.corporate_follow_ups} corporate
+                            </div>
+                        </div>
+                    </div>
+                    
+                    ${totalOverdue > 0 ? `
+                        <div style="margin-top: 20px; padding: 16px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px;">
+                            <p style="margin: 0; color: #dc2626; font-weight: 600;">
+                                ⚠️ You have ${totalOverdue} overdue items that need attention!
+                            </p>
+                        </div>
+                    ` : ''}
+                `;
+            }
+            
+            function loadDashboardPipeline(data) {
+                const pipelineContainer = document.getElementById('dashboard-pipeline');
+                
+                pipelineContainer.innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                        <!-- Total Pipeline Value -->
+                        <div style="background: linear-gradient(135deg, #f0fdf4 0%, #bbf7d0 100%); padding: 20px; border-radius: 12px; text-align: center;">
+                            <h4 style="margin: 0 0 8px 0; color: #059669;">💰 Active Pipeline</h4>
+                            <div style="font-size: 28px; font-weight: 700; color: #1f2937;">€${data.total_pipeline_value.toLocaleString()}</div>
+                            <div style="font-size: 12px; color: #6b7280;">Total Value</div>
+                        </div>
+                        
+                        <!-- Won Deals -->
+                        <div style="background: linear-gradient(135deg, #ecfdf5 0%, #a7f3d0 100%); padding: 20px; border-radius: 12px; text-align: center;">
+                            <h4 style="margin: 0 0 8px 0; color: #065f46;">🎉 Won Deals</h4>
+                            <div style="font-size: 28px; font-weight: 700; color: #1f2937;">€${data.won_deals_value.toLocaleString()}</div>
+                            <div style="font-size: 12px; color: #6b7280;">Closed Value</div>
+                        </div>
+                        
+                        <!-- Win Rate -->
+                        <div style="background: linear-gradient(135deg, #eff6ff 0%, #bfdbfe 100%); padding: 20px; border-radius: 12px; text-align: center;">
+                            <h4 style="margin: 0 0 8px 0; color: #1d4ed8;">📊 Win Rate</h4>
+                            <div style="font-size: 28px; font-weight: 700; color: #1f2937;">${Math.round(data.win_rate)}%</div>
+                            <div style="font-size: 12px; color: #6b7280;">Success Rate</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pipeline Breakdown -->
+                    <div style="margin-top: 24px;">
+                        <h4 style="margin: 0 0 16px 0; color: #374151;">📋 Pipeline Breakdown</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px;">
+                            ${Object.entries(data.pipeline_by_stage).map(([stage, stageData]) => `
+                                <div style="background: #f9fafb; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e5e7eb;">
+                                    <div style="font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 4px;">
+                                        ${stage.replace('_', ' ').toUpperCase()}
+                                    </div>
+                                    <div style="font-size: 18px; font-weight: 700; color: #059669;">€${stageData.total_value.toLocaleString()}</div>
+                                    <div style="font-size: 11px; color: #6b7280;">${stageData.count} deals</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
             }
         </script>
     </body>
@@ -7676,6 +8318,607 @@ def cleanup_database(
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Database cleanup failed: {str(e)}")
+
+
+# ============================================================================
+# ENHANCED WAITLIST MANAGEMENT ENDPOINTS
+# ============================================================================
+
+@app.get("/admin/waitlist/management", response_model=List[WaitlistRegistrationResponse])
+def get_waitlist_management(
+    skip: int = 0,
+    limit: int = 100,
+    status: Optional[str] = None,
+    priority: Optional[str] = None,
+    assigned_to: Optional[str] = None,
+    search: Optional[str] = None,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Get waitlist entries with enhanced filtering for management"""
+    try:
+        query = db.query(WaitlistRegistration)
+        
+        # Apply filters
+        if status:
+            query = query.filter(WaitlistRegistration.status == status)
+        if priority:
+            query = query.filter(WaitlistRegistration.priority == priority)
+        if search:
+            search_filter = f"%{search}%"
+            query = query.filter(
+                or_(
+                    WaitlistRegistration.full_name.ilike(search_filter),
+                    WaitlistRegistration.email.ilike(search_filter),
+                    WaitlistRegistration.occupation.ilike(search_filter),
+                    WaitlistRegistration.city_country.ilike(search_filter)
+                )
+            )
+        
+        entries = query.order_by(desc(WaitlistRegistration.created_at)).offset(skip).limit(limit).all()
+        return entries
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get waitlist entries: {str(e)}")
+
+@app.get("/admin/waitlist/management/{entry_id}", response_model=WaitlistRegistrationResponse)
+def get_waitlist_entry_details(
+    entry_id: int,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Get detailed waitlist entry information"""
+    entry = db.query(WaitlistRegistration).filter(WaitlistRegistration.id == entry_id).first()
+    if not entry:
+        raise HTTPException(status_code=404, detail="Waitlist entry not found")
+    return entry
+
+@app.put("/admin/waitlist/management/{entry_id}", response_model=WaitlistRegistrationResponse)
+def update_waitlist_entry(
+    entry_id: int,
+    update_data: WaitlistUpdateRequest,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Update waitlist entry with enhanced tracking"""
+    try:
+        entry = db.query(WaitlistRegistration).filter(WaitlistRegistration.id == entry_id).first()
+        if not entry:
+            raise HTTPException(status_code=404, detail="Waitlist entry not found")
+        
+        # Update fields that are provided
+        update_dict = update_data.dict(exclude_unset=True)
+        for field, value in update_dict.items():
+            setattr(entry, field, value)
+        
+        # Track who updated and when
+        entry.updated_by = current_user.username
+        entry.updated_at = datetime.utcnow()
+        
+        # Update last_contacted if status changes to contacted
+        if update_data.status == "contacted":
+            entry.last_contacted = datetime.utcnow()
+        
+        db.commit()
+        db.refresh(entry)
+        return entry
+        
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to update waitlist entry: {str(e)}")
+
+@app.delete("/admin/waitlist/management/{entry_id}")
+def delete_waitlist_entry(
+    entry_id: int,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Delete waitlist entry"""
+    try:
+        entry = db.query(WaitlistRegistration).filter(WaitlistRegistration.id == entry_id).first()
+        if not entry:
+            raise HTTPException(status_code=404, detail="Waitlist entry not found")
+        
+        # Delete related communications and tasks
+        db.query(Communication).filter(
+            Communication.contact_type == "waitlist",
+            Communication.contact_id == entry_id
+        ).delete()
+        
+        db.query(Task).filter(
+            Task.contact_type == "waitlist",
+            Task.contact_id == entry_id
+        ).delete()
+        
+        # Delete the entry
+        db.delete(entry)
+        db.commit()
+        
+        return {"message": "Waitlist entry deleted successfully"}
+        
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to delete waitlist entry: {str(e)}")
+
+# ============================================================================
+# ENHANCED CORPORATE INQUIRY MANAGEMENT ENDPOINTS
+# ============================================================================
+
+@app.get("/admin/corporate/management", response_model=List[CorporateInquiryResponse])
+def get_corporate_management(
+    skip: int = 0,
+    limit: int = 100,
+    status: Optional[str] = None,
+    priority: Optional[str] = None,
+    assigned_to: Optional[str] = None,
+    search: Optional[str] = None,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Get corporate inquiries with enhanced filtering for management"""
+    try:
+        query = db.query(CorporateInquiry)
+        
+        # Apply filters
+        if status:
+            query = query.filter(CorporateInquiry.status == status)
+        if priority:
+            query = query.filter(CorporateInquiry.priority == priority)
+        if assigned_to:
+            query = query.filter(CorporateInquiry.assigned_to == assigned_to)
+        if search:
+            search_filter = f"%{search}%"
+            query = query.filter(
+                or_(
+                    CorporateInquiry.company_name.ilike(search_filter),
+                    CorporateInquiry.contact_person.ilike(search_filter),
+                    CorporateInquiry.email.ilike(search_filter)
+                )
+            )
+        
+        inquiries = query.order_by(desc(CorporateInquiry.created_at)).offset(skip).limit(limit).all()
+        return inquiries
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get corporate inquiries: {str(e)}")
+
+@app.get("/admin/corporate/management/{inquiry_id}", response_model=CorporateInquiryResponse)
+def get_corporate_inquiry_details(
+    inquiry_id: int,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Get detailed corporate inquiry information"""
+    inquiry = db.query(CorporateInquiry).filter(CorporateInquiry.id == inquiry_id).first()
+    if not inquiry:
+        raise HTTPException(status_code=404, detail="Corporate inquiry not found")
+    return inquiry
+
+@app.put("/admin/corporate/management/{inquiry_id}", response_model=CorporateInquiryResponse)
+def update_corporate_inquiry(
+    inquiry_id: int,
+    update_data: CorporateUpdateRequest,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Update corporate inquiry with enhanced tracking"""
+    try:
+        inquiry = db.query(CorporateInquiry).filter(CorporateInquiry.id == inquiry_id).first()
+        if not inquiry:
+            raise HTTPException(status_code=404, detail="Corporate inquiry not found")
+        
+        # Update fields that are provided
+        update_dict = update_data.dict(exclude_unset=True)
+        for field, value in update_dict.items():
+            setattr(inquiry, field, value)
+        
+        # Track who updated and when
+        inquiry.updated_by = current_user.username
+        inquiry.updated_at = datetime.utcnow()
+        
+        # Update last_contacted if status changes to qualified or higher
+        if update_data.status in ["qualified", "proposal_sent", "negotiation"]:
+            inquiry.last_contacted = datetime.utcnow()
+        
+        db.commit()
+        db.refresh(inquiry)
+        return inquiry
+        
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to update corporate inquiry: {str(e)}")
+
+@app.delete("/admin/corporate/management/{inquiry_id}")
+def delete_corporate_inquiry(
+    inquiry_id: int,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Delete corporate inquiry"""
+    try:
+        inquiry = db.query(CorporateInquiry).filter(CorporateInquiry.id == inquiry_id).first()
+        if not inquiry:
+            raise HTTPException(status_code=404, detail="Corporate inquiry not found")
+        
+        # Delete related communications and tasks
+        db.query(Communication).filter(
+            Communication.contact_type == "corporate",
+            Communication.contact_id == inquiry_id
+        ).delete()
+        
+        db.query(Task).filter(
+            Task.contact_type == "corporate",
+            Task.contact_id == inquiry_id
+        ).delete()
+        
+        # Delete the inquiry
+        db.delete(inquiry)
+        db.commit()
+        
+        return {"message": "Corporate inquiry deleted successfully"}
+        
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to delete corporate inquiry: {str(e)}")
+
+# ============================================================================
+# COMMUNICATION TRACKING ENDPOINTS
+# ============================================================================
+
+@app.post("/admin/communications", response_model=CommunicationResponse)
+def create_communication(
+    communication: CommunicationRequest,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Create a new communication record"""
+    try:
+        comm = Communication(
+            **communication.dict(),
+            sent_by=current_user.username
+        )
+        db.add(comm)
+        db.commit()
+        db.refresh(comm)
+        return comm
+        
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to create communication: {str(e)}")
+
+@app.get("/admin/communications/{contact_type}/{contact_id}", response_model=List[CommunicationResponse])
+def get_communications(
+    contact_type: str,
+    contact_id: int,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Get all communications for a specific contact"""
+    try:
+        communications = db.query(Communication).filter(
+            Communication.contact_type == contact_type,
+            Communication.contact_id == contact_id
+        ).order_by(desc(Communication.sent_at)).all()
+        
+        return communications
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get communications: {str(e)}")
+
+# ============================================================================
+# TASK MANAGEMENT ENDPOINTS
+# ============================================================================
+
+@app.post("/admin/tasks", response_model=TaskResponse)
+def create_task(
+    task: TaskRequest,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Create a new task"""
+    try:
+        new_task = Task(**task.dict())
+        db.add(new_task)
+        db.commit()
+        db.refresh(new_task)
+        return new_task
+        
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to create task: {str(e)}")
+
+@app.get("/admin/tasks/pending", response_model=List[TaskResponse])
+def get_pending_tasks(
+    assigned_to: Optional[str] = None,
+    due_date: Optional[str] = None,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Get pending tasks with optional filtering"""
+    try:
+        query = db.query(Task).filter(Task.status == "pending")
+        
+        if assigned_to:
+            query = query.filter(Task.assigned_to == assigned_to)
+        
+        if due_date:
+            target_date = datetime.fromisoformat(due_date)
+            query = query.filter(func.date(Task.due_date) == target_date.date())
+        
+        tasks = query.order_by(Task.due_date).all()
+        return tasks
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get pending tasks: {str(e)}")
+
+@app.put("/admin/tasks/{task_id}/complete")
+def complete_task(
+    task_id: int,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Mark a task as completed"""
+    try:
+        task = db.query(Task).filter(Task.id == task_id).first()
+        if not task:
+            raise HTTPException(status_code=404, detail="Task not found")
+        
+        task.status = "completed"
+        task.completed_at = datetime.utcnow()
+        task.completed_by = current_user.username
+        
+        db.commit()
+        return {"message": "Task completed successfully"}
+        
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to complete task: {str(e)}")
+
+# ============================================================================
+# ANALYTICS AND REPORTING ENDPOINTS
+# ============================================================================
+
+@app.get("/admin/analytics/conversion-funnel")
+def get_conversion_funnel(
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Get conversion funnel analytics"""
+    try:
+        # Waitlist funnel
+        waitlist_stats = {
+            "total": db.query(WaitlistRegistration).count(),
+            "new": db.query(WaitlistRegistration).filter(WaitlistRegistration.status == "new").count(),
+            "contacted": db.query(WaitlistRegistration).filter(WaitlistRegistration.status == "contacted").count(),
+            "qualified": db.query(WaitlistRegistration).filter(WaitlistRegistration.status == "qualified").count(),
+            "converted": db.query(WaitlistRegistration).filter(WaitlistRegistration.status == "converted").count(),
+            "not_interested": db.query(WaitlistRegistration).filter(WaitlistRegistration.status == "not_interested").count()
+        }
+        
+        # Corporate funnel
+        corporate_stats = {
+            "total": db.query(CorporateInquiry).count(),
+            "new": db.query(CorporateInquiry).filter(CorporateInquiry.status == "new").count(),
+            "qualified": db.query(CorporateInquiry).filter(CorporateInquiry.status == "qualified").count(),
+            "proposal_sent": db.query(CorporateInquiry).filter(CorporateInquiry.status == "proposal_sent").count(),
+            "negotiation": db.query(CorporateInquiry).filter(CorporateInquiry.status == "negotiation").count(),
+            "closed_won": db.query(CorporateInquiry).filter(CorporateInquiry.status == "closed_won").count(),
+            "closed_lost": db.query(CorporateInquiry).filter(CorporateInquiry.status == "closed_lost").count()
+        }
+        
+        return {
+            "waitlist_funnel": waitlist_stats,
+            "corporate_funnel": corporate_stats
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get conversion funnel: {str(e)}")
+
+@app.get("/admin/analytics/corporate-pipeline")
+def get_corporate_pipeline(
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Get corporate sales pipeline analytics"""
+    try:
+        # Pipeline value by stage
+        pipeline_query = db.query(
+            CorporateInquiry.status,
+            func.sum(CorporateInquiry.estimated_value).label('total_value'),
+            func.count(CorporateInquiry.id).label('count')
+        ).filter(
+            CorporateInquiry.estimated_value.isnot(None)
+        ).group_by(CorporateInquiry.status).all()
+        
+        pipeline_data = {}
+        for status, total_value, count in pipeline_query:
+            pipeline_data[status] = {
+                "total_value": total_value or 0,
+                "count": count,
+                "average_value": (total_value / count) if count > 0 and total_value else 0
+            }
+        
+        # Overall metrics
+        total_pipeline_value = db.query(func.sum(CorporateInquiry.estimated_value)).filter(
+            CorporateInquiry.status.in_(["qualified", "proposal_sent", "negotiation"])
+        ).scalar() or 0
+        
+        won_deals_value = db.query(func.sum(CorporateInquiry.estimated_value)).filter(
+            CorporateInquiry.status == "closed_won"
+        ).scalar() or 0
+        
+        return {
+            "pipeline_by_stage": pipeline_data,
+            "total_pipeline_value": total_pipeline_value,
+            "won_deals_value": won_deals_value,
+            "win_rate": len([p for p in pipeline_data if p == "closed_won"]) / max(len(pipeline_data), 1) * 100
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get corporate pipeline: {str(e)}")
+
+@app.get("/admin/analytics/follow-ups")
+def get_follow_ups_analytics(
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Get follow-ups and overdue tasks analytics"""
+    try:
+        today = datetime.utcnow().date()
+        
+        # Overdue waitlist follow-ups
+        overdue_waitlist = db.query(WaitlistRegistration).filter(
+            WaitlistRegistration.follow_up_date < today
+        ).count()
+        
+        # Overdue corporate follow-ups
+        overdue_corporate = db.query(CorporateInquiry).filter(
+            CorporateInquiry.follow_up_date < today
+        ).count()
+        
+        # Today's follow-ups
+        today_waitlist = db.query(WaitlistRegistration).filter(
+            func.date(WaitlistRegistration.follow_up_date) == today
+        ).count()
+        
+        today_corporate = db.query(CorporateInquiry).filter(
+            func.date(CorporateInquiry.follow_up_date) == today
+        ).count()
+        
+        # Overdue tasks
+        overdue_tasks = db.query(Task).filter(
+            Task.status == "pending",
+            Task.due_date < datetime.utcnow()
+        ).count()
+        
+        return {
+            "overdue": {
+                "waitlist_follow_ups": overdue_waitlist,
+                "corporate_follow_ups": overdue_corporate,
+                "tasks": overdue_tasks
+            },
+            "today": {
+                "waitlist_follow_ups": today_waitlist,
+                "corporate_follow_ups": today_corporate
+            }
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get follow-ups analytics: {str(e)}")
+
+# ============================================================================
+# LEAD SCORING ENDPOINTS
+# ============================================================================
+
+@app.post("/admin/scoring/calculate-waitlist/{entry_id}")
+def calculate_waitlist_lead_score(
+    entry_id: int,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Calculate lead score for waitlist entry"""
+    try:
+        entry = db.query(WaitlistRegistration).filter(WaitlistRegistration.id == entry_id).first()
+        if not entry:
+            raise HTTPException(status_code=404, detail="Waitlist entry not found")
+        
+        score = 0
+        
+        # Score based on occupation (example scoring)
+        if "manager" in entry.occupation.lower() or "director" in entry.occupation.lower():
+            score += 20
+        elif "coach" in entry.occupation.lower() or "consultant" in entry.occupation.lower():
+            score += 15
+        elif "entrepreneur" in entry.occupation.lower() or "founder" in entry.occupation.lower():
+            score += 25
+        
+        # Score based on skills to improve
+        high_value_skills = ["leadership", "management", "communication", "strategy"]
+        for skill in high_value_skills:
+            if skill in entry.skills_to_improve.lower():
+                score += 10
+        
+        # Score based on why_join
+        motivation_keywords = ["growth", "development", "career", "team", "business"]
+        for keyword in motivation_keywords:
+            if keyword in entry.why_join.lower():
+                score += 5
+        
+        # Update the score
+        entry.lead_score = min(score, 100)  # Cap at 100
+        entry.updated_by = current_user.username
+        entry.updated_at = datetime.utcnow()
+        
+        db.commit()
+        
+        return {"score": entry.lead_score, "message": "Lead score calculated successfully"}
+        
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to calculate lead score: {str(e)}")
+
+@app.post("/admin/scoring/calculate-corporate/{inquiry_id}")
+def calculate_corporate_lead_score(
+    inquiry_id: int,
+    current_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Calculate lead score for corporate inquiry"""
+    try:
+        inquiry = db.query(CorporateInquiry).filter(CorporateInquiry.id == inquiry_id).first()
+        if not inquiry:
+            raise HTTPException(status_code=404, detail="Corporate inquiry not found")
+        
+        score = 0
+        
+        # Score based on team size
+        team_size = inquiry.team_size.lower()
+        if "50+" in team_size or "100+" in team_size:
+            score += 30
+        elif "20-50" in team_size or "10-20" in team_size:
+            score += 20
+        elif "5-10" in team_size:
+            score += 15
+        elif "1-5" in team_size:
+            score += 10
+        
+        # Score based on budget
+        if inquiry.budget:
+            budget = inquiry.budget.lower()
+            if "10000+" in budget or "€10" in budget or "$10" in budget:
+                score += 25
+            elif "5000+" in budget or "€5" in budget or "$5" in budget:
+                score += 20
+            elif "1000+" in budget or "€1" in budget or "$1" in budget:
+                score += 15
+        
+        # Score based on training goals
+        high_value_goals = ["leadership", "management", "team building", "strategic", "executive"]
+        for goal in high_value_goals:
+            if goal in inquiry.training_goals.lower():
+                score += 10
+        
+        # Score based on urgency (if preferred dates are soon)
+        if inquiry.preferred_dates:
+            # Simple check for urgency keywords
+            urgent_keywords = ["soon", "urgent", "asap", "immediately"]
+            for keyword in urgent_keywords:
+                if keyword in inquiry.preferred_dates.lower():
+                    score += 15
+                    break
+        
+        # Update the score
+        inquiry.lead_score = min(score, 100)  # Cap at 100
+        inquiry.updated_by = current_user.username
+        inquiry.updated_at = datetime.utcnow()
+        
+        db.commit()
+        
+        return {"score": inquiry.lead_score, "message": "Lead score calculated successfully"}
+        
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to calculate lead score: {str(e)}")
 
 
 if __name__ == "__main__":
