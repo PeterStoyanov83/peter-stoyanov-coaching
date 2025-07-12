@@ -64,7 +64,7 @@ def create_and_send_newsletter(subject: str, content: str, group_ids: list = Non
         }
 
 
-def send_individual_email(to_email: str, subject: str, content: str, from_name: str = "Peter Stoyanov"):
+def send_individual_email(to_email: str, subject: str, content: str, from_name: str = "Peter Stoyanov", reply_to: str = None):
     """
     Send individual email via Mailgun
     
@@ -87,7 +87,15 @@ def send_individual_email(to_email: str, subject: str, content: str, from_name: 
             "to": to_email,
             "subject": subject,
             "html": content,
-            "o:tag": "email_automation"
+            "text": content.replace('<br>', '\n').replace('<p>', '').replace('</p>', '\n'),  # Plain text version
+            "o:tag": "email_automation",
+            "o:tracking": "yes",
+            "o:tracking-clicks": "yes",
+            "o:tracking-opens": "yes",
+            "h:Reply-To": reply_to or "peter@peterstoyanov-pepe.com",
+            "h:List-Unsubscribe": f"<https://peterstoyanov-pepe.com/unsubscribe?email={to_email}>",
+            "h:X-Mailgun-Variables": '{"campaign": "coaching_automation"}',
+            "o:require-tls": "yes"
         }
         
         print(f"📧 Sending email to {to_email} via Mailgun...")

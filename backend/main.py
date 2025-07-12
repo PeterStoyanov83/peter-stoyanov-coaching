@@ -25,9 +25,8 @@ from database import (get_db, store_waitlist_registration, store_corporate_inqui
                      create_multilingual_blog_post, get_multilingual_blog_posts, get_multilingual_blog_post_by_id,
                      get_multilingual_blog_post_by_slug, get_published_multilingual_posts, 
                      update_multilingual_blog_post, delete_multilingual_blog_post, get_related_multilingual_posts)
-from mailerlite import (add_subscriber_to_mailerlite, add_lead_magnet_subscriber, add_waitlist_subscriber,
-                         create_and_send_newsletter, get_subscriber_groups, create_newsletter_from_blog_posts,
-                         get_newsletter_templates, get_sequence_info_by_language, trigger_sequence_by_subscriber_data)
+from sendgrid_service import (add_subscriber_to_mailerlite, add_lead_magnet_subscriber, add_waitlist_subscriber,
+                         create_and_send_newsletter)
 from email_sequences import (get_sequence_by_type_and_language, get_available_languages, 
                              get_sequence_metadata_by_language, get_monday_morning_sequence_by_language,
                              get_waitlist_sequence_by_language, get_corporate_sequence_by_language)
@@ -4128,6 +4127,112 @@ def test_enrollment(db: Session = Depends(get_db)):
         return result
     except Exception as e:
         return {"success": False, "error": f"Test enrollment failed: {str(e)}"}
+
+@app.get("/api/test-real-subscribers")
+def test_real_subscribers(db: Session = Depends(get_db)):
+    """Get all real subscribers from database for testing"""
+    try:
+        from models import EmailSubscriber, ScheduledEmail, SequenceEnrollment
+        
+        # Get all active subscribers
+        subscribers = db.query(EmailSubscriber).filter(
+            EmailSubscriber.is_active == True
+        ).all()
+        
+        result = {"total_subscribers": len(subscribers), "subscribers": []}
+        
+        for subscriber in subscribers:
+            # Get ready-to-send emails for this subscriber
+            ready_emails = db.query(ScheduledEmail).join(SequenceEnrollment).filter(
+                SequenceEnrollment.subscriber_id == subscriber.id,
+                ScheduledEmail.status.in_(["scheduled", "failed"]),
+                ScheduledEmail.scheduled_for <= datetime.utcnow()
+            ).count()
+            
+            result["subscribers"].append({
+                "id": subscriber.id,
+                "email": subscriber.email,
+                "name": subscriber.name,
+                "source": subscriber.source,
+                "language": subscriber.language,
+                "ready_emails": ready_emails,
+                "created": subscriber.signup_date.isoformat() if subscriber.signup_date else None
+            })
+        
+        return result
+        
+    except Exception as e:
+        return {"success": False, "error": f"Failed to get subscribers: {str(e)}"}
+
+@app.post("/api/test-send-to-real-subscribers")
+def test_send_to_real_subscribers(db: Session = Depends(get_db)):
+    """Send test emails to real subscribers using Mailgun"""
+    try:
+        from mailgun_service import send_individual_email
+        from models import EmailSubscriber
+        
+        # Get real subscribers that should be in authorized recipients
+        real_emails = [
+            "peterstoyanov83@gmail.com",
+            "emociozavr@gmail.com", 
+            "hristova.radostina@gmail.com",
+            "radostincheto_@abv.bg"
+        ]
+        
+        results = []
+        
+        for email in real_emails:
+            subscriber = db.query(EmailSubscriber).filter(
+                EmailSubscriber.email == email,
+                EmailSubscriber.is_active == True
+            ).first()
+            
+            if subscriber:
+                # Send a simple test email
+                result = send_individual_email(
+                    to_email=email,
+                    subject="🎭 Test Email from Mailgun Integration",
+                    content=f"""
+                    <h2>Hello {subscriber.name or 'Friend'}!</h2>
+                    
+                    <p>This is a test email from your new Mailgun integration.</p>
+                    
+                    <p><strong>Test Details:</strong></p>
+                    <ul>
+                        <li>✅ Mailgun integration working</li>
+                        <li>✅ Database connection active</li>
+                        <li>✅ Webhook system ready</li>
+                        <li>✅ Email analytics tracking enabled</li>
+                    </ul>
+                    
+                    <p>Your email automation system is now fully functional!</p>
+                    
+                    <p><strong>Peter Stoyanov</strong><br>
+                    <em>Email Automation Test</em></p>
+                    """,
+                    from_name="Peter Stoyanov"
+                )
+                
+                results.append({
+                    "email": email,
+                    "subscriber_name": subscriber.name,
+                    "source": subscriber.source,
+                    "result": result
+                })
+            else:
+                results.append({
+                    "email": email,
+                    "error": "Subscriber not found in database"
+                })
+        
+        return {
+            "success": True,
+            "message": "Test emails sent to real subscribers",
+            "results": results
+        }
+        
+    except Exception as e:
+        return {"success": False, "error": f"Failed to send test emails: {str(e)}"}
 
 @app.get("/api/test-email-status")
 def test_email_status(db: Session = Depends(get_db)):

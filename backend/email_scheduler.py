@@ -13,7 +13,7 @@ from sqlalchemy.orm import sessionmaker
 from database import get_db_url
 from models import ScheduledEmail, SequenceEnrollment, SequenceEmail, EmailSubscriber
 from sequence_automation import get_emails_to_send, mark_email_as_sent, get_failed_emails_for_retry
-from mailgun_service import create_and_send_newsletter, send_individual_email
+from sendgrid_service import create_and_send_newsletter, send_individual_email
 from email_sequences import get_sequence_by_type_and_language
 
 # Set up logging
