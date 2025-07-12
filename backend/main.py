@@ -6233,10 +6233,10 @@ def get_subscribers_management(
             ).count()
             
             # Get scheduled emails count
-            scheduled_emails = db.query(ScheduledEmail).filter(
-                ScheduledEmail.subscriber_id == subscriber.id,
+            scheduled_emails = db.query(ScheduledEmail).join(SequenceEnrollment).filter(
+                SequenceEnrollment.subscriber_id == subscriber.id,
                 ScheduledEmail.sent_at.is_(None),
-                ScheduledEmail.failed_at.is_(None)
+                ScheduledEmail.status == "scheduled"
             ).count()
             
             result.append({
@@ -6285,13 +6285,13 @@ def get_subscriber_details(
         ).all()
         
         # Get all scheduled emails
-        scheduled_emails = db.query(ScheduledEmail).filter(
-            ScheduledEmail.subscriber_id == subscriber_id
+        scheduled_emails = db.query(ScheduledEmail).join(SequenceEnrollment).filter(
+            SequenceEnrollment.subscriber_id == subscriber_id
         ).order_by(ScheduledEmail.scheduled_for.desc()).all()
         
         # Get email analytics
-        email_analytics = db.query(EmailAnalytics).join(ScheduledEmail).filter(
-            ScheduledEmail.subscriber_id == subscriber_id
+        email_analytics = db.query(EmailAnalytics).join(ScheduledEmail).join(SequenceEnrollment).filter(
+            SequenceEnrollment.subscriber_id == subscriber_id
         ).all()
         
         # Format enrollments
@@ -6314,20 +6314,26 @@ def get_subscriber_details(
         # Format scheduled emails
         email_data = []
         for email in scheduled_emails:
-            status = "pending"
+            status = email.status
             if email.sent_at:
                 status = "sent"
-            elif email.failed_at:
-                status = "failed"
+            
+            # Get sequence info through the relationship
+            sequence_info = db.query(EmailSequence).join(SequenceEmail).filter(
+                SequenceEmail.id == email.email_id
+            ).first()
+            
+            sequence_email = db.query(SequenceEmail).filter(
+                SequenceEmail.id == email.email_id
+            ).first()
             
             email_data.append({
                 "id": email.id,
-                "subject": email.subject,
-                "sequence_type": email.sequence_type,
-                "email_index": email.email_index,
+                "subject": sequence_email.subject if sequence_email else "Unknown",
+                "sequence_type": sequence_info.sequence_type if sequence_info else "Unknown",
+                "email_index": sequence_email.email_index if sequence_email else 0,
                 "scheduled_for": email.scheduled_for.isoformat(),
                 "sent_at": email.sent_at.isoformat() if email.sent_at else None,
-                "failed_at": email.failed_at.isoformat() if email.failed_at else None,
                 "status": status,
                 "error_message": email.error_message
             })
@@ -6436,14 +6442,14 @@ def delete_subscriber(
         
         # Delete related data in correct order
         # Delete analytics first
-        analytics_deleted = db.query(EmailAnalytics).join(ScheduledEmail).filter(
-            ScheduledEmail.subscriber_id == subscriber_id
+        analytics_deleted = db.query(EmailAnalytics).join(ScheduledEmail).join(SequenceEnrollment).filter(
+            SequenceEnrollment.subscriber_id == subscriber_id
         ).delete(synchronize_session=False)
         
         # Delete scheduled emails
-        emails_deleted = db.query(ScheduledEmail).filter(
-            ScheduledEmail.subscriber_id == subscriber_id
-        ).delete()
+        emails_deleted = db.query(ScheduledEmail).join(SequenceEnrollment).filter(
+            SequenceEnrollment.subscriber_id == subscriber_id
+        ).delete(synchronize_session=False)
         
         # Delete enrollments
         enrollments_deleted = db.query(SequenceEnrollment).filter(
