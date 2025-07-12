@@ -6194,12 +6194,12 @@ def get_subscribers_management(
         
         # Search functionality
         if search:
-            query = query.filter(
-                or_(
-                    EmailSubscriber.email.contains(search),
-                    EmailSubscriber.name.contains(search) if EmailSubscriber.name.isnot(None) else False
-                )
+            search_conditions = [EmailSubscriber.email.contains(search)]
+            # Only add name search if name field exists and is not null
+            search_conditions.append(
+                EmailSubscriber.name.contains(search)
             )
+            query = query.filter(or_(*search_conditions))
         
         # Source filtering
         if source_filter:
@@ -6441,15 +6441,27 @@ def delete_subscriber(
             raise HTTPException(status_code=404, detail="Subscriber not found")
         
         # Delete related data in correct order
-        # Delete analytics first
-        analytics_deleted = db.query(EmailAnalytics).join(ScheduledEmail).join(SequenceEnrollment).filter(
+        # Get IDs first to avoid join issues with delete
+        enrollment_ids = db.query(SequenceEnrollment.id).filter(
             SequenceEnrollment.subscriber_id == subscriber_id
-        ).delete(synchronize_session=False)
+        ).all()
+        enrollment_ids = [e.id for e in enrollment_ids]
+        
+        # Get scheduled email IDs
+        scheduled_email_ids = db.query(ScheduledEmail.id).filter(
+            ScheduledEmail.enrollment_id.in_(enrollment_ids)
+        ).all() if enrollment_ids else []
+        scheduled_email_ids = [e.id for e in scheduled_email_ids]
+        
+        # Delete analytics first
+        analytics_deleted = db.query(EmailAnalytics).filter(
+            EmailAnalytics.scheduled_email_id.in_(scheduled_email_ids)
+        ).delete(synchronize_session=False) if scheduled_email_ids else 0
         
         # Delete scheduled emails
-        emails_deleted = db.query(ScheduledEmail).join(SequenceEnrollment).filter(
-            SequenceEnrollment.subscriber_id == subscriber_id
-        ).delete(synchronize_session=False)
+        emails_deleted = db.query(ScheduledEmail).filter(
+            ScheduledEmail.enrollment_id.in_(enrollment_ids)
+        ).delete(synchronize_session=False) if enrollment_ids else 0
         
         # Delete enrollments
         enrollments_deleted = db.query(SequenceEnrollment).filter(
