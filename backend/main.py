@@ -8920,6 +8920,141 @@ def calculate_corporate_lead_score(
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Failed to calculate lead score: {str(e)}")
 
+@app.post("/admin/migrate-database")
+def migrate_production_database(current_user: User = Depends(get_current_admin_user)):
+    """Migrate production database to add new columns and tables"""
+    try:
+        from sqlalchemy import text
+        
+        # Get database engine from existing session
+        engine = SessionLocal().bind
+        
+        with engine.connect() as conn:
+            print("🔄 Starting production database migration...")
+            
+            # Migrate waitlist_registrations table
+            waitlist_migrations = [
+                "ALTER TABLE waitlist_registrations ADD COLUMN IF NOT EXISTS status VARCHAR(20) DEFAULT 'new'",
+                "ALTER TABLE waitlist_registrations ADD COLUMN IF NOT EXISTS notes TEXT",
+                "ALTER TABLE waitlist_registrations ADD COLUMN IF NOT EXISTS priority VARCHAR(10) DEFAULT 'medium'",
+                "ALTER TABLE waitlist_registrations ADD COLUMN IF NOT EXISTS last_contacted TIMESTAMP",
+                "ALTER TABLE waitlist_registrations ADD COLUMN IF NOT EXISTS follow_up_date TIMESTAMP",
+                "ALTER TABLE waitlist_registrations ADD COLUMN IF NOT EXISTS conversion_source VARCHAR(50)",
+                "ALTER TABLE waitlist_registrations ADD COLUMN IF NOT EXISTS updated_by VARCHAR(100)",
+                "ALTER TABLE waitlist_registrations ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+                "ALTER TABLE waitlist_registrations ADD COLUMN IF NOT EXISTS lead_score INTEGER DEFAULT 0",
+                "ALTER TABLE waitlist_registrations ADD COLUMN IF NOT EXISTS tags JSON"
+            ]
+            
+            for migration in waitlist_migrations:
+                try:
+                    conn.execute(text(migration))
+                except Exception as e:
+                    # Column might already exist, continue
+                    pass
+            
+            # Migrate corporate_inquiries table
+            corporate_migrations = [
+                "ALTER TABLE corporate_inquiries ADD COLUMN IF NOT EXISTS status VARCHAR(20) DEFAULT 'new'",
+                "ALTER TABLE corporate_inquiries ADD COLUMN IF NOT EXISTS priority VARCHAR(10) DEFAULT 'medium'",
+                "ALTER TABLE corporate_inquiries ADD COLUMN IF NOT EXISTS estimated_value INTEGER",
+                "ALTER TABLE corporate_inquiries ADD COLUMN IF NOT EXISTS proposal_sent_date TIMESTAMP",
+                "ALTER TABLE corporate_inquiries ADD COLUMN IF NOT EXISTS follow_up_date TIMESTAMP",
+                "ALTER TABLE corporate_inquiries ADD COLUMN IF NOT EXISTS expected_close_date TIMESTAMP",
+                "ALTER TABLE corporate_inquiries ADD COLUMN IF NOT EXISTS notes TEXT",
+                "ALTER TABLE corporate_inquiries ADD COLUMN IF NOT EXISTS assigned_to VARCHAR(100)",
+                "ALTER TABLE corporate_inquiries ADD COLUMN IF NOT EXISTS last_contacted TIMESTAMP",
+                "ALTER TABLE corporate_inquiries ADD COLUMN IF NOT EXISTS updated_by VARCHAR(100)",
+                "ALTER TABLE corporate_inquiries ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+                "ALTER TABLE corporate_inquiries ADD COLUMN IF NOT EXISTS lead_score INTEGER DEFAULT 0",
+                "ALTER TABLE corporate_inquiries ADD COLUMN IF NOT EXISTS tags JSON",
+                "ALTER TABLE corporate_inquiries ADD COLUMN IF NOT EXISTS probability INTEGER DEFAULT 50",
+                "ALTER TABLE corporate_inquiries ADD COLUMN IF NOT EXISTS lost_reason VARCHAR(100)"
+            ]
+            
+            for migration in corporate_migrations:
+                try:
+                    conn.execute(text(migration))
+                except Exception as e:
+                    # Column might already exist, continue
+                    pass
+            
+            # Create communications table
+            create_communications = """
+            CREATE TABLE IF NOT EXISTS communications (
+                id SERIAL PRIMARY KEY,
+                contact_type VARCHAR(20) NOT NULL,
+                contact_id INTEGER NOT NULL,
+                communication_type VARCHAR(20) NOT NULL,
+                subject VARCHAR(200),
+                content TEXT,
+                sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                sent_by VARCHAR(100) NOT NULL,
+                response_received BOOLEAN DEFAULT FALSE,
+                response_date TIMESTAMP,
+                follow_up_required BOOLEAN DEFAULT FALSE,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """
+            
+            conn.execute(text(create_communications))
+            
+            # Create tasks table
+            create_tasks = """
+            CREATE TABLE IF NOT EXISTS tasks (
+                id SERIAL PRIMARY KEY,
+                title VARCHAR(200) NOT NULL,
+                description TEXT,
+                task_type VARCHAR(20) NOT NULL,
+                contact_type VARCHAR(20) NOT NULL,
+                contact_id INTEGER NOT NULL,
+                assigned_to VARCHAR(100) NOT NULL,
+                due_date TIMESTAMP NOT NULL,
+                status VARCHAR(20) DEFAULT 'pending',
+                priority VARCHAR(10) DEFAULT 'medium',
+                completed_at TIMESTAMP,
+                completed_by VARCHAR(100),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """
+            
+            conn.execute(text(create_tasks))
+            
+            # Commit all changes
+            conn.commit()
+            
+            return {
+                "success": True,
+                "message": "Database migration completed successfully",
+                "changes": [
+                    "Added status, notes, priority, lead_score, tags, etc. to waitlist_registrations",
+                    "Added status, priority, estimated_value, probability, etc. to corporate_inquiries",
+                    "Created communications table for interaction tracking",
+                    "Created tasks table for follow-up management"
+                ]
+            }
+            
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Migration failed: {str(e)}")
+
+@app.get("/migrate", response_class=HTMLResponse)
+def serve_migration_page():
+    """Serve the database migration page"""
+    try:
+        with open(os.path.join(os.path.dirname(__file__), "migrate.html"), "r") as f:
+            return f.read()
+    except FileNotFoundError:
+        return HTMLResponse("""
+        <html>
+            <body>
+                <h1>Migration Page Not Found</h1>
+                <p>Use the endpoint: POST /admin/migrate-database (requires admin authentication)</p>
+            </body>
+        </html>
+        """)
+
 
 if __name__ == "__main__":
     import uvicorn
