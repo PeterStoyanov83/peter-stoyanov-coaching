@@ -305,6 +305,58 @@ async def download_guide(
         db.rollback()
         raise HTTPException(status_code=500, detail="Download request failed")
 
+# Database migration endpoint  
+@app.post("/admin/migrate-database")
+async def migrate_database():
+    """Migrate database to new schema - drops and recreates tables"""
+    try:
+        from sqlalchemy import text
+        from models import Base
+        from database import engine
+        
+        with engine.connect() as conn:
+            # Drop existing tables
+            drop_commands = [
+                "DROP TABLE IF EXISTS email_logs CASCADE",
+                "DROP TABLE IF EXISTS sequence_emails CASCADE", 
+                "DROP TABLE IF EXISTS email_sequences CASCADE",
+                "DROP TABLE IF EXISTS lead_magnet_downloads CASCADE",
+                "DROP TABLE IF EXISTS corporate_inquiries CASCADE",
+                "DROP TABLE IF EXISTS waitlist_registrations CASCADE"
+            ]
+            
+            for cmd in drop_commands:
+                try:
+                    conn.execute(text(cmd))
+                except Exception:
+                    pass  # Ignore errors if table doesn't exist
+            
+            conn.commit()
+        
+        # Create all new tables
+        Base.metadata.create_all(bind=engine)
+        
+        # Test the new structure
+        from database import SessionLocal
+        from models import WaitlistRegistration
+        
+        db = SessionLocal()
+        count = db.query(WaitlistRegistration).count()
+        db.close()
+        
+        return {
+            "success": True,
+            "message": "Database migrated successfully",
+            "waitlist_count": count
+        }
+        
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e),
+            "message": "Database migration failed"
+        }
+
 # Database initialization endpoint
 @app.post("/admin/init-database")
 async def init_database():
