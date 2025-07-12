@@ -1,5 +1,7 @@
 from fastapi import FastAPI, HTTPException, Depends, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from typing import List
 import logging
@@ -41,6 +43,34 @@ app.add_middleware(
 @app.get("/")
 def read_root():
     return {"message": "Welcome to Peter Stoyanov Coaching API", "status": "clean"}
+
+# Admin web interface routes
+@app.get("/admin", response_class=HTMLResponse)
+async def admin_redirect():
+    """Redirect /admin to /admin/login"""
+    return HTMLResponse(content="""
+        <script>
+            window.location.href = '/admin/login';
+        </script>
+    """)
+
+@app.get("/admin/login", response_class=HTMLResponse)
+async def admin_login_page():
+    """Serve the admin login page"""
+    try:
+        with open("templates/login.html", "r") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        return HTMLResponse(content="<h1>Login page not found</h1>", status_code=404)
+
+@app.get("/admin/dashboard", response_class=HTMLResponse)
+async def admin_dashboard_page():
+    """Serve the admin dashboard page"""
+    try:
+        with open("templates/dashboard.html", "r") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        return HTMLResponse(content="<h1>Dashboard page not found</h1>", status_code=404)
 
 # Form submission endpoints
 @app.post("/api/register", response_model=dict)

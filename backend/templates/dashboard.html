@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Peter Stoyanov Coaching</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f7fafc;
+            color: #2d3748;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .stat-card h3 {
+            font-size: 14px;
+            color: #718096;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card .value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .stat-card .change {
+            font-size: 14px;
+            color: #38a169;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .section-content {
+            padding: 24px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        .btn-danger {
+            background: #f56565;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #e53e3e;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .table th {
+            background: #f7fafc;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .table tr:hover {
+            background: #f7fafc;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .badge-warning {
+            background: #fefcbf;
+            color: #744210;
+        }
+
+        .badge-danger {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #718096;
+        }
+
+        .error {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .sequence-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+
+            .tab {
+                flex: 1;
+                min-width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>Admin Dashboard</h1>
+            <div class="user-info">
+                <span id="user-email">Loading...</span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Stats Overview -->
+        <div class="stats-grid" id="stats-grid">
+            <div class="stat-card">
+                <h3>Total Waitlist</h3>
+                <div class="value" id="total-waitlist">-</div>
+                <div class="change">Subscribers</div>
+            </div>
+            <div class="stat-card">
+                <h3>Corporate Inquiries</h3>
+                <div class="value" id="total-corporate">-</div>
+                <div class="change">Companies</div>
+            </div>
+            <div class="stat-card">
+                <h3>Lead Magnet Downloads</h3>
+                <div class="value" id="total-lead-magnet">-</div>
+                <div class="change">Downloads</div>
+            </div>
+            <div class="stat-card">
+                <h3>Emails Sent</h3>
+                <div class="value" id="total-emails">-</div>
+                <div class="change">Total emails</div>
+            </div>
+            <div class="stat-card">
+                <h3>New This Week</h3>
+                <div class="value" id="new-this-week">-</div>
+                <div class="change">New subscribers</div>
+            </div>
+            <div class="stat-card">
+                <h3>Active Sequences</h3>
+                <div class="value" id="active-sequences">-</div>
+                <div class="change">Running</div>
+            </div>
+        </div>
+
+        <!-- Email Sequence Management -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Email Sequence Management</h2>
+                <div class="sequence-controls">
+                    <button class="btn btn-secondary" onclick="pauseAllSequences()">Pause All</button>
+                    <button class="btn btn-primary" onclick="resumeAllSequences()">Resume All</button>
+                </div>
+            </div>
+            <div class="section-content">
+                <div id="sequence-status">
+                    <div class="loading">Loading sequence information...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subscriber Management -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Subscriber Management</h2>
+                <div>
+                    <button class="btn btn-secondary" onclick="exportSubscribers()">Export CSV</button>
+                    <button class="btn btn-primary" onclick="showManualEmailModal()">Send Email</button>
+                </div>
+            </div>
+            <div class="section-content">
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab('waitlist')">Waitlist</div>
+                    <div class="tab" onclick="switchTab('corporate')">Corporate</div>
+                    <div class="tab" onclick="switchTab('lead-magnet')">Lead Magnet</div>
+                </div>
+
+                <div id="waitlist-content" class="tab-content active">
+                    <div id="waitlist-table">
+                        <div class="loading">Loading waitlist subscribers...</div>
+                    </div>
+                </div>
+
+                <div id="corporate-content" class="tab-content">
+                    <div id="corporate-table">
+                        <div class="loading">Loading corporate inquiries...</div>
+                    </div>
+                </div>
+
+                <div id="lead-magnet-content" class="tab-content">
+                    <div id="lead-magnet-table">
+                        <div class="loading">Loading lead magnet downloads...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Emails -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Recent Emails</h2>
+            </div>
+            <div class="section-content">
+                <div id="recent-emails">
+                    <div class="loading">Loading recent emails...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let authToken = '';
+        let currentTab = 'waitlist';
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Check authentication
+            authToken = localStorage.getItem('admin_token');
+            const userEmail = localStorage.getItem('admin_email');
+
+            if (!authToken) {
+                window.location.href = '/admin/login';
+                return;
+            }
+
+            document.getElementById('user-email').textContent = userEmail || 'Admin';
+
+            // Load dashboard data
+            await loadDashboardStats();
+            await loadSequenceStatus();
+            await loadSubscribers('waitlist');
+            await loadRecentEmails();
+        });
+
+        // Authentication helper
+        function getAuthHeaders() {
+            return {
+                'Authorization': `Bearer ${authToken}`,
+                'Content-Type': 'application/json'
+            };
+        }
+
+        // Handle API errors
+        function handleApiError(response) {
+            if (response.status === 401) {
+                localStorage.removeItem('admin_token');
+                localStorage.removeItem('admin_email');
+                window.location.href = '/admin/login';
+                return;
+            }
+            throw new Error(`API Error: ${response.status}`);
+        }
+
+        // Load dashboard statistics
+        async function loadDashboardStats() {
+            try {
+                const response = await fetch('/admin/dashboard/stats', {
+                    headers: getAuthHeaders()
+                });
+
+                if (!response.ok) {
+                    handleApiError(response);
+                    return;
+                }
+
+                const stats = await response.json();
+                
+                document.getElementById('total-waitlist').textContent = stats.total_waitlist;
+                document.getElementById('total-corporate').textContent = stats.total_corporate;
+                document.getElementById('total-lead-magnet').textContent = stats.total_lead_magnet;
+                document.getElementById('total-emails').textContent = stats.total_emails_sent;
+                document.getElementById('new-this-week').textContent = stats.new_this_week;
+                document.getElementById('active-sequences').textContent = stats.active_sequences;
+            } catch (error) {
+                console.error('Error loading stats:', error);
+                document.getElementById('stats-grid').innerHTML = 
+                    '<div class="error">Error loading dashboard statistics</div>';
+            }
+        }
+
+        // Load sequence status
+        async function loadSequenceStatus() {
+            try {
+                const response = await fetch('/admin/sequences', {
+                    headers: getAuthHeaders()
+                });
+
+                if (!response.ok) {
+                    handleApiError(response);
+                    return;
+                }
+
+                const sequences = await response.json();
+                
+                let html = '<div class="sequence-info">';
+                
+                for (const [key, sequence] of Object.entries(sequences)) {
+                    html += `
+                        <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px;">
+                            <h4>${sequence.name}</h4>
+                            <p>Type: ${sequence.type} | Total Emails: ${sequence.total_emails}</p>
+                            <div style="margin-top: 10px;">
+                                ${sequence.progress.map(p => 
+                                    `<span class="badge badge-success">Email ${p.email_index}: ${p.subscriber_count} subscribers</span>`
+                                ).join(' ')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                html += '</div>';
+                document.getElementById('sequence-status').innerHTML = html;
+            } catch (error) {
+                console.error('Error loading sequences:', error);
+                document.getElementById('sequence-status').innerHTML = 
+                    '<div class="error">Error loading sequence information</div>';
+            }
+        }
+
+        // Load subscribers by type
+        async function loadSubscribers(type) {
+            const endpoint = type === 'lead-magnet' ? 'lead-magnet' : type;
+            const containerId = `${type}-table`;
+            
+            try {
+                const response = await fetch(`/admin/${endpoint}`, {
+                    headers: getAuthHeaders()
+                });
+
+                if (!response.ok) {
+                    handleApiError(response);
+                    return;
+                }
+
+                const subscribers = await response.json();
+                
+                if (subscribers.length === 0) {
+                    document.getElementById(containerId).innerHTML = 
+                        '<p style="text-align: center; color: #718096; padding: 40px;">No subscribers found</p>';
+                    return;
+                }
+
+                let html = '<table class="table"><thead><tr>';
+                
+                if (type === 'waitlist') {
+                    html += '<th>Name</th><th>Email</th><th>Occupation</th><th>Created</th><th>Sequence Progress</th><th>Status</th>';
+                } else if (type === 'corporate') {
+                    html += '<th>Company</th><th>Contact</th><th>Email</th><th>Team Size</th><th>Created</th><th>Sequence Progress</th>';
+                } else if (type === 'lead-magnet') {
+                    html += '<th>Email</th><th>Downloads</th><th>Created</th><th>Sequence Progress</th><th>Status</th>';
+                }
+                
+                html += '</tr></thead><tbody>';
+                
+                subscribers.forEach(sub => {
+                    html += '<tr>';
+                    
+                    if (type === 'waitlist') {
+                        html += `
+                            <td>${sub.full_name}</td>
+                            <td>${sub.email}</td>
+                            <td>${sub.occupation}</td>
+                            <td>${new Date(sub.created_at).toLocaleDateString()}</td>
+                            <td>${sub.current_email_index}/12</td>
+                            <td><span class="badge ${sub.is_active ? 'badge-success' : 'badge-danger'}">${sub.is_active ? 'Active' : 'Inactive'}</span></td>
+                        `;
+                    } else if (type === 'corporate') {
+                        html += `
+                            <td>${sub.company_name}</td>
+                            <td>${sub.contact_person}</td>
+                            <td>${sub.email}</td>
+                            <td>${sub.team_size}</td>
+                            <td>${new Date(sub.created_at).toLocaleDateString()}</td>
+                            <td>${sub.current_email_index}/12</td>
+                        `;
+                    } else if (type === 'lead-magnet') {
+                        html += `
+                            <td>${sub.email}</td>
+                            <td>${sub.download_count}</td>
+                            <td>${new Date(sub.created_at).toLocaleDateString()}</td>
+                            <td>${sub.current_email_index}/12</td>
+                            <td><span class="badge ${sub.is_active ? 'badge-success' : 'badge-danger'}">${sub.is_active ? 'Active' : 'Inactive'}</span></td>
+                        `;
+                    }
+                    
+                    html += '</tr>';
+                });
+                
+                html += '</tbody></table>';
+                document.getElementById(containerId).innerHTML = html;
+                
+            } catch (error) {
+                console.error(`Error loading ${type} subscribers:`, error);
+                document.getElementById(containerId).innerHTML = 
+                    '<div class="error">Error loading subscribers</div>';
+            }
+        }
+
+        // Load recent emails
+        async function loadRecentEmails() {
+            try {
+                const response = await fetch('/admin/emails?limit=20', {
+                    headers: getAuthHeaders()
+                });
+
+                if (!response.ok) {
+                    handleApiError(response);
+                    return;
+                }
+
+                const emails = await response.json();
+                
+                if (emails.length === 0) {
+                    document.getElementById('recent-emails').innerHTML = 
+                        '<p style="text-align: center; color: #718096; padding: 40px;">No emails found</p>';
+                    return;
+                }
+
+                let html = '<table class="table"><thead><tr><th>Type</th><th>Subject</th><th>Recipient</th><th>Sent At</th><th>Status</th></tr></thead><tbody>';
+                
+                emails.forEach(email => {
+                    html += `
+                        <tr>
+                            <td><span class="badge badge-secondary">${email.email_type}</span></td>
+                            <td>${email.subject}</td>
+                            <td>${email.recipient_email}</td>
+                            <td>${new Date(email.sent_at).toLocaleString()}</td>
+                            <td><span class="badge badge-success">${email.status}</span></td>
+                        </tr>
+                    `;
+                });
+                
+                html += '</tbody></table>';
+                document.getElementById('recent-emails').innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error loading recent emails:', error);
+                document.getElementById('recent-emails').innerHTML = 
+                    '<div class="error">Error loading recent emails</div>';
+            }
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabName}-content`).classList.add('active');
+
+            // Load data for the tab if not already loaded
+            if (currentTab !== tabName) {
+                currentTab = tabName;
+                loadSubscribers(tabName);
+            }
+        }
+
+        // Sequence controls
+        async function pauseAllSequences() {
+            try {
+                const response = await fetch('/admin/sequences/pause-all', {
+                    method: 'POST',
+                    headers: getAuthHeaders()
+                });
+
+                if (response.ok) {
+                    alert('All email sequences paused successfully');
+                    await loadSequenceStatus();
+                } else {
+                    alert('Error pausing sequences');
+                }
+            } catch (error) {
+                console.error('Error pausing sequences:', error);
+                alert('Error pausing sequences');
+            }
+        }
+
+        async function resumeAllSequences() {
+            try {
+                const response = await fetch('/admin/sequences/resume-all', {
+                    method: 'POST',
+                    headers: getAuthHeaders()
+                });
+
+                if (response.ok) {
+                    alert('All email sequences resumed successfully');
+                    await loadSequenceStatus();
+                } else {
+                    alert('Error resuming sequences');
+                }
+            } catch (error) {
+                console.error('Error resuming sequences:', error);
+                alert('Error resuming sequences');
+            }
+        }
+
+        // Export subscribers
+        async function exportSubscribers() {
+            try {
+                const response = await fetch('/admin/export/subscribers?format=csv', {
+                    headers: getAuthHeaders()
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'subscribers.csv';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                } else {
+                    alert('Error exporting subscribers');
+                }
+            } catch (error) {
+                console.error('Error exporting subscribers:', error);
+                alert('Error exporting subscribers');
+            }
+        }
+
+        // Manual email modal (simplified version)
+        function showManualEmailModal() {
+            const subject = prompt('Email Subject:');
+            if (!subject) return;
+            
+            const content = prompt('Email Content (HTML allowed):');
+            if (!content) return;
+            
+            alert('Manual email feature coming soon!');
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('admin_token');
+            localStorage.removeItem('admin_email');
+            window.location.href = '/admin/login';
+        }
+    </script>
+</body>
+</html>
