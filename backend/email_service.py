@@ -16,7 +16,7 @@ class SendGridService:
         else:
             self.client = SendGridAPIClient(api_key=self.api_key)
         
-        self.from_email = "noreply@peter-stoyanov.com"
+        self.from_email = "peterstoyanov83@gmail.com"
         self.admin_email = "peterstoyanov83@gmail.com"
 
     def send_email(self, to_email: str, subject: str, html_content: str, from_name: str = "Peter Stoyanov Coaching") -> Dict[str, Any]:
