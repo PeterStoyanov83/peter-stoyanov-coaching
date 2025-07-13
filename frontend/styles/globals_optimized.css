@@ -108,6 +108,11 @@ html {
   line-height: 1.2;
 }
 
+/* Ensure hero h1 has explicit font-size for all cases */
+.hero-content h1 {
+  font-size: clamp(2rem, 5vw, 4rem) !important;
+}
+
 .hero-subtitle {
   font-size: clamp(1rem, 2.5vw, 1.5rem);
   margin-bottom: 2rem;
@@ -360,17 +365,44 @@ main {
   text-wrap: balance;
 }
 
-/* Improve typography hierarchy */
+/* Improve typography hierarchy - Fix deprecated API warning */
 h1 {
   @apply text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight;
+  font-size: 2.25rem; /* Explicit font-size to fix deprecated API warning */
+}
+
+@media (min-width: 768px) {
+  h1 {
+    font-size: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  h1 {
+    font-size: 3.75rem;
+  }
 }
 
 h2 {
   @apply text-3xl md:text-4xl font-bold tracking-tight;
+  font-size: 1.875rem; /* Explicit font-size */
+}
+
+@media (min-width: 768px) {
+  h2 {
+    font-size: 2.25rem;
+  }
 }
 
 h3 {
   @apply text-xl md:text-2xl font-semibold;
+  font-size: 1.25rem; /* Explicit font-size */
+}
+
+@media (min-width: 768px) {
+  h3 {
+    font-size: 1.5rem;
+  }
 }
 
 /* Improve link hover states */
