@@ -150,6 +150,12 @@ class SendGridService:
                         As a <strong>{data['occupation']}</strong> in {data['city_country']}, you bring unique perspectives that I look forward to working with.
                     </p>
                     
+                    <div style="background-color: #f0fff4; border: 2px solid #38a169; padding: 25px; border-radius: 8px; margin: 30px 0; text-align: center;">
+                        <h3 style="color: #2f855a; margin: 0 0 15px 0; font-size: 20px;">🎁 Welcome Gift: Leadership Guide</h3>
+                        <p style="color: #2d3748; margin: 0 0 20px 0;">As a thank you for joining, here's your exclusive leadership development guide!</p>
+                        <a href="https://peter-stoyanov.com/guides/5-theater-secrets-guide.pdf" style="display: inline-block; background: linear-gradient(135deg, #38a169 0%, #2f855a 100%); color: #ffffff; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 16px;">Download Your Free Guide</a>
+                    </div>
+                    
                     <div style="background-color: #edf2f7; padding: 20px; border-radius: 8px; margin: 30px 0;">
                         <h3 style="color: #2c5282; margin: 0 0 10px 0; font-size: 18px;">What's Next?</h3>
                         <ul style="color: #2d3748; margin: 0; padding-left: 20px;">

@@ -110,7 +110,7 @@ async def register_waitlist(
         db.commit()
         db.refresh(db_registration)
         
-        # Send welcome email
+        # Send welcome email with lead magnet
         registration_data = {
             "full_name": registration.full_name,
             "email": registration.email,
@@ -121,6 +121,11 @@ async def register_waitlist(
         }
         
         email_result = sendgrid_service.send_welcome_email_waitlist(registration_data)
+        
+        # Also create lead magnet entry for guide access
+        lead_magnet_entry = LeadMagnetDownload(email=registration.email)
+        db.add(lead_magnet_entry)
+        db.commit()
         
         if email_result["success"]:
             db_registration.welcome_sent = True
@@ -203,9 +208,7 @@ async def submit_corporate_inquiry(
         if email_result["success"]:
             db_inquiry.welcome_sent = True
             db_inquiry.welcome_sent_at = datetime.utcnow()
-            # Start email sequence after successful welcome email
-            db_inquiry.sequence_started = True
-            db_inquiry.last_email_sent_at = datetime.utcnow()
+            # Note: Corporate inquiries are handled manually, no automated sequence
             db.commit()
             
             # Log email
@@ -394,6 +397,225 @@ async def init_database():
 @app.get("/health")
 def health_check():
     return {"status": "healthy", "version": "clean", "timestamp": datetime.utcnow().isoformat()}
+
+# Test endpoints for production verification
+@app.post("/admin/test-email-flow")
+async def test_email_flow(db: Session = Depends(get_db)):
+    """Test the complete email automation flow"""
+    test_email = "test@peter-stoyanov.com"
+    
+    try:
+        # 1. Test database connection
+        test_count = db.query(WaitlistRegistration).count()
+        
+        # 2. Test email service
+        test_result = sendgrid_service.send_email(
+            to_email=test_email,
+            subject="Email Flow Test",
+            html_content="<p>This is a test email from your automation system.</p>"
+        )
+        
+        # 3. Test sequence email generation
+        from email_automation import EmailSequenceAutomation
+        automation = EmailSequenceAutomation()
+        test_sequence = automation._get_waitlist_magnet_email(1)
+        
+        return {
+            "success": True,
+            "database_connection": "OK",
+            "waitlist_count": test_count,
+            "email_service": "OK" if test_result.get("success") else f"ERROR: {test_result.get('error')}",
+            "sequence_generation": "OK" if test_sequence else "ERROR: No sequence content",
+            "test_email_sent": test_result.get("success", False),
+            "message_id": test_result.get("message_id")
+        }
+        
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e),
+            "message": "Email flow test failed"
+        }
+
+@app.post("/admin/test-sequence-email")
+async def test_sequence_email(email: str, sequence_index: int = 1, db: Session = Depends(get_db)):
+    """Send a test sequence email to verify content and formatting"""
+    try:
+        from email_automation import EmailSequenceAutomation
+        automation = EmailSequenceAutomation()
+        
+        # Get sequence email content
+        sequence_email = automation._get_waitlist_magnet_email(sequence_index)
+        if not sequence_email:
+            return {"success": False, "error": f"No sequence email found for index {sequence_index}"}
+        
+        # Personalize with test data
+        test_data = {
+            "full_name": "Test User",
+            "email": email,
+            "occupation": "Test Occupation",
+            "city_country": "Test City, Test Country"
+        }
+        
+        personalized_content = automation._personalize_email_content(sequence_email['content'], test_data)
+        
+        # Send test email
+        result = sendgrid_service.send_email(
+            to_email=email,
+            subject=f"[TEST] {sequence_email['subject']}",
+            html_content=personalized_content
+        )
+        
+        return {
+            "success": result.get("success", False),
+            "sequence_index": sequence_index,
+            "subject": sequence_email['subject'],
+            "message_id": result.get("message_id"),
+            "error": result.get("error")
+        }
+        
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e),
+            "message": "Sequence email test failed"
+        }
+
+@app.get("/admin/automation-status")
+async def automation_status(db: Session = Depends(get_db)):
+    """Get status of email automation system"""
+    try:
+        # Count subscribers by type and status
+        waitlist_total = db.query(WaitlistRegistration).count()
+        waitlist_active = db.query(WaitlistRegistration).filter(WaitlistRegistration.is_active == True).count()
+        waitlist_sequences_started = db.query(WaitlistRegistration).filter(WaitlistRegistration.sequence_started == True).count()
+        
+        lead_magnet_total = db.query(LeadMagnetDownload).count()
+        lead_magnet_active = db.query(LeadMagnetDownload).filter(LeadMagnetDownload.is_active == True).count()
+        
+        corporate_total = db.query(CorporateInquiry).count()
+        corporate_active = db.query(CorporateInquiry).filter(CorporateInquiry.is_active == True).count()
+        
+        # Count recent emails
+        from datetime import timedelta
+        last_24h = datetime.utcnow() - timedelta(hours=24)
+        emails_sent_24h = db.query(EmailLog).filter(EmailLog.sent_at >= last_24h).count()
+        
+        return {
+            "database_status": "connected",
+            "subscribers": {
+                "waitlist": {"total": waitlist_total, "active": waitlist_active, "sequences_started": waitlist_sequences_started},
+                "lead_magnet": {"total": lead_magnet_total, "active": lead_magnet_active},
+                "corporate": {"total": corporate_total, "active": corporate_active}
+            },
+            "email_activity": {
+                "emails_sent_last_24h": emails_sent_24h
+            },
+            "sendgrid_configured": bool(sendgrid_service.api_key),
+            "timestamp": datetime.utcnow().isoformat()
+        }
+        
+    except Exception as e:
+        return {
+            "database_status": "error",
+            "error": str(e),
+            "timestamp": datetime.utcnow().isoformat()
+        }
+
+# Email content management endpoints
+@app.post("/admin/init-email-content")
+async def init_email_content():
+    """Initialize email sequences in database"""
+    try:
+        from email_content_manager import EmailContentManager
+        manager = EmailContentManager()
+        result = manager.initialize_sequences()
+        return result
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e),
+            "message": "Failed to initialize email content"
+        }
+
+@app.get("/admin/list-sequence-emails/{sequence_type}")
+async def list_sequence_emails(sequence_type: str):
+    """List all emails in a sequence"""
+    try:
+        from email_content_manager import EmailContentManager
+        manager = EmailContentManager()
+        result = manager.list_sequence_emails(sequence_type)
+        return result
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e),
+            "message": "Failed to list sequence emails"
+        }
+
+@app.put("/admin/update-sequence-email/{sequence_type}/{email_index}")
+async def update_sequence_email(sequence_type: str, email_index: int, subject: str, content: str):
+    """Update a sequence email"""
+    try:
+        from email_content_manager import EmailContentManager
+        manager = EmailContentManager()
+        result = manager.update_sequence_email(sequence_type, email_index, subject, content)
+        return result
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e),
+            "message": "Failed to update sequence email"
+        }
+
+
+@app.post("/admin/test-single-sequence-email")
+async def test_single_sequence_email(test_email: str, week_number: int, db: Session = Depends(get_db)):
+    """Test a single email from the sequence"""
+    try:
+        from email_automation import EmailSequenceAutomation
+        
+        if week_number < 1 or week_number > 10:
+            return {"success": False, "error": "Week number must be between 1 and 10"}
+        
+        automation = EmailSequenceAutomation()
+        sequence_email = automation._get_sequence_email_content("waitlist_magnet", week_number)
+        
+        if not sequence_email:
+            return {"success": False, "error": f"No content found for week {week_number}"}
+        
+        # Test subscriber data
+        test_data = {
+            "full_name": "Test User"
+        }
+        
+        # Personalize and send
+        personalized_content = automation._personalize_email_content(
+            sequence_email['content'], 
+            test_data
+        )
+        
+        result = sendgrid_service.send_email(
+            to_email=test_email,
+            subject=f"[TEST WEEK {week_number}] {sequence_email['subject']}",
+            html_content=personalized_content
+        )
+        
+        return {
+            "success": result.get("success", False),
+            "week_number": week_number,
+            "subject": sequence_email['subject'],
+            "message_id": result.get("message_id"),
+            "error": result.get("error"),
+            "message": f"Week {week_number} email sent to {test_email}"
+        }
+        
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e),
+            "message": f"Failed to send week {week_number} email"
+        }
 
 if __name__ == "__main__":
     import uvicorn

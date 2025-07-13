@@ -320,6 +320,91 @@
             </div>
         </div>
 
+        <!-- Email Sequence Testing -->
+        <div class="section">
+            <div class="section-header">
+                <h2>🧪 Email Sequence Testing</h2>
+                <div>
+                    <span style="color: #718096; font-size: 14px;">Test email sequences before they go live</span>
+                </div>
+            </div>
+            <div class="section-content">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                    <!-- Quick Tests -->
+                    <div>
+                        <h3 style="margin-bottom: 15px; color: #2d3748;">Quick Tests</h3>
+                        
+                        <div style="background: #f7fafc; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
+                            <h4 style="margin: 0 0 10px 0; color: #4a5568;">Test Single Email</h4>
+                            <div style="display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: end;">
+                                <div>
+                                    <label style="display: block; font-size: 12px; color: #718096; margin-bottom: 5px;">Test Email:</label>
+                                    <input type="email" id="singleTestEmail" placeholder="your-email@example.com" style="width: 100%; padding: 8px; border: 1px solid #e2e8f0; border-radius: 4px;">
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 12px; color: #718096; margin-bottom: 5px;">Week:</label>
+                                    <select id="singleTestWeek" style="padding: 8px; border: 1px solid #e2e8f0; border-radius: 4px;">
+                                        <option value="0">Welcome</option>
+                                        <option value="1">Week 1</option>
+                                        <option value="2">Week 2</option>
+                                        <option value="3">Week 3</option>
+                                        <option value="4">Week 4</option>
+                                        <option value="5">Week 5</option>
+                                        <option value="6">Week 6</option>
+                                        <option value="7">Week 7</option>
+                                        <option value="8">Week 8</option>
+                                        <option value="9">Week 9</option>
+                                        <option value="10">Week 10</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-secondary" onclick="testSingleEmail()" style="height: fit-content;">Send Test</button>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #f7fafc; padding: 20px; border-radius: 8px;">
+                            <h4 style="margin: 0 0 10px 0; color: #4a5568;">Test Complete Flow</h4>
+                            <p style="margin: 0 0 15px 0; font-size: 14px; color: #718096;">Test the complete waitlist signup process</p>
+                            <div style="display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: end;">
+                                <div>
+                                    <label style="display: block; font-size: 12px; color: #718096; margin-bottom: 5px;">Test Email:</label>
+                                    <input type="email" id="flowTestEmail" placeholder="your-email@example.com" style="width: 100%; padding: 8px; border: 1px solid #e2e8f0; border-radius: 4px;">
+                                </div>
+                                <button class="btn btn-primary" onclick="testEmailFlow()" style="height: fit-content;">Test Flow</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Full Sequence Test -->
+                    <div>
+                        <h3 style="margin-bottom: 15px; color: #2d3748;">Full Sequence Test</h3>
+                        
+                        <div style="background: #f0fff4; border: 1px solid #9ae6b4; padding: 20px; border-radius: 8px;">
+                            <h4 style="margin: 0 0 10px 0; color: #38a169;">Custom Interval Test</h4>
+                            <p style="margin: 0 0 15px 0; font-size: 14px; color: #2f855a;">Sends all 11 emails (welcome + 10 weeks) with custom timing between emails</p>
+                            <div style="display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: end;">
+                                <div>
+                                    <label style="display: block; font-size: 12px; color: #2f855a; margin-bottom: 5px;">Test Email:</label>
+                                    <input type="email" id="customSequenceEmail" placeholder="your-email@example.com" style="width: 100%; padding: 8px; border: 1px solid #c6f6d5; border-radius: 4px;">
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 12px; color: #2f855a; margin-bottom: 5px;">Interval (sec):</label>
+                                    <input type="number" id="customInterval" value="60" min="10" max="300" style="width: 80px; padding: 8px; border: 1px solid #c6f6d5; border-radius: 4px;">
+                                </div>
+                                <button class="btn btn-primary" onclick="testCustomSequence()" style="height: fit-content;">Start Test</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Test Results -->
+                <div id="testResults" style="margin-top: 30px; display: none;">
+                    <h3 style="margin-bottom: 15px; color: #2d3748;">Test Results</h3>
+                    <div id="testResultsContent" style="background: #f7fafc; padding: 20px; border-radius: 8px; max-height: 300px; overflow-y: auto;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Email Sequence Management -->
         <div class="section">
             <div class="section-header">
@@ -1365,6 +1450,214 @@
             if (!content) return;
             
             alert('Manual email feature coming soon!');
+        }
+
+        // Email Testing Functions
+        async function testSingleEmail() {
+            const email = document.getElementById('singleTestEmail').value;
+            const week = document.getElementById('singleTestWeek').value;
+            
+            if (!email) {
+                alert('Please enter a test email address');
+                return;
+            }
+            
+            showTestResults('Starting single email test...', 'info');
+            
+            try {
+                let endpoint, params;
+                
+                if (week === '0') {
+                    // Test welcome email
+                    endpoint = '/admin/test-email-flow';
+                    params = '';
+                } else {
+                    // Test sequence email
+                    endpoint = '/admin/test-single-sequence-email';
+                    params = `?test_email=${encodeURIComponent(email)}&week_number=${week}`;
+                }
+                
+                const response = await fetch(endpoint + params, {
+                    method: 'POST',
+                    headers: getAuthHeaders()
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showTestResults(`✅ Email sent successfully!
+                    ${week === '0' ? 'Welcome email' : `Week ${week} email`} sent to ${email}
+                    Message ID: ${result.message_id || 'N/A'}`, 'success');
+                } else {
+                    showTestResults(`❌ Email test failed: ${result.error || result.message}`, 'error');
+                }
+                
+            } catch (error) {
+                showTestResults(`❌ Error testing email: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testEmailFlow() {
+            const email = document.getElementById('flowTestEmail').value;
+            
+            if (!email) {
+                alert('Please enter a test email address');
+                return;
+            }
+            
+            showTestResults('Testing complete email flow...', 'info');
+            
+            try {
+                const response = await fetch('/admin/test-email-flow', {
+                    method: 'POST',
+                    headers: getAuthHeaders()
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showTestResults(`✅ Email flow test completed!
+                    Database connection: ${result.database_connection}
+                    Email service: ${result.email_service}
+                    Sequence generation: ${result.sequence_generation}
+                    Test email sent: ${result.test_email_sent}
+                    Message ID: ${result.message_id || 'N/A'}`, 'success');
+                } else {
+                    showTestResults(`❌ Email flow test failed: ${result.error || result.message}`, 'error');
+                }
+                
+            } catch (error) {
+                showTestResults(`❌ Error testing email flow: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testCustomSequence() {
+            const email = document.getElementById('customSequenceEmail').value;
+            const interval = parseInt(document.getElementById('customInterval').value);
+            
+            if (!email) {
+                alert('Please enter a test email address');
+                return;
+            }
+            
+            const minutes = Math.ceil((11 * interval) / 60);
+            
+            if (!confirm(`⚠️ This will send 11 emails to ${email} with ${interval}-second intervals (~${minutes} minutes). Are you sure?`)) {
+                return;
+            }
+            
+            showTestResults(`🚀 Starting custom sequence test with ${interval}-second intervals...`, 'warning');
+            appendTestResults(`Estimated completion time: ${minutes} minutes`);
+            
+            let results = [];
+            let successCount = 0;
+            let failCount = 0;
+            
+            try {
+                // Send welcome email first
+                appendTestResults('\n📧 Sending welcome email...');
+                const welcomeResponse = await fetch('/admin/test-email-flow', {
+                    method: 'POST',
+                    headers: getAuthHeaders()
+                });
+                const welcomeResult = await welcomeResponse.json();
+                
+                if (welcomeResult.success) {
+                    successCount++;
+                    appendTestResults('✅ Welcome email sent');
+                } else {
+                    failCount++;
+                    appendTestResults(`❌ Welcome email failed: ${welcomeResult.error}`);
+                }
+                
+                // Wait before starting sequence
+                await new Promise(resolve => setTimeout(resolve, Math.min(interval, 5) * 1000));
+                
+                // Send 10 sequence emails
+                for (let week = 1; week <= 10; week++) {
+                    appendTestResults(`\n📧 Sending week ${week} email...`);
+                    
+                    try {
+                        const response = await fetch(`/admin/test-single-sequence-email?test_email=${encodeURIComponent(email)}&week_number=${week}`, {
+                            method: 'POST',
+                            headers: getAuthHeaders()
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (result.success) {
+                            successCount++;
+                            appendTestResults(`✅ Week ${week}: ${result.subject}`);
+                        } else {
+                            failCount++;
+                            appendTestResults(`❌ Week ${week} failed: ${result.error}`);
+                        }
+                        
+                        // Wait before next email (except for last one)
+                        if (week < 10) {
+                            await new Promise(resolve => setTimeout(resolve, interval * 1000));
+                        }
+                        
+                    } catch (error) {
+                        failCount++;
+                        appendTestResults(`❌ Week ${week} error: ${error.message}`);
+                    }
+                }
+                
+                // Show final results
+                showTestResults(`✅ Custom sequence test completed!
+                Test email: ${email}
+                Interval: ${interval} seconds
+                Total emails: ${successCount + failCount}
+                Emails sent: ${successCount}
+                Emails failed: ${failCount}
+                Duration: ${minutes} minutes
+                
+                📧 Check ${email} for all emails!`, 'success');
+                
+            } catch (error) {
+                showTestResults(`❌ Error testing custom sequence: ${error.message}`, 'error');
+            }
+        }
+        
+        function showTestResults(message, type = 'info') {
+            const resultsDiv = document.getElementById('testResults');
+            const contentDiv = document.getElementById('testResultsContent');
+            
+            let bgColor, textColor;
+            switch (type) {
+                case 'success':
+                    bgColor = '#f0fff4';
+                    textColor = '#2f855a';
+                    break;
+                case 'error':
+                    bgColor = '#fff5f5';
+                    textColor = '#c53030';
+                    break;
+                case 'warning':
+                    bgColor = '#fffbeb';
+                    textColor = '#d69e2e';
+                    break;
+                default:
+                    bgColor = '#f7fafc';
+                    textColor = '#4a5568';
+            }
+            
+            contentDiv.style.backgroundColor = bgColor;
+            contentDiv.style.color = textColor;
+            contentDiv.style.border = `1px solid ${textColor}20`;
+            contentDiv.innerHTML = `<pre style="margin: 0; white-space: pre-wrap; font-family: inherit;">${message}</pre>`;
+            
+            resultsDiv.style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function appendTestResults(message) {
+            const contentDiv = document.getElementById('testResultsContent');
+            const pre = contentDiv.querySelector('pre');
+            if (pre) {
+                pre.textContent += '\n' + message;
+            }
         }
 
         // Logout

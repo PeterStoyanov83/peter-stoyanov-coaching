@@ -36,8 +36,7 @@ class EmailSequenceAutomation:
             # Process lead magnet sequences  
             self._process_lead_magnet_sequences()
             
-            # Process corporate sequences
-            self._process_corporate_sequences()
+            # Note: Corporate inquiries are handled manually, no automation
             
             logger.info("Email sequence processing completed successfully")
             
@@ -73,19 +72,6 @@ class EmailSequenceAutomation:
             if self._should_send_next_email(subscriber.last_email_sent_at, subscriber.current_email_index):
                 self._send_sequence_email(subscriber, "waitlist_magnet")
     
-    def _process_corporate_sequences(self):
-        """Process email sequences for corporate inquiries"""
-        # Get corporate subscribers ready for next email
-        subscribers = self.db.query(CorporateInquiry).filter(
-            CorporateInquiry.is_active == True,
-            CorporateInquiry.welcome_sent == True,
-            CorporateInquiry.sequence_started == True,
-            CorporateInquiry.current_email_index < 12  # 12-week sequence
-        ).all()
-        
-        for subscriber in subscribers:
-            if self._should_send_next_email(subscriber.last_email_sent_at, subscriber.current_email_index):
-                self._send_sequence_email(subscriber, "corporate")
     
     def _should_send_next_email(self, last_sent_at, current_index):
         """Determine if it's time to send the next email"""
@@ -142,13 +128,29 @@ class EmailSequenceAutomation:
     
     def _get_sequence_email_content(self, sequence_type: str, email_index: int) -> Dict[str, str]:
         """Get email content for specific sequence and index"""
-        # This could be from database or predefined content
-        # For now, using predefined content structure
-        
-        if sequence_type == "waitlist_magnet":
-            return self._get_waitlist_magnet_email(email_index)
-        elif sequence_type == "corporate":
-            return self._get_corporate_email(email_index)
+        try:
+            # Try to get from database first
+            from email_content_manager import EmailContentManager
+            manager = EmailContentManager()
+            db_content = manager.get_sequence_email_from_db(sequence_type, email_index)
+            
+            if db_content:
+                return db_content
+            
+            # Fallback to hardcoded content
+            logger.warning(f"No database content found for {sequence_type} email {email_index}, using fallback")
+            if sequence_type == "waitlist_magnet":
+                return self._get_waitlist_magnet_email(email_index)
+            elif sequence_type == "corporate":
+                return self._get_corporate_email(email_index)
+            
+        except Exception as e:
+            logger.error(f"Error getting sequence email content: {str(e)}")
+            # Fallback to hardcoded content
+            if sequence_type == "waitlist_magnet":
+                return self._get_waitlist_magnet_email(email_index)
+            elif sequence_type == "corporate":
+                return self._get_corporate_email(email_index)
         
         return None
     
@@ -201,8 +203,194 @@ class EmailSequenceAutomation:
                     </div>
                 </div>
                 """
+            },
+            3: {
+                "subject": "Week 3: Building Trust Through Vulnerability",
+                "content": """
+                <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 20px; text-align: center;">
+                        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Week 3: Vulnerable Leadership</h1>
+                    </div>
+                    <div style="padding: 30px;">
+                        <p>Hi {full_name},</p>
+                        <p>This week, we explore one of the most counterintuitive leadership skills: strategic vulnerability.</p>
+                        <h3>Why Vulnerability Creates Trust:</h3>
+                        <ul>
+                            <li><strong>Authenticity:</strong> People follow leaders they perceive as genuine</li>
+                            <li><strong>Psychological Safety:</strong> When you model openness, others feel safe to contribute</li>
+                            <li><strong>Connection:</strong> Shared struggles create deeper bonds than shared successes</li>
+                        </ul>
+                        <p><strong>This Week's Practice:</strong> Share one professional challenge you're working through with your team. Ask for their perspective.</p>
+                        <p>Strength through openness,<br>Peter</p>
+                    </div>
+                </div>
+                """
+            },
+            4: {
+                "subject": "Week 4: The Art of Decisive Leadership",
+                "content": """
+                <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 20px; text-align: center;">
+                        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Week 4: Decisive Leadership</h1>
+                    </div>
+                    <div style="padding: 30px;">
+                        <p>Hi {full_name},</p>
+                        <p>Great leaders make tough decisions with incomplete information. This week, we master the decision-making process.</p>
+                        <h3>The RAPID Decision Framework:</h3>
+                        <ol>
+                            <li><strong>Recommend:</strong> Who suggests the course of action?</li>
+                            <li><strong>Agree:</strong> Who must agree before moving forward?</li>
+                            <li><strong>Perform:</strong> Who will execute the decision?</li>
+                            <li><strong>Input:</strong> Who provides information and expertise?</li>
+                            <li><strong>Decide:</strong> Who makes the final call?</li>
+                        </ol>
+                        <p><strong>Action Step:</strong> Map your next major decision using this framework.</p>
+                        <p>Leading with clarity,<br>Peter</p>
+                    </div>
+                </div>
+                """
+            },
+            5: {
+                "subject": "Week 5: Emotional Intelligence in Action",
+                "content": """
+                <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 20px; text-align: center;">
+                        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Week 5: Emotional Intelligence</h1>
+                    </div>
+                    <div style="padding: 30px;">
+                        <p>Hi {full_name},</p>
+                        <p>This week we dive deep into the skill that separates good leaders from exceptional ones: emotional intelligence.</p>
+                        <h3>The 4 Domains of EQ:</h3>
+                        <ul>
+                            <li><strong>Self-Awareness:</strong> Understanding your emotions as they happen</li>
+                            <li><strong>Self-Management:</strong> Controlling your emotional responses</li>
+                            <li><strong>Social Awareness:</strong> Reading the emotions of others</li>
+                            <li><strong>Relationship Management:</strong> Influencing positive emotional outcomes</li>
+                        </ul>
+                        <p><strong>This Week's Challenge:</strong> Before reacting to any frustrating situation, pause and name the emotion you're feeling.</p>
+                        <p>Leading with wisdom,<br>Peter</p>
+                    </div>
+                </div>
+                """
+            },
+            6: {
+                "subject": "Week 6: Delegation That Develops People",
+                "content": """
+                <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 20px; text-align: center;">
+                        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Week 6: Strategic Delegation</h1>
+                    </div>
+                    <div style="padding: 30px;">
+                        <p>Hi {full_name},</p>
+                        <p>True leadership isn't about doing everything yourself—it's about developing others to excel beyond what they thought possible.</p>
+                        <h3>The GROW Model for Delegation:</h3>
+                        <ol>
+                            <li><strong>Goal:</strong> What specific outcome do you want?</li>
+                            <li><strong>Reality:</strong> What skills does your team member currently have?</li>
+                            <li><strong>Options:</strong> What support and resources can you provide?</li>
+                            <li><strong>Will:</strong> What's their commitment level and timeline?</li>
+                        </ol>
+                        <p><strong>Action Item:</strong> Identify one task you can delegate using this framework this week.</p>
+                        <p>Growing leaders,<br>Peter</p>
+                    </div>
+                </div>
+                """
+            },
+            7: {
+                "subject": "Week 7: Creating a Vision That Inspires",
+                "content": """
+                <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 20px; text-align: center;">
+                        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Week 7: Visionary Leadership</h1>
+                    </div>
+                    <div style="padding: 30px;">
+                        <p>Hi {full_name},</p>
+                        <p>Great leaders paint a picture of the future so compelling that people can't help but want to be part of creating it.</p>
+                        <h3>Elements of an Inspiring Vision:</h3>
+                        <ul>
+                            <li><strong>Clear Picture:</strong> People can visualize the future state</li>
+                            <li><strong>Emotional Connection:</strong> It speaks to deeper values and purpose</li>
+                            <li><strong>Achievable Stretch:</strong> Challenging but believable</li>
+                            <li><strong>Personal Relevance:</strong> Everyone sees their role in achieving it</li>
+                        </ul>
+                        <p><strong>Vision Exercise:</strong> Write a one-paragraph description of where you want your team/organization to be in 3 years.</p>
+                        <p>Painting the future,<br>Peter</p>
+                    </div>
+                </div>
+                """
+            },
+            8: {
+                "subject": "Week 8: Conflict Resolution as a Leadership Tool",
+                "content": """
+                <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 20px; text-align: center;">
+                        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Week 8: Mastering Conflict</h1>
+                    </div>
+                    <div style="padding: 30px;">
+                        <p>Hi {full_name},</p>
+                        <p>Exceptional leaders don't avoid conflict—they transform it into opportunity for growth and innovation.</p>
+                        <h3>The PEACE Method:</h3>
+                        <ol>
+                            <li><strong>Pause:</strong> Take time to understand all perspectives</li>
+                            <li><strong>Empathize:</strong> Acknowledge everyone's feelings and concerns</li>
+                            <li><strong>Ask:</strong> Focus on underlying interests, not positions</li>
+                            <li><strong>Create:</strong> Brainstorm solutions together</li>
+                            <li><strong>Execute:</strong> Agree on specific next steps</li>
+                        </ol>
+                        <p><strong>Challenge:</strong> Use this method in your next difficult conversation.</p>
+                        <p>Turning tension into triumph,<br>Peter</p>
+                    </div>
+                </div>
+                """
+            },
+            9: {
+                "subject": "Week 9: Building High-Performance Teams",
+                "content": """
+                <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 20px; text-align: center;">
+                        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Week 9: Team Excellence</h1>
+                    </div>
+                    <div style="padding: 30px;">
+                        <p>Hi {full_name},</p>
+                        <p>This week, we explore what transforms a group of individuals into a high-performing team that achieves extraordinary results.</p>
+                        <h3>The 5 Characteristics of Elite Teams:</h3>
+                        <ul>
+                            <li><strong>Psychological Safety:</strong> Members feel safe to take risks and make mistakes</li>
+                            <li><strong>Dependability:</strong> Everyone completes quality work on time</li>
+                            <li><strong>Structure & Clarity:</strong> Clear goals, roles, and execution plans</li>
+                            <li><strong>Meaning:</strong> Work has personal significance to each member</li>
+                            <li><strong>Impact:</strong> The team believes their work matters</li>
+                        </ul>
+                        <p><strong>Team Assessment:</strong> Rate your team 1-10 on each characteristic. Focus on improving the lowest score.</p>
+                        <p>Building excellence together,<br>Peter</p>
+                    </div>
+                </div>
+                """
+            },
+            10: {
+                "subject": "Week 10: Leading Through Change and Uncertainty",
+                "content": """
+                <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 20px; text-align: center;">
+                        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Week 10: Leading Through Change</h1>
+                    </div>
+                    <div style="padding: 30px;">
+                        <p>Hi {full_name},</p>
+                        <p>Change is the only constant in leadership. This week, we master the art of guiding others through uncertainty with confidence and grace.</p>
+                        <h3>The ADAPT Framework:</h3>
+                        <ol>
+                            <li><strong>Acknowledge:</strong> Recognize the reality of the situation openly</li>
+                            <li><strong>Define:</strong> Clarify what you can and cannot control</li>
+                            <li><strong>Assess:</strong> Evaluate options and potential outcomes</li>
+                            <li><strong>Plan:</strong> Create flexible strategies with contingencies</li>
+                            <li><strong>Take Action:</strong> Move forward with clear, decisive steps</li>
+                        </ol>
+                        <p><strong>Reflection:</strong> Think of a current change your team is facing. How can you apply this framework?</p>
+                        <p>Navigating the unknown with certainty,<br>Peter</p>
+                    </div>
+                </div>
+                """
             }
-            # Add more weeks as needed...
         }
         
         return emails.get(index)
@@ -266,25 +454,19 @@ class EmailSequenceAutomation:
         """Prepare subscriber data for email personalization"""
         if isinstance(subscriber, WaitlistRegistration):
             return {
-                'full_name': subscriber.full_name,
-                'email': subscriber.email,
-                'occupation': subscriber.occupation,
-                'city_country': subscriber.city_country
+                'full_name': subscriber.full_name
             }
         elif isinstance(subscriber, CorporateInquiry):
             return {
                 'contact_person': subscriber.contact_person,
-                'company_name': subscriber.company_name,
-                'email': subscriber.email,
-                'team_size': subscriber.team_size
+                'company_name': subscriber.company_name
             }
         elif isinstance(subscriber, LeadMagnetDownload):
             return {
-                'email': subscriber.email,
-                'full_name': subscriber.email.split('@')[0].title()  # Fallback name
+                'full_name': subscriber.email.split('@')[0].title()  # Fallback name from email
             }
         
-        return {}
+        return {'full_name': 'Friend'}  # Default fallback
     
     def _personalize_email_content(self, content: str, subscriber_data: Dict[str, Any]) -> str:
         """Personalize email content with subscriber data"""
