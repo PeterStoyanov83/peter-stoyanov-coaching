@@ -766,6 +766,184 @@ async def delete_blog_post(
     
     return {"message": "Blog post deleted successfully"}
 
+# Paired Blog Post Management (EN/BG together)
+@router.get("/paired-blog-posts")
+async def get_paired_blog_posts_admin(
+    skip: int = 0,
+    limit: int = 50,
+    current_admin: dict = Depends(admin_required),
+    db: Session = Depends(get_db)
+):
+    """Get all blog posts (both single language and multilingual) paired together"""
+    # Get single language posts grouped by translation_id
+    single_posts = db.query(BlogPost).order_by(desc(BlogPost.created_at)).all()
+    
+    # Get multilingual posts
+    multilingual_posts = db.query(MultilingualBlogPost).order_by(
+        desc(MultilingualBlogPost.created_at)
+    ).all()
+    
+    paired_posts = []
+    
+    # Process multilingual posts (already paired)
+    for post in multilingual_posts:
+        paired_post = {
+            "id": post.id,
+            "type": "multilingual",
+            "title_en": post.title_en,
+            "title_bg": post.title_bg,
+            "slug_en": post.slug_en,
+            "slug_bg": post.slug_bg,
+            "is_published_en": post.is_published_en,
+            "is_published_bg": post.is_published_bg,
+            "published_at_en": post.published_at_en,
+            "published_at_bg": post.published_at_bg,
+            "created_at": post.created_at,
+            "updated_at": post.updated_at,
+            "featured_image": post.featured_image,
+            "has_both_languages": True
+        }
+        paired_posts.append(paired_post)
+    
+    # Process single language posts - group by translation_id
+    translation_groups = {}
+    orphaned_posts = []
+    
+    for post in single_posts:
+        if post.translation_id:
+            if post.translation_id not in translation_groups:
+                translation_groups[post.translation_id] = {}
+            translation_groups[post.translation_id][post.language] = post
+        else:
+            orphaned_posts.append(post)
+    
+    # Create paired posts from translation groups
+    for translation_id, posts_by_lang in translation_groups.items():
+        en_post = posts_by_lang.get('en')
+        bg_post = posts_by_lang.get('bg')
+        
+        # Use English as primary, fallback to Bulgarian
+        primary_post = en_post if en_post else bg_post
+        
+        paired_post = {
+            "id": f"paired_{translation_id}",
+            "type": "paired_single",
+            "translation_id": translation_id,
+            "title_en": en_post.title if en_post else None,
+            "title_bg": bg_post.title if bg_post else None,
+            "slug_en": en_post.slug if en_post else None,
+            "slug_bg": bg_post.slug if bg_post else None,
+            "is_published_en": en_post.is_published if en_post else False,
+            "is_published_bg": bg_post.is_published if bg_post else False,
+            "published_at_en": en_post.published_at if en_post else None,
+            "published_at_bg": bg_post.published_at if bg_post else None,
+            "created_at": primary_post.created_at,
+            "updated_at": primary_post.updated_at,
+            "featured_image": primary_post.featured_image,
+            "has_both_languages": en_post is not None and bg_post is not None,
+            "en_post_id": en_post.id if en_post else None,
+            "bg_post_id": bg_post.id if bg_post else None
+        }
+        paired_posts.append(paired_post)
+    
+    # Add orphaned single posts
+    for post in orphaned_posts:
+        paired_post = {
+            "id": f"single_{post.id}",
+            "type": "single",
+            "post_id": post.id,
+            "title_en": post.title if post.language == 'en' else None,
+            "title_bg": post.title if post.language == 'bg' else None,
+            "slug_en": post.slug if post.language == 'en' else None,
+            "slug_bg": post.slug if post.language == 'bg' else None,
+            "is_published_en": post.is_published if post.language == 'en' else False,
+            "is_published_bg": post.is_published if post.language == 'bg' else False,
+            "published_at_en": post.published_at if post.language == 'en' else None,
+            "published_at_bg": post.published_at if post.language == 'bg' else None,
+            "created_at": post.created_at,
+            "updated_at": post.updated_at,
+            "featured_image": post.featured_image,
+            "has_both_languages": False,
+            "language": post.language
+        }
+        paired_posts.append(paired_post)
+    
+    # Sort by creation date
+    paired_posts.sort(key=lambda x: x['created_at'], reverse=True)
+    
+    return paired_posts[skip:skip+limit]
+
+# Get specific paired blog post for editing
+@router.get("/paired-blog-posts/{post_identifier}")
+async def get_paired_blog_post_admin(
+    post_identifier: str,
+    current_admin: dict = Depends(admin_required),
+    db: Session = Depends(get_db)
+):
+    """Get specific paired blog post for editing"""
+    
+    if post_identifier.startswith("paired_"):
+        # Translation group
+        translation_id = post_identifier.replace("paired_", "")
+        en_post = db.query(BlogPost).filter(
+            BlogPost.translation_id == translation_id,
+            BlogPost.language == 'en'
+        ).first()
+        bg_post = db.query(BlogPost).filter(
+            BlogPost.translation_id == translation_id,
+            BlogPost.language == 'bg'
+        ).first()
+        
+        return {
+            "type": "paired_single",
+            "translation_id": translation_id,
+            "en_post": en_post.__dict__ if en_post else None,
+            "bg_post": bg_post.__dict__ if bg_post else None
+        }
+    
+    elif post_identifier.startswith("single_"):
+        # Single orphaned post
+        post_id = int(post_identifier.replace("single_", ""))
+        post = db.query(BlogPost).filter(BlogPost.id == post_id).first()
+        if not post:
+            raise HTTPException(status_code=404, detail="Blog post not found")
+        
+        return {
+            "type": "single",
+            "post": post.__dict__
+        }
+    
+    else:
+        # Multilingual post
+        post_id = int(post_identifier)
+        post = db.query(MultilingualBlogPost).filter(MultilingualBlogPost.id == post_id).first()
+        if not post:
+            raise HTTPException(status_code=404, detail="Blog post not found")
+        
+        return {
+            "type": "multilingual",
+            "post": {
+                "id": post.id,
+                "slug_en": post.slug_en,
+                "slug_bg": post.slug_bg,
+                "title_en": post.title_en,
+                "title_bg": post.title_bg,
+                "excerpt_en": post.excerpt_en,
+                "excerpt_bg": post.excerpt_bg,
+                "content_en": post.content_en,
+                "content_bg": post.content_bg,
+                "tags_en": post.tags_en,
+                "tags_bg": post.tags_bg,
+                "featured_image": post.featured_image,
+                "is_published_en": post.is_published_en,
+                "is_published_bg": post.is_published_bg,
+                "published_at_en": post.published_at_en,
+                "published_at_bg": post.published_at_bg,
+                "created_at": post.created_at,
+                "updated_at": post.updated_at
+            }
+        }
+
 # Multilingual Blog Post Management
 @router.get("/multilingual-blog-posts", response_model=List[MultilingualBlogPostPublicResponse])
 async def get_multilingual_blog_posts_admin(
