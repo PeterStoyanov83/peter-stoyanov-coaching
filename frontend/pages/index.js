@@ -146,14 +146,10 @@ export default function Home() {
 
                 {/* Modern Stats */}
                 <div className="flex justify-center">
-                  <div className="grid grid-cols-3 gap-8 max-w-2xl">
+                  <div className="grid grid-cols-2 gap-8 max-w-lg">
                     <div className="text-center bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 transform hover:scale-105 transition-all duration-300">
                       <div className="text-3xl md:text-4xl font-bold text-cyan-400 mb-2">20+</div>
                       <div className="text-gray-300 text-sm">{t('home.hero.stats.experience')}</div>
-                    </div>
-                    <div className="text-center bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 transform hover:scale-105 transition-all duration-300">
-                      <div className="text-3xl md:text-4xl font-bold text-purple-400 mb-2">500+</div>
-                      <div className="text-gray-300 text-sm">{t('home.hero.stats.students')}</div>
                     </div>
                     <div className="text-center bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 transform hover:scale-105 transition-all duration-300">
                       <div className="text-3xl md:text-4xl font-bold text-pink-400 mb-2">15+</div>

@@ -365,43 +365,202 @@ main {
   text-wrap: balance;
 }
 
-/* Improve typography hierarchy - Fix deprecated API warning */
+/* Mobile-first responsive typography - Optimized for small screens */
 h1 {
-  @apply text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight;
-  font-size: 2.25rem; /* Explicit font-size to fix deprecated API warning */
+  @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight;
+  font-size: 1.5rem; /* Mobile base: 24px */
+}
+
+@media (min-width: 640px) {
+  h1 {
+    font-size: 1.875rem; /* sm: 30px */
+  }
 }
 
 @media (min-width: 768px) {
   h1 {
-    font-size: 3rem;
+    font-size: 2.25rem; /* md: 36px */
   }
 }
 
 @media (min-width: 1024px) {
   h1 {
-    font-size: 3.75rem;
+    font-size: 3rem; /* lg: 48px */
+  }
+}
+
+@media (min-width: 1280px) {
+  h1 {
+    font-size: 3.75rem; /* xl: 60px */
   }
 }
 
 h2 {
-  @apply text-3xl md:text-4xl font-bold tracking-tight;
-  font-size: 1.875rem; /* Explicit font-size */
+  @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight;
+  font-size: 1.25rem; /* Mobile base: 20px */
+}
+
+@media (min-width: 640px) {
+  h2 {
+    font-size: 1.5rem; /* sm: 24px */
+  }
 }
 
 @media (min-width: 768px) {
   h2 {
-    font-size: 2.25rem;
+    font-size: 1.875rem; /* md: 30px */
+  }
+}
+
+@media (min-width: 1024px) {
+  h2 {
+    font-size: 2.25rem; /* lg: 36px */
   }
 }
 
 h3 {
-  @apply text-xl md:text-2xl font-semibold;
-  font-size: 1.25rem; /* Explicit font-size */
+  @apply text-lg sm:text-xl md:text-2xl font-semibold;
+  font-size: 1.125rem; /* Mobile base: 18px */
+}
+
+@media (min-width: 640px) {
+  h3 {
+    font-size: 1.25rem; /* sm: 20px */
+  }
 }
 
 @media (min-width: 768px) {
   h3 {
-    font-size: 1.5rem;
+    font-size: 1.5rem; /* md: 24px */
+  }
+}
+
+/* Mobile-optimized text size overrides for specific large text classes */
+.text-5xl {
+  font-size: 2rem !important; /* Mobile: 32px instead of 48px */
+}
+
+@media (min-width: 640px) {
+  .text-5xl {
+    font-size: 2.5rem !important; /* sm: 40px */
+  }
+}
+
+@media (min-width: 768px) {
+  .text-5xl {
+    font-size: 3rem !important; /* md: 48px (original) */
+  }
+}
+
+.text-6xl {
+  font-size: 2.25rem !important; /* Mobile: 36px instead of 60px */
+}
+
+@media (min-width: 640px) {
+  .text-6xl {
+    font-size: 3rem !important; /* sm: 48px */
+  }
+}
+
+@media (min-width: 768px) {
+  .text-6xl {
+    font-size: 3.75rem !important; /* md: 60px (original) */
+  }
+}
+
+.text-7xl {
+  font-size: 2.5rem !important; /* Mobile: 40px instead of 72px */
+}
+
+@media (min-width: 640px) {
+  .text-7xl {
+    font-size: 3.5rem !important; /* sm: 56px */
+  }
+}
+
+@media (min-width: 768px) {
+  .text-7xl {
+    font-size: 4.5rem !important; /* md: 72px (original) */
+  }
+}
+
+.text-4xl {
+  font-size: 1.75rem !important; /* Mobile: 28px instead of 36px */
+}
+
+@media (min-width: 640px) {
+  .text-4xl {
+    font-size: 2rem !important; /* sm: 32px */
+  }
+}
+
+@media (min-width: 768px) {
+  .text-4xl {
+    font-size: 2.25rem !important; /* md: 36px (original) */
+  }
+}
+
+.text-3xl {
+  font-size: 1.5rem !important; /* Mobile: 24px instead of 30px */
+}
+
+@media (min-width: 640px) {
+  .text-3xl {
+    font-size: 1.75rem !important; /* sm: 28px */
+  }
+}
+
+@media (min-width: 768px) {
+  .text-3xl {
+    font-size: 1.875rem !important; /* md: 30px (original) */
+  }
+}
+
+.text-2xl {
+  font-size: 1.25rem !important; /* Mobile: 20px instead of 24px */
+}
+
+@media (min-width: 640px) {
+  .text-2xl {
+    font-size: 1.375rem !important; /* sm: 22px */
+  }
+}
+
+@media (min-width: 768px) {
+  .text-2xl {
+    font-size: 1.5rem !important; /* md: 24px (original) */
+  }
+}
+
+.text-xl {
+  font-size: 1.125rem !important; /* Mobile: 18px instead of 20px */
+}
+
+@media (min-width: 640px) {
+  .text-xl {
+    font-size: 1.25rem !important; /* sm: 20px (original) */
+  }
+}
+
+.text-8xl {
+  font-size: 3rem !important; /* Mobile: 48px instead of 96px */
+}
+
+@media (min-width: 640px) {
+  .text-8xl {
+    font-size: 4rem !important; /* sm: 64px */
+  }
+}
+
+@media (min-width: 768px) {
+  .text-8xl {
+    font-size: 5rem !important; /* md: 80px */
+  }
+}
+
+@media (min-width: 1024px) {
+  .text-8xl {
+    font-size: 6rem !important; /* lg: 96px (original) */
   }
 }
 
