@@ -180,8 +180,6 @@ async def submit_corporate_inquiry(
             contact_person=inquiry.contactPerson,
             email=inquiry.email,
             phone=inquiry.phone,
-            team_size=inquiry.teamSize,
-            budget=inquiry.budget,
             training_goals=inquiry.trainingGoals,
             preferred_dates=inquiry.preferredDates,
             additional_info=inquiry.additionalInfo
@@ -196,8 +194,6 @@ async def submit_corporate_inquiry(
             "contact_person": inquiry.contactPerson,
             "email": inquiry.email,
             "phone": inquiry.phone,
-            "team_size": inquiry.teamSize,
-            "budget": inquiry.budget,
             "training_goals": inquiry.trainingGoals,
             "preferred_dates": inquiry.preferredDates,
             "additional_info": inquiry.additionalInfo

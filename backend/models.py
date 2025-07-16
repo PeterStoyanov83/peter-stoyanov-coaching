@@ -39,8 +39,6 @@ class CorporateInquiry(Base):
     contact_person = Column(String(100), nullable=False)
     email = Column(String(100), nullable=False, unique=True, index=True)
     phone = Column(String(20), nullable=True)
-    team_size = Column(String(20), nullable=False)
-    budget = Column(String(30), nullable=True)
     training_goals = Column(Text, nullable=False)
     preferred_dates = Column(Text, nullable=True)
     additional_info = Column(Text, nullable=True)
@@ -203,8 +201,6 @@ class CorporateInquiryRequest(BaseModel):
     contactPerson: str
     email: EmailStr
     phone: Optional[str] = None
-    teamSize: Optional[str] = None
-    budget: Optional[str] = None
     trainingGoals: str
     preferredDates: Optional[str] = None
     additionalInfo: Optional[str] = None
@@ -215,8 +211,6 @@ class CorporateInquiryResponse(BaseModel):
     contact_person: str
     email: str
     phone: Optional[str]
-    team_size: str
-    budget: Optional[str]
     training_goals: str
     preferred_dates: Optional[str]
     additional_info: Optional[str]

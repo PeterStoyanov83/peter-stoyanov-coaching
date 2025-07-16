@@ -219,8 +219,6 @@ class SendGridService:
                     <div style="background-color: #edf2f7; padding: 20px; border-radius: 8px; margin: 30px 0;">
                         <h3 style="color: #2c5282; margin: 0 0 15px 0; font-size: 18px;">Your Inquiry Details:</h3>
                         <div style="color: #2d3748; font-size: 14px;">
-                            <p style="margin: 5px 0;"><strong>Team Size:</strong> {data['team_size']}</p>
-                            {f'<p style="margin: 5px 0;"><strong>Budget:</strong> {data["budget"]}</p>' if data.get('budget') else ''}
                             <p style="margin: 5px 0;"><strong>Training Goals:</strong> {data['training_goals']}</p>
                             {f'<p style="margin: 5px 0;"><strong>Preferred Timeline:</strong> {data["preferred_dates"]}</p>' if data.get('preferred_dates') else ''}
                         </div>
