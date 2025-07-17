@@ -47,7 +47,7 @@ class SendGridService:
 
     def send_welcome_email_waitlist(self, registration_data: Dict[str, Any]) -> Dict[str, Any]:
         """Send welcome email to waitlist subscriber"""
-        subject = f"Welcome to Peter Stoyanov Coaching, {registration_data['full_name']}!"
+        subject = f"Welcome to Peter Stoyanov Coaching, {registration_data['full_name']}"
         
         html_content = self._create_waitlist_welcome_template(registration_data)
         
@@ -59,7 +59,7 @@ class SendGridService:
 
     def send_welcome_email_corporate(self, inquiry_data: Dict[str, Any]) -> Dict[str, Any]:
         """Send welcome email to corporate inquirer"""
-        subject = f"Thank you for your corporate training inquiry, {inquiry_data['contact_person']}!"
+        subject = f"Thank you for your corporate training inquiry, {inquiry_data['contact_person']}"
         
         html_content = self._create_corporate_welcome_template(inquiry_data)
         
@@ -71,7 +71,7 @@ class SendGridService:
 
     def send_welcome_email_lead_magnet(self, email: str) -> Dict[str, Any]:
         """Send welcome email to lead magnet subscriber"""
-        subject = "Your Leadership Guide is Ready + Welcome to the Community!"
+        subject = "Your Voice and Presence Guide - Welcome to the Community"
         
         html_content = self._create_lead_magnet_welcome_template(email)
         
@@ -83,7 +83,7 @@ class SendGridService:
 
     def send_admin_notification(self, subscriber_type: str, email: str) -> Dict[str, Any]:
         """Send notification to admin about new subscriber"""
-        subject = f"🎉 New {subscriber_type.title()} Subscriber!"
+        subject = f"New {subscriber_type.title()} Subscriber"
         
         html_content = f"""
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -151,17 +151,17 @@ class SendGridService:
                     </p>
                     
                     <div style="background-color: #f0fff4; border: 2px solid #38a169; padding: 25px; border-radius: 8px; margin: 30px 0; text-align: center;">
-                        <h3 style="color: #2f855a; margin: 0 0 15px 0; font-size: 20px;">🎁 Welcome Gift: Leadership Guide</h3>
-                        <p style="color: #2d3748; margin: 0 0 20px 0;">As a thank you for joining, here's your exclusive leadership development guide!</p>
-                        <a href="https://peter-stoyanov.com/guides/exersises-for-breathing-voice-and-speaking.pdf" style="display: inline-block; background: linear-gradient(135deg, #38a169 0%, #2f855a 100%); color: #ffffff; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 16px;">Download Your Free Guide</a>
+                        <h3 style="color: #2f855a; margin: 0 0 15px 0; font-size: 20px;">Welcome Gift: Voice and Presence Guide</h3>
+                        <p style="color: #2d3748; margin: 0 0 20px 0;">As a thank you for joining, here's your comprehensive guide: "8 Essential Exercises to Improve Your Voice and Presence"</p>
+                        <a href="https://peter-stoyanov.com/guides/exersises-for-breathing-voice-and-speaking.pdf" style="display: inline-block; background: linear-gradient(135deg, #38a169 0%, #2f855a 100%); color: #ffffff; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 16px;">Download Your Voice & Presence Guide</a>
                     </div>
                     
                     <div style="background-color: #edf2f7; padding: 20px; border-radius: 8px; margin: 30px 0;">
                         <h3 style="color: #2c5282; margin: 0 0 10px 0; font-size: 18px;">What's Next?</h3>
                         <ul style="color: #2d3748; margin: 0; padding-left: 20px;">
-                            <li style="margin-bottom: 8px;">You'll receive weekly insights on leadership development</li>
+                            <li style="margin-bottom: 8px;">You will receive weekly insights on leadership development</li>
                             <li style="margin-bottom: 8px;">Get early access to new programs and resources</li>
-                            <li style="margin-bottom: 8px;">I'll personally reach out when spots open up</li>
+                            <li style="margin-bottom: 8px;">I will personally reach out when spots open up</li>
                         </ul>
                     </div>
                     
@@ -225,13 +225,13 @@ class SendGridService:
                     </div>
                     
                     <p style="color: #2d3748; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
-                        I'll personally review your requirements and get back to you within 24 hours with a customized proposal that addresses your specific leadership development needs.
+                        I will personally review your requirements and get back to you within 24 hours with a customized proposal that addresses your specific leadership development needs.
                     </p>
                     
                     <div style="background-color: #f0fff4; border-left: 4px solid #38a169; padding: 20px; margin: 30px 0;">
                         <h4 style="color: #2f855a; margin: 0 0 10px 0; font-size: 16px;">What happens next?</h4>
                         <ul style="color: #2d3748; margin: 0; padding-left: 20px; font-size: 14px;">
-                            <li style="margin-bottom: 8px;">I'll prepare a tailored training proposal</li>
+                            <li style="margin-bottom: 8px;">I will prepare a tailored training proposal</li>
                             <li style="margin-bottom: 8px;">Schedule a discovery call to discuss your specific needs</li>
                             <li style="margin-bottom: 8px;">Provide case studies from similar organizations</li>
                         </ul>
@@ -279,31 +279,31 @@ class SendGridService:
                 
                 <!-- Header -->
                 <div style="background: linear-gradient(135deg, #38a169 0%, #2f855a 100%); padding: 40px 20px; text-align: center;">
-                    <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 600;">Your Guide is Ready! 📚</h1>
+                    <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 600;">Your Voice and Presence Guide is Ready</h1>
                     <p style="color: #e2e8f0; margin: 10px 0 0 0; font-size: 16px;">Plus, welcome to the leadership community</p>
                 </div>
                 
                 <!-- Content -->
                 <div style="padding: 40px 30px;">
                     <p style="color: #2d3748; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
-                        Thank you for downloading the leadership guide! You now have access to proven strategies that will help you become a more effective leader.
+                        Thank you for downloading your voice and presence guide. You now have access to 8 effective exercises that will help you improve your communication and develop strong presence.
                     </p>
                     
                     <div style="background-color: #f0fff4; border: 2px solid #38a169; padding: 25px; border-radius: 8px; margin: 30px 0; text-align: center;">
-                        <h3 style="color: #2f855a; margin: 0 0 15px 0; font-size: 20px;">📥 Download Your Guide</h3>
-                        <a href="https://peter-stoyanov.com/guides/exersises-for-breathing-voice-and-speaking.pdf" style="display: inline-block; background: linear-gradient(135deg, #38a169 0%, #2f855a 100%); color: #ffffff; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 16px;">Get Your Leadership Guide</a>
+                        <h3 style="color: #2f855a; margin: 0 0 15px 0; font-size: 20px;">Download Your Voice and Presence Guide</h3>
+                        <a href="https://peter-stoyanov.com/guides/exersises-for-breathing-voice-and-speaking.pdf" style="display: inline-block; background: linear-gradient(135deg, #38a169 0%, #2f855a 100%); color: #ffffff; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 16px;">Get Your Voice & Presence Guide</a>
                     </div>
                     
                     <p style="color: #2d3748; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
-                        As a bonus, you're now part of my exclusive leadership community. Every week, you'll receive:
+                        As a bonus, you're now part of my leadership community. Every week, you will receive:
                     </p>
                     
                     <div style="background-color: #edf2f7; padding: 20px; border-radius: 8px; margin: 30px 0;">
                         <ul style="color: #2d3748; margin: 0; padding-left: 20px;">
-                            <li style="margin-bottom: 10px;"><strong>Weekly Leadership Insights</strong> - Practical tips you can use immediately</li>
+                            <li style="margin-bottom: 10px;"><strong>Weekly Leadership Insights</strong> - Practical tips you can use right away</li>
                             <li style="margin-bottom: 10px;"><strong>Case Studies</strong> - Real examples from successful leaders</li>
-                            <li style="margin-bottom: 10px;"><strong>Exclusive Resources</strong> - Tools and templates for leadership development</li>
-                            <li style="margin-bottom: 10px;"><strong>Early Access</strong> - First to know about new programs and opportunities</li>
+                            <li style="margin-bottom: 10px;"><strong>Additional Resources</strong> - Tools and templates for leadership development</li>
+                            <li style="margin-bottom: 10px;"><strong>Early Access</strong> - Be the first to know about new programs and opportunities</li>
                         </ul>
                     </div>
                     
