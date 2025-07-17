@@ -153,7 +153,7 @@ class SendGridService:
                     <div style="background-color: #f0fff4; border: 2px solid #38a169; padding: 25px; border-radius: 8px; margin: 30px 0; text-align: center;">
                         <h3 style="color: #2f855a; margin: 0 0 15px 0; font-size: 20px;">🎁 Welcome Gift: Leadership Guide</h3>
                         <p style="color: #2d3748; margin: 0 0 20px 0;">As a thank you for joining, here's your exclusive leadership development guide!</p>
-                        <a href="https://peter-stoyanov.com/guides/5-theater-secrets-guide.pdf" style="display: inline-block; background: linear-gradient(135deg, #38a169 0%, #2f855a 100%); color: #ffffff; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 16px;">Download Your Free Guide</a>
+                        <a href="https://peter-stoyanov.com/guides/exersises-for-breathing-voice-and-speaking.pdf" style="display: inline-block; background: linear-gradient(135deg, #38a169 0%, #2f855a 100%); color: #ffffff; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 16px;">Download Your Free Guide</a>
                     </div>
                     
                     <div style="background-color: #edf2f7; padding: 20px; border-radius: 8px; margin: 30px 0;">
@@ -291,7 +291,7 @@ class SendGridService:
                     
                     <div style="background-color: #f0fff4; border: 2px solid #38a169; padding: 25px; border-radius: 8px; margin: 30px 0; text-align: center;">
                         <h3 style="color: #2f855a; margin: 0 0 15px 0; font-size: 20px;">📥 Download Your Guide</h3>
-                        <a href="#" style="display: inline-block; background: linear-gradient(135deg, #38a169 0%, #2f855a 100%); color: #ffffff; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 16px;">Get Your Leadership Guide</a>
+                        <a href="https://peter-stoyanov.com/guides/exersises-for-breathing-voice-and-speaking.pdf" style="display: inline-block; background: linear-gradient(135deg, #38a169 0%, #2f855a 100%); color: #ffffff; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 16px;">Get Your Leadership Guide</a>
                     </div>
                     
                     <p style="color: #2d3748; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
