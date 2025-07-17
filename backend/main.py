@@ -293,10 +293,14 @@ async def download_guide(
         
         logger.info(f"Lead magnet download: {request.email}")
         
+        # Provide direct download URL for immediate download
+        download_url = "https://peter-stoyanov.com/guides/exersises-for-breathing-voice-and-speaking.pdf"
+        
         return {
             "success": True,
             "message": "Download link sent! Check your email for the leadership guide.",
-            "email": request.email
+            "email": request.email,
+            "downloadUrl": download_url
         }
         
     except Exception as e:

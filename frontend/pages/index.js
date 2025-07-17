@@ -77,7 +77,7 @@ export default function Home() {
         // Trigger download
         const link = document.createElement('a');
         link.href = data.downloadUrl;
-        link.download = '5-Theater-Secrets-Guide.pdf';
+        link.download = 'exersises-for-breathing-voice-and-speaking.pdf';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
