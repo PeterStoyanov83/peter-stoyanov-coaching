@@ -164,7 +164,12 @@ async def register_waitlist(
     except Exception as e:
         logger.error(f"Error processing waitlist registration: {str(e)}")
         db.rollback()
-        raise HTTPException(status_code=500, detail="Registration failed")
+        
+        # Check if it's a duplicate email error
+        if "duplicate key" in str(e) or "UNIQUE constraint failed" in str(e):
+            raise HTTPException(status_code=409, detail="This email is already registered. Please use a different email.")
+        else:
+            raise HTTPException(status_code=500, detail=f"Registration failed: {str(e)}")
 
 @app.post("/api/corporate-inquiry", response_model=dict)
 async def submit_corporate_inquiry(
