@@ -622,6 +622,43 @@ async def test_single_sequence_email(test_email: str, week_number: int, db: Sess
             "message": f"Failed to send week {week_number} email"
         }
 
+@app.delete("/admin/delete-subscriber/{email}")
+async def delete_subscriber_for_testing(email: str, db: Session = Depends(get_db)):
+    """Delete subscriber from all tables for testing purposes"""
+    try:
+        # Delete from waitlist registrations
+        waitlist_deleted = db.query(WaitlistRegistration).filter(WaitlistRegistration.email == email).delete()
+        
+        # Delete from lead magnet downloads
+        lead_magnet_deleted = db.query(LeadMagnetDownload).filter(LeadMagnetDownload.email == email).delete()
+        
+        # Delete from corporate inquiries
+        corporate_deleted = db.query(CorporateInquiry).filter(CorporateInquiry.email == email).delete()
+        
+        # Delete related email logs
+        email_logs_deleted = db.query(EmailLog).filter(EmailLog.recipient_email == email).delete()
+        
+        db.commit()
+        
+        return {
+            "success": True,
+            "message": f"Subscriber {email} deleted from all tables",
+            "deleted_counts": {
+                "waitlist_registrations": waitlist_deleted,
+                "lead_magnet_downloads": lead_magnet_deleted,
+                "corporate_inquiries": corporate_deleted,
+                "email_logs": email_logs_deleted
+            }
+        }
+        
+    except Exception as e:
+        db.rollback()
+        return {
+            "success": False,
+            "error": str(e),
+            "message": f"Failed to delete subscriber {email}"
+        }
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
