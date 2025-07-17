@@ -622,7 +622,7 @@ async def test_single_sequence_email(test_email: str, week_number: int, db: Sess
             "message": f"Failed to send week {week_number} email"
         }
 
-@app.delete("/admin/delete-subscriber/{email}")
+@app.delete("/admin/delete-subscriber")
 async def delete_subscriber_for_testing(email: str, db: Session = Depends(get_db)):
     """Delete subscriber from all tables for testing purposes"""
     try:
