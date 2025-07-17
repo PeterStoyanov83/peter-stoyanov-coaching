@@ -17,7 +17,7 @@ export default function Header() {
     if (router.pathname === '/blog/[slug]' && router.query.slug) {
       try {
         // Get translations for the current post
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/posts/${router.query.slug}/translations`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://peter-stoyanov-backend.onrender.com'}/api/posts/${router.query.slug}/translations`);
         
         if (response.ok) {
           const translations = await response.json();

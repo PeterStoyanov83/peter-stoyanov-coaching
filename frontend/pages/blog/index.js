@@ -186,7 +186,7 @@ export default function Blog({ posts }) {
 export async function getStaticProps({ locale }) {
   try {
     // Fetch blog posts from backend API
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/posts?language=${locale}&published=true`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://peter-stoyanov-backend.onrender.com'}/api/posts?language=${locale}&published=true`);
     
     if (!response.ok) {
       throw new Error('Failed to fetch blog posts');

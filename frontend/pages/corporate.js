@@ -89,7 +89,7 @@ export default function Corporate() {
         setIsSubmitting(true);
 
         try {
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://peter-stoyanov-backend.onrender.com';
             const response = await fetch(`${apiUrl}/api/corporate-inquiry`, {
                 method: 'POST',
                 headers: {

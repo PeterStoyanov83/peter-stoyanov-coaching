@@ -169,7 +169,7 @@ export default function BlogPost({ post }) {
 export async function getStaticPaths() {
   try {
     // Fetch all published blog posts from backend API
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/posts?published=true`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://peter-stoyanov-backend.onrender.com'}/api/posts?published=true`);
     
     if (!response.ok) {
       throw new Error('Failed to fetch blog posts');
@@ -193,7 +193,7 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params, locale }) {
   try {
     // Fetch individual blog post from backend API
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/posts/${params.slug}?language=${locale}`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://peter-stoyanov-backend.onrender.com'}/api/posts/${params.slug}?language=${locale}`);
     
     if (!response.ok) {
       if (response.status === 404) {
@@ -209,7 +209,7 @@ export async function getStaticProps({ params, locale }) {
     // Fetch related posts
     let relatedPosts = [];
     try {
-      const relatedResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/posts/${params.slug}/related?language=${locale}&limit=3`);
+      const relatedResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://peter-stoyanov-backend.onrender.com'}/api/posts/${params.slug}/related?language=${locale}&limit=3`);
       if (relatedResponse.ok) {
         const relatedData = await relatedResponse.json();
         relatedPosts = relatedData.map(relatedPost => ({
