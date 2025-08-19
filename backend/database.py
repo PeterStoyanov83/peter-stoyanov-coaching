@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker, Session
 from models import Base
 
 # Get database URL from environment variable
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://peterstoyanov@localhost:5432/coaching_site")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./data/coaching_site.db")
 
 # Create SQLAlchemy engine
 if DATABASE_URL.startswith("sqlite"):
