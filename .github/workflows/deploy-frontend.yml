@@ -3,7 +3,6 @@ name: Deploy Frontend to GitHub Pages
 on:
   push:
     branches: [ main ]
-    paths: [ 'frontend/**' ]
   workflow_dispatch:
 
 permissions:
@@ -45,7 +44,7 @@ jobs:
         npm run export
       env:
         NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL || 'https://your-backend-url.com' }}
-        NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || 'https://peterstoyanov.github.io' }}
+        NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || 'https://peterstoyanov83.github.io/peter-stoyanov-coaching' }}
         
     - name: Setup Pages
       uses: actions/configure-pages@v4
