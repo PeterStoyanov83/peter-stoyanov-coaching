@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException, Depends, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
+import os
 from sqlalchemy.orm import Session
 from typing import List
 import logging
@@ -24,6 +25,10 @@ app = FastAPI(title="Peter Stoyanov Coaching API", description="Clean API for co
 
 # Include admin routes
 app.include_router(admin_router)
+
+# Serve static files (frontend) if available
+if os.path.exists("static"):
+    app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 # Initialize database on startup
 @app.on_event("startup")
@@ -48,6 +53,8 @@ app.add_middleware(
         "https://peter-stoyanov.com",
         "https://www.peter-stoyanov.com", 
         "https://peter-stoyanov-coaching.onrender.com",
+        "https://*.railway.app",
+        "https://*.fly.dev",
         "http://localhost:3000",
         "http://localhost:8000",
     ],

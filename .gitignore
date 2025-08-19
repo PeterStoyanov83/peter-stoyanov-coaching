@@ -22,6 +22,9 @@ frontend/out/
 # Database
 backend/*.db
 backend/*.sqlite
+data/*.db
+data/*.sqlite
+data/*.sqlite3
 
 # Logs
 *.log
