@@ -7,8 +7,8 @@ module.exports = {
   // GitHub Pages configuration
   output: 'export',
   trailingSlash: true,
-  basePath: process.env.NODE_ENV === 'production' ? '/coaching-site' : '',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/coaching-site' : '',
+  basePath: process.env.NODE_ENV === 'production' ? '/peter-stoyanov-coaching' : '',
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/peter-stoyanov-coaching' : '',
   
   // Image optimization (disabled for static export)
   images: {
