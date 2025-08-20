@@ -14,4 +14,23 @@ module.exports = {
   images: {
     unoptimized: true,
   },
+
+  // Webpack configuration to exclude backup files
+  webpack: (config, { isServer }) => {
+    // Exclude backup files from build
+    config.module.rules.push({
+      test: /\.(js|jsx|ts|tsx)$/,
+      exclude: [
+        /node_modules/,
+        /pages\/_backup/,
+        /pages\/.*\.backup\./,
+        /_backup/
+      ]
+    });
+    
+    return config;
+  },
+
+  // Page extensions
+  pageExtensions: ['js', 'jsx', 'ts', 'tsx'].filter(ext => !ext.includes('backup')),
 };
