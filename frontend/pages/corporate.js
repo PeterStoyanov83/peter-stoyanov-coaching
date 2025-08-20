@@ -72,7 +72,7 @@ export default function Corporate() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-white">
         <Header />
         
         {/* Hero Section */}
