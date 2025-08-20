@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peter Stoyanov - Communication & Leadership Coach</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c5282;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .subtitle {
+            color: #4a5568;
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+        .description {
+            color: #2d3748;
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            line-height: 1.7;
+        }
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .service {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .service h3 {
+            color: #2c5282;
+            margin-bottom: 10px;
+        }
+        .service p {
+            color: #4a5568;
+            margin: 0;
+        }
+        .cta {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+            color: white;
+        }
+        .btn-secondary {
+            background: linear-gradient(135deg, #2c5282 0%, #2a4365 100%);
+            color: white;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .status {
+            margin-top: 30px;
+            padding: 15px;
+            background: #f0fff4;
+            border: 1px solid #38a169;
+            border-radius: 8px;
+            color: #2f855a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Peter Stoyanov</h1>
+        <div class="subtitle">Communication & Leadership Coach</div>
+        
+        <div class="description">
+            Transform your communication skills and unlock your leadership potential 
+            with over 20 years of professional coaching experience in theater, 
+            communication, and organizational development.
+        </div>
+
+        <div class="services">
+            <div class="service">
+                <h3>Individual Coaching</h3>
+                <p>Personal development for communication excellence and leadership presence.</p>
+            </div>
+            <div class="service">
+                <h3>Corporate Training</h3>
+                <p>Team workshops and organizational communication development programs.</p>
+            </div>
+            <div class="service">
+                <h3>Leadership Development</h3>
+                <p>Build confidence, presence, and communication skills for effective leadership.</p>
+            </div>
+        </div>
+
+        <div class="cta">
+            <a href="/guides/exersises-for-breathing-voice-and-speaking.pdf" class="btn btn-primary">
+                Download Free Voice Guide
+            </a>
+            <a href="mailto:peterstoyanov83@gmail.com" class="btn btn-secondary">
+                Contact Me
+            </a>
+        </div>
+
+        <div class="status">
+            🚀 Site Status: GitHub Pages Enabled | Backend: <span id="backend-status">Testing...</span>
+        </div>
+    </div>
+
+    <script>
+        // Test backend connection
+        const backendUrl = window.location.hostname.includes('github.io') 
+            ? 'https://your-codespace-url.github.dev' 
+            : '/api/health';
+            
+        fetch(backendUrl + '/health')
+            .then(response => response.ok ? 'Connected ✅' : 'Offline ❌')
+            .catch(() => 'Offline ❌')
+            .then(status => {
+                document.getElementById('backend-status').textContent = status;
+            });
+    </script>
+</body>
+</html>
