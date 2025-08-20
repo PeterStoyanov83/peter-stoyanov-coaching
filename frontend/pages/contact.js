@@ -105,7 +105,7 @@ export default function Contact() {
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-800 mb-2">{t('contact.email')}</h3>
-                        <p className="text-gray-600">peter@peterstoyanov-coaching.com</p>
+                        <p className="text-gray-600">peterstoyanov83@gmail.com</p>
                       </div>
                     </div>
 
