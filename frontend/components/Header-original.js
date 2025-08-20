@@ -1,17 +1,50 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { useTranslation } from '../hooks/useTranslation';
+import { useTranslation } from 'next-i18next';
 
 export default function Header() {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('common');
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   
-  const toggleLanguage = () => {
+  // Toggle language between 'bg' (Bulgarian) and 'en' (English)
+  const toggleLanguage = async () => {
     const newLocale = i18n.language === 'bg' ? 'en' : 'bg';
-    i18n.changeLanguage(newLocale);
+    
+    // Check if we're on a blog post page
+    if (router.pathname === '/blog/[slug]' && router.query.slug) {
+      try {
+        // Get translations for the current post
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://peter-stoyanov-backend.onrender.com'}/api/posts/${router.query.slug}/translations`);
+        
+        if (response.ok) {
+          const translations = await response.json();
+          
+          // Find the translation in the target language
+          const targetTranslation = translations.find(t => t.language === newLocale);
+          
+          if (targetTranslation) {
+            // Redirect to the translated post
+            router.push(`/blog/${targetTranslation.slug}`, `/blog/${targetTranslation.slug}`, { locale: newLocale });
+            return;
+          } else {
+            // If no translation found, redirect to blog index in new language
+            router.push('/blog', '/blog', { locale: newLocale });
+            return;
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching translations:', error);
+        // If API call fails, redirect to blog index in new language
+        router.push('/blog', '/blog', { locale: newLocale });
+        return;
+      }
+    }
+    
+    // Default behavior for other pages
+    router.push(router.pathname, router.asPath, { locale: newLocale });
   };
   
   // Handle scroll event to change header style when scrolled
@@ -67,7 +100,12 @@ export default function Header() {
             }`}>
               {t('nav.corporate')}
             </Link>
-            <Link href="/contact" className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium py-1.5 px-3 rounded-md transition duration-300">
+            <Link href="/blog" className={`text-sm text-gray-600 hover:text-indigo-600 transition duration-300 ${
+              router.pathname.startsWith('/blog') ? 'font-medium text-indigo-600' : ''
+            }`}>
+              {t('nav.blog')}
+            </Link>
+            <Link href="/waitlist" className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium py-1.5 px-3 rounded-md transition duration-300">
               {t('nav.waitlist')}
             </Link>
             
@@ -125,7 +163,15 @@ export default function Header() {
               >
                 {t('nav.corporate')}
               </Link>
-              <Link href="/contact" 
+              <Link href="/blog" 
+                className={`text-gray-700 hover:text-indigo-600 transition duration-300 ${
+                  router.pathname.startsWith('/blog') ? 'font-semibold text-indigo-600' : ''
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {t('nav.blog')}
+              </Link>
+              <Link href="/waitlist" 
                 className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 inline-block"
                 onClick={() => setIsMenuOpen(false)}
               >

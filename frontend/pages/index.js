@@ -1,119 +1,188 @@
+import { useState } from 'react';
 import Head from 'next/head';
+import Link from 'next/link';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import BackToTop from '../components/BackToTop';
+import { useTranslation } from '../hooks/useTranslation';
 
 export default function Home() {
+  const { t } = useTranslation();
+  
+  // Lead magnet form state
+  const [leadMagnetEmail, setLeadMagnetEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState('');
+
+  const handleLeadMagnetSubmit = async (e) => {
+    e.preventDefault();
+    if (!leadMagnetEmail) return;
+
+    setIsSubmitting(true);
+    setSubmitMessage('');
+
+    try {
+      const response = await fetch('/api/download-guide', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: leadMagnetEmail }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSubmitMessage('✅ Check your email for the guide download link!');
+        setLeadMagnetEmail('');
+        
+        // Open download link if available
+        if (data.downloadUrl) {
+          window.open(data.downloadUrl, '_blank');
+        }
+      } else {
+        setSubmitMessage('❌ Something went wrong. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setSubmitMessage('❌ Something went wrong. Please try again.');
+    }
+
+    setIsSubmitting(false);
+  };
+
   return (
     <>
       <Head>
-        <title>Peter Stoyanov - Communication & Leadership Coach</title>
-        <meta name="description" content="Professional coaching for communication and leadership development" />
+        <title>Peter Stoyanov - {t('home.hero.subtitle')}</title>
+        <meta name="description" content={t('home.hero.description')} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', fontFamily: 'Arial, sans-serif' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
-          {/* Hero Section */}
-          <section style={{ textAlign: 'center', paddingTop: '80px', paddingBottom: '80px', color: 'white' }}>
-            <h1 style={{ fontSize: '3rem', fontWeight: 'bold', marginBottom: '16px', margin: 0 }}>
-              Peter Stoyanov
+      <div className="min-h-screen">
+        <Header />
+        
+        {/* Hero Section */}
+        <section className="relative bg-gradient-to-br from-indigo-900 via-indigo-800 to-purple-800 text-white py-20 pt-32 overflow-hidden">
+          <div className="absolute inset-0 bg-black/20"></div>
+          <div className="relative container mx-auto px-4 text-center">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+              {t('home.hero.title')}
             </h1>
-            <p style={{ fontSize: '1.5rem', marginBottom: '32px' }}>
-              Communication & Leadership Coach
+            <p className="text-xl md:text-2xl mb-8 text-indigo-100 max-w-3xl mx-auto">
+              {t('home.hero.description')}
             </p>
-            <p style={{ fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto 40px auto', lineHeight: '1.6' }}>
-              Transform your communication skills and unlock your leadership potential 
-              with over 20 years of professional coaching experience.
-            </p>
-          </section>
-
-          {/* Services */}
-          <section style={{ paddingBottom: '80px' }}>
-            <h2 style={{ fontSize: '2rem', textAlign: 'center', marginBottom: '48px', color: 'white' }}>
-              Professional Coaching Services
-            </h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px' }}>
-              <div style={{ background: 'white', padding: '24px', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: '600', marginBottom: '16px', color: '#2c5282' }}>
-                  Individual Coaching
-                </h3>
-                <p style={{ color: '#4a5568', lineHeight: '1.6' }}>
-                  Personal development for communication excellence and leadership presence.
-                </p>
-              </div>
-              <div style={{ background: 'white', padding: '24px', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: '600', marginBottom: '16px', color: '#2c5282' }}>
-                  Corporate Training
-                </h3>
-                <p style={{ color: '#4a5568', lineHeight: '1.6' }}>
-                  Team workshops and organizational communication development programs.
-                </p>
-              </div>
-              <div style={{ background: 'white', padding: '24px', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: '600', marginBottom: '16px', color: '#2c5282' }}>
-                  Leadership Development
-                </h3>
-                <p style={{ color: '#4a5568', lineHeight: '1.6' }}>
-                  Build confidence, presence, and communication skills for effective leadership.
-                </p>
-              </div>
+            
+            {/* Lead Magnet Form */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 max-w-md mx-auto mb-8">
+              <h3 className="text-lg font-semibold mb-4">🎭 Free Voice & Presence Guide</h3>
+              <form onSubmit={handleLeadMagnetSubmit} className="space-y-4">
+                <input
+                  type="email"
+                  value={leadMagnetEmail}
+                  onChange={(e) => setLeadMagnetEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  className="w-full px-4 py-2 rounded-lg text-gray-800 placeholder-gray-500"
+                  required
+                />
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition duration-300 disabled:opacity-50"
+                >
+                  {isSubmitting ? 'Sending...' : t('home.cta.primary')}
+                </button>
+              </form>
+              {submitMessage && (
+                <p className="mt-3 text-sm">{submitMessage}</p>
+              )}
             </div>
-          </section>
 
-          {/* CTA */}
-          <section style={{ textAlign: 'center', paddingBottom: '80px' }}>
-            <h2 style={{ fontSize: '2rem', marginBottom: '32px', color: 'white' }}>
-              Get Started Today
-            </h2>
-            <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <a 
-                href="/guides/exersises-for-breathing-voice-and-speaking.pdf"
-                style={{ 
-                  background: 'linear-gradient(135deg, #38a169 0%, #2f855a 100%)',
-                  color: 'white',
-                  padding: '15px 30px',
-                  textDecoration: 'none',
-                  borderRadius: '8px',
-                  fontWeight: '600',
-                  fontSize: '1.1rem',
-                  display: 'inline-block',
-                  transition: 'transform 0.2s'
-                }}
-                onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
-                onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link 
+                href="/contact"
+                className="bg-white text-indigo-900 hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition duration-300"
               >
-                Download Free Voice Guide
-              </a>
-              <a 
-                href="mailto:peterstoyanov83@gmail.com"
-                style={{ 
-                  background: 'linear-gradient(135deg, #2c5282 0%, #2a4365 100%)',
-                  color: 'white',
-                  padding: '15px 30px',
-                  textDecoration: 'none',
-                  borderRadius: '8px',
-                  fontWeight: '600',
-                  fontSize: '1.1rem',
-                  display: 'inline-block',
-                  transition: 'transform 0.2s'
-                }}
-                onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
-                onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
-              >
-                Contact Me
-              </a>
+                {t('home.cta.secondary')}
+              </Link>
             </div>
-          </section>
-        </div>
-
-        {/* Footer */}
-        <footer style={{ background: 'rgba(0,0,0,0.2)', color: 'white', padding: '32px 0', textAlign: 'center' }}>
-          <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
-            <p style={{ marginBottom: '8px' }}>© 2024 Peter Stoyanov Coaching</p>
-            <p style={{ color: 'rgba(255,255,255,0.8)', margin: 0 }}>
-              Professional Communication & Leadership Development
-            </p>
           </div>
-        </footer>
+        </section>
+
+        {/* Services Section */}
+        <section className="py-20 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <h2 className="text-4xl font-bold text-center mb-16 text-gray-800">
+              {t('services.title')}
+            </h2>
+            
+            <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition duration-300">
+                <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-6">
+                  <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold mb-4 text-gray-800">
+                  {t('services.individual.title')}
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  {t('services.individual.description')}
+                </p>
+              </div>
+
+              <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition duration-300">
+                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-6">
+                  <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold mb-4 text-gray-800">
+                  {t('services.corporate.title')}
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  {t('services.corporate.description')}
+                </p>
+              </div>
+
+              <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition duration-300">
+                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-6">
+                  <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold mb-4 text-gray-800">
+                  {t('services.leadership.title')}
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  {t('services.leadership.description')}
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-20 bg-indigo-900 text-white">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-8">
+              Ready to Transform Your Leadership?
+            </h2>
+            <p className="text-xl mb-8 text-indigo-200 max-w-2xl mx-auto">
+              Join hundreds of professionals who have unlocked their potential through proven communication strategies.
+            </p>
+            <Link 
+              href="/contact"
+              className="bg-white text-indigo-900 hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition duration-300 inline-block"
+            >
+              Get Started Today
+            </Link>
+          </div>
+        </section>
+
+        <Footer />
+        <BackToTop />
       </div>
     </>
   );
