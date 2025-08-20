@@ -2,8 +2,8 @@
 const nextConfig = {
   output: 'export',
   trailingSlash: true,
-  basePath: process.env.NODE_ENV === 'production' ? '/peter-stoyanov-coaching' : '',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/peter-stoyanov-coaching' : '',
+  basePath: '',
+  assetPrefix: '',
   images: {
     unoptimized: true,
   },
