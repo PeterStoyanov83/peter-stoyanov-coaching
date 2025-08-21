@@ -13,7 +13,7 @@ from models import (
     WaitlistRegistrationRequest, CorporateInquiryRequest, LeadMagnetRequest,
     WaitlistRegistrationResponse, CorporateInquiryResponse, LeadMagnetResponse
 )
-from database import get_db
+from database_supabase import get_db
 from email_service import sendgrid_service
 from admin_routes import router as admin_router
 
@@ -36,7 +36,7 @@ async def startup_event():
     """Initialize database tables on startup"""
     try:
         from models import Base
-        from database import engine
+        from database_supabase import engine
         
         # Create all tables if they don't exist
         Base.metadata.create_all(bind=engine)
@@ -327,7 +327,7 @@ async def migrate_database():
     try:
         from sqlalchemy import text
         from models import Base
-        from database import engine
+        from database_supabase import engine
         
         with engine.connect() as conn:
             # Drop existing tables
@@ -352,7 +352,7 @@ async def migrate_database():
         Base.metadata.create_all(bind=engine)
         
         # Test the new structure
-        from database import SessionLocal
+        from database_supabase import SessionLocal
         from models import WaitlistRegistration
         
         db = SessionLocal()
@@ -378,13 +378,13 @@ async def init_database():
     """Initialize database tables - run this once after deployment"""
     try:
         from models import Base
-        from database import engine
+        from database_supabase import engine
         
         # Create all tables
         Base.metadata.create_all(bind=engine)
         
         # Test connection
-        from database import SessionLocal
+        from database_supabase import SessionLocal
         db = SessionLocal()
         
         # Check if tables exist by trying a simple query
