@@ -57,37 +57,19 @@ export default function Home() {
     setSubmitError('');
     setSubmitMessage('');
     
-    try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://peter-stoyanov-backend.onrender.com';
-      const response = await fetch(`${apiUrl}/api/download-guide`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: leadMagnetEmail }),
-      });
-      
-      const data = await response.json();
-      
-      if (response.ok) {
-        setSubmitMessage(data.message);
-        setLeadMagnetEmail('');
-        
-        // Trigger download
-        const link = document.createElement('a');
-        link.href = data.downloadUrl;
-        link.download = 'exersises-for-breathing-voice-and-speaking.pdf';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } else {
-        setSubmitError(data.message || t('home.leadMagnet.errors.submitError'));
-      }
-    } catch (error) {
-      setSubmitError(t('home.leadMagnet.errors.networkError'));
-    } finally {
-      setIsSubmitting(false);
-    }
+    // Simple static approach - just trigger download and show success
+    setSubmitMessage(t('home.leadMagnet.success'));
+    setLeadMagnetEmail('');
+    
+    // Trigger download immediately
+    const link = document.createElement('a');
+    link.href = '/guides/exersises-for-breathing-voice-and-speaking.pdf';
+    link.download = 'exersises-for-breathing-voice-and-speaking.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    setIsSubmitting(false);
   };
 
   return (

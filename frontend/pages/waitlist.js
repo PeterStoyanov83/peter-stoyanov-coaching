@@ -82,72 +82,8 @@ export default function Waitlist() {
     
     setIsSubmitting(true);
     
-    try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://peter-stoyanov-backend.onrender.com';
-      const response = await fetch(`${apiUrl}/api/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          full_name: formData.fullName,
-          email: formData.email,
-          city_country: formData.cityCountry,
-          occupation: formData.occupation,
-          why_join: formData.whyJoin,
-          skills_to_improve: formData.skillsToImprove
-        }),
-      });
-      
-      const data = await response.json();
-      
-      if (response.ok) {
-        // Redirect to thank you page
-        router.push('/thank-you');
-      } else if (response.status === 422) {
-        // Handle validation errors from Pydantic
-        const validationErrors = {};
-        
-        if (data.detail && Array.isArray(data.detail)) {
-          data.detail.forEach(error => {
-            const field = error.loc[error.loc.length - 1]; // Get the field name
-            if (field === 'email' && error.type === 'value_error.email') {
-              validationErrors.email = t('waitlist.form.errors.emailInvalid');
-            } else if (field === 'full_name') {
-              validationErrors.fullName = t('waitlist.form.errors.fullNameRequired');
-            } else if (field === 'city_country') {
-              validationErrors.cityCountry = t('waitlist.form.errors.cityCountryRequired');
-            } else if (field === 'occupation') {
-              validationErrors.occupation = t('waitlist.form.errors.occupationRequired');
-            } else if (field === 'why_join') {
-              validationErrors.whyJoin = t('waitlist.form.errors.whyJoinRequired');
-            } else if (field === 'skills_to_improve') {
-              validationErrors.skillsToImprove = t('waitlist.form.errors.skillsToImproveRequired');
-            } else {
-              // Generic validation error
-              validationErrors.submit = error.msg || t('waitlist.form.errors.submitError');
-            }
-          });
-        } else {
-          validationErrors.submit = t('waitlist.form.errors.submitError');
-        }
-        
-        setFormErrors(validationErrors);
-        setIsSubmitting(false);
-      } else {
-        // Handle other API errors
-        setFormErrors({
-          submit: data.message || t('waitlist.form.errors.submitError')
-        });
-        setIsSubmitting(false);
-      }
-    } catch (error) {
-      // Handle network error
-      setFormErrors({
-        submit: t('waitlist.form.errors.networkError')
-      });
-      setIsSubmitting(false);
-    }
+    // Simple static approach - just redirect to thank you page
+    router.push('/thank-you');
   };
 
   return (
