@@ -3,47 +3,12 @@ import Head from 'next/head';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import BackToTop from '../components/BackToTop';
+import TypeformModal from '../components/TypeformModal';
 import { useTranslation } from '../hooks/useTranslation';
 
 export default function Corporate() {
   const { t } = useTranslation();
-  const [formData, setFormData] = useState({
-    companyName: '',
-    contactPerson: '',
-    email: '',
-    phone: '',
-    trainingGoals: '',
-    additionalInfo: ''
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState('');
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitMessage('');
-
-    // Simple static approach - show success message
-    setSubmitMessage('✅ Thank you! We\'ll get back to you within 24 hours.');
-    setFormData({
-      companyName: '',
-      contactPerson: '',
-      email: '',
-      phone: '',
-      trainingGoals: '',
-      additionalInfo: ''
-    });
-
-    setIsSubmitting(false);
-  };
+  const [isCorporateModalOpen, setIsCorporateModalOpen] = useState(false);
 
   return (
     <>
@@ -160,7 +125,7 @@ export default function Corporate() {
           </div>
         </section>
 
-        {/* Contact Form Section */}
+        {/* Contact Section with Liquid Glass Button */}
         <section className="py-20 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
@@ -173,116 +138,50 @@ export default function Corporate() {
                 </p>
               </div>
 
-              <div className="bg-white rounded-lg shadow-md p-8">
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <label htmlFor="companyName" className="block text-sm font-medium text-gray-700 mb-2">
-                        Company Name *
-                      </label>
-                      <input
-                        type="text"
-                        id="companyName"
-                        name="companyName"
-                        value={formData.companyName}
-                        onChange={handleChange}
-                        required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                      />
+              <div className="bg-gradient-to-br from-indigo-50 via-white to-purple-50 rounded-2xl shadow-2xl p-12 border border-indigo-100">
+                <div className="text-center space-y-8">
+                  {/* Liquid Glass Typeform Button */}
+                  <button
+                    type="button"
+                    onClick={() => setIsCorporateModalOpen(true)}
+                    className="relative group overflow-hidden bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-600 hover:from-indigo-600 hover:via-purple-700 hover:to-pink-700 text-white font-bold py-5 px-10 rounded-2xl shadow-2xl transform transition-all duration-600 hover:scale-105 hover:shadow-purple-500/40 backdrop-blur-sm border border-white/20"
+                  >
+                    {/* Liquid glass overlay effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/15 via-white/8 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-800 animate-pulse"></div>
+                    
+                    {/* Corporate-themed glass particles */}
+                    <div className="absolute inset-0 overflow-hidden rounded-2xl">
+                      <div className="absolute -top-3 -left-3 w-6 h-6 bg-white/25 rounded-full animate-float delay-200"></div>
+                      <div className="absolute -bottom-3 -right-3 w-4 h-4 bg-white/20 rounded-full animate-float delay-400"></div>
+                      <div className="absolute top-1/4 right-1/3 w-3 h-3 bg-white/30 rounded-full animate-float delay-600"></div>
                     </div>
-                    <div>
-                      <label htmlFor="contactPerson" className="block text-sm font-medium text-gray-700 mb-2">
-                        Contact Person *
-                      </label>
-                      <input
-                        type="text"
-                        id="contactPerson"
-                        name="contactPerson"
-                        value={formData.contactPerson}
-                        onChange={handleChange}
-                        required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                      />
+                    
+                    {/* Button content */}
+                    <div className="relative z-10 flex items-center justify-center space-x-3">
+                      <svg className="w-6 h-6 transform group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                      </svg>
+                      <span className="text-lg tracking-wide font-semibold">
+                        Request Consultation
+                      </span>
+                      <div className="w-2 h-2 bg-yellow-300 rounded-full animate-pulse"></div>
                     </div>
+                    
+                    {/* Professional shimmer effect */}
+                    <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1200 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12"></div>
+                  </button>
+                  
+                  <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                    Ready to transform your team's communication skills? Our professional training programs are designed to create lasting impact through proven theater-based techniques.
+                  </p>
+                  
+                  {/* Visual enhancement dots */}
+                  <div className="flex justify-center space-x-2">
+                    <div className="w-2 h-2 bg-indigo-400 rounded-full animate-pulse"></div>
+                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse delay-300"></div>
+                    <div className="w-2 h-2 bg-pink-400 rounded-full animate-pulse delay-600"></div>
                   </div>
-
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                        Email Address *
-                      </label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                        Phone Number
-                      </label>
-                      <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor="trainingGoals" className="block text-sm font-medium text-gray-700 mb-2">
-                      Training Goals & Objectives *
-                    </label>
-                    <textarea
-                      id="trainingGoals"
-                      name="trainingGoals"
-                      value={formData.trainingGoals}
-                      onChange={handleChange}
-                      required
-                      rows={4}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                      placeholder="Tell us about your team's communication challenges and what you hope to achieve..."
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="additionalInfo" className="block text-sm font-medium text-gray-700 mb-2">
-                      Additional Information
-                    </label>
-                    <textarea
-                      id="additionalInfo"
-                      name="additionalInfo"
-                      value={formData.additionalInfo}
-                      onChange={handleChange}
-                      rows={3}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                      placeholder="Team size, preferred dates, budget considerations, etc."
-                    />
-                  </div>
-
-                  <div className="text-center">
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-8 rounded-lg transition duration-300 disabled:opacity-50"
-                    >
-                      {isSubmitting ? 'Sending...' : 'Request Consultation'}
-                    </button>
-                  </div>
-
-                  {submitMessage && (
-                    <div className="text-center mt-4">
-                      <p className="text-sm">{submitMessage}</p>
-                    </div>
-                  )}
-                </form>
+                </div>
               </div>
             </div>
           </div>
@@ -290,6 +189,15 @@ export default function Corporate() {
 
         <Footer />
         <BackToTop />
+
+        {/* Corporate Training Typeform Modal */}
+        <TypeformModal
+          isOpen={isCorporateModalOpen}
+          onClose={() => setIsCorporateModalOpen(false)}
+          typeformId="YRsIpOvV"
+          title="Request Corporate Training Consultation"
+          description="Tell us about your organization's needs and let's discuss how we can help your team excel."
+        />
       </div>
     </>
   );

@@ -4,16 +4,14 @@ import Link from 'next/link';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import BackToTop from '../components/BackToTop';
+import TypeformModal from '../components/TypeformModal';
 import { useTranslation } from '../hooks/useTranslation';
 
 export default function Home() {
   const { t } = useTranslation();
   
-  // Lead magnet form state
-  const [leadMagnetEmail, setLeadMagnetEmail] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState('');
-  const [submitError, setSubmitError] = useState('');
+  // Modal state for Typeform integration
+  const [isLeadMagnetModalOpen, setIsLeadMagnetModalOpen] = useState(false);
 
   // Testimonials carousel state
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
@@ -45,32 +43,6 @@ export default function Home() {
     setIsAutoPlaying(false);
   };
 
-  const handleLeadMagnetSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (!leadMagnetEmail || !/\S+@\S+\.\S+/.test(leadMagnetEmail)) {
-      setSubmitError(t('home.leadMagnet.errors.emailRequired'));
-      return;
-    }
-    
-    setIsSubmitting(true);
-    setSubmitError('');
-    setSubmitMessage('');
-    
-    // Simple static approach - just trigger download and show success
-    setSubmitMessage(t('home.leadMagnet.success'));
-    setLeadMagnetEmail('');
-    
-    // Trigger download immediately
-    const link = document.createElement('a');
-    link.href = '/guides/exersises-for-breathing-voice-and-speaking.pdf';
-    link.download = 'exersises-for-breathing-voice-and-speaking.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    setIsSubmitting(false);
-  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -753,53 +725,40 @@ export default function Home() {
                       </div>
                     </div>
                     
-                    <form onSubmit={handleLeadMagnetSubmit} className="space-y-4">
-                      {submitMessage && (
-                        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
-                          {submitMessage}
-                        </div>
-                      )}
-                      {submitError && (
-                        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-                          {submitError}
-                        </div>
-                      )}
-                      <input
-                        type="email"
-                        value={leadMagnetEmail}
-                        onChange={(e) => setLeadMagnetEmail(e.target.value)}
-                        placeholder={t('home.leadMagnet.emailPlaceholder')}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                        required
-                      />
+                    <div className="space-y-4">
                       <button 
-                        type="submit"
-                        disabled={isSubmitting}
-                        className={`w-full inline-flex items-center justify-center px-6 py-3 text-lg font-semibold text-white button-gradient rounded-lg shadow-lg transform transition-all duration-300 ${
-                          isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:-translate-y-1'
-                        }`}
+                        type="button"
+                        onClick={() => setIsLeadMagnetModalOpen(true)}
+                        className="w-full relative group overflow-hidden bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 text-white font-semibold py-4 px-8 rounded-2xl shadow-2xl transform transition-all duration-500 hover:scale-105 hover:shadow-purple-500/25 backdrop-blur-sm border border-white/20"
                       >
-                        {isSubmitting ? (
-                          <>
-                            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            {t('home.leadMagnet.sending')}
-                          </>
-                        ) : (
-                          <>
-                            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                            </svg>
+                        {/* Liquid glass overlay effect */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700 animate-pulse"></div>
+                        
+                        {/* Animated background bubbles */}
+                        <div className="absolute inset-0 overflow-hidden rounded-2xl">
+                          <div className="absolute -top-4 -left-4 w-8 h-8 bg-white/20 rounded-full animate-bounce delay-100"></div>
+                          <div className="absolute -bottom-4 -right-4 w-6 h-6 bg-white/20 rounded-full animate-bounce delay-300"></div>
+                          <div className="absolute top-1/2 left-1/4 w-4 h-4 bg-white/20 rounded-full animate-ping delay-500"></div>
+                        </div>
+                        
+                        {/* Button content */}
+                        <div className="relative z-10 flex items-center justify-center space-x-3">
+                          <svg className="w-6 h-6 transform group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          <span className="text-lg tracking-wide">
                             {t('home.leadMagnet.downloadButton')}
-                          </>
-                        )}
+                          </span>
+                          <div className="w-2 h-2 bg-white rounded-full animate-ping"></div>
+                        </div>
+                        
+                        {/* Shimmer effect */}
+                        <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12"></div>
                       </button>
                       <p className="text-sm text-gray-500">
                         {t('home.leadMagnet.joinText')}
                       </p>
-                    </form>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -861,6 +820,15 @@ export default function Home() {
 
       <Footer />
       <BackToTop />
+
+      {/* Lead Magnet Typeform Modal */}
+      <TypeformModal
+        isOpen={isLeadMagnetModalOpen}
+        onClose={() => setIsLeadMagnetModalOpen(false)}
+        typeformId="PZopArKb"
+        title="Get Your Free Communication Guide"
+        description="Download our comprehensive guide to confident communication and stage presence."
+      />
     </div>
   );
 }
