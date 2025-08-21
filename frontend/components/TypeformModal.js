@@ -20,15 +20,26 @@ const TypeformModal = ({ isOpen, onClose, typeformId, title, description }) => {
           window.tf.createWidget(typeformId, {
             container: typeformRef.current,
             width: '100%',
-            height: '500px',
+            height: '600px',
             hideHeaders: true,
-            hideFooter: true,
+            hideFooter: false,
             opacity: 0,
+            medium: 'snippet',
+            transitiveSearchParams: ['embed'],
             onReady: () => {
               // Fade in the form
               if (typeformRef.current) {
                 typeformRef.current.style.opacity = '1';
                 typeformRef.current.style.transition = 'opacity 0.5s ease-in-out';
+                
+                // Apply additional styling to the embedded form
+                const iframe = typeformRef.current.querySelector('iframe');
+                if (iframe) {
+                  iframe.style.border = 'none';
+                  iframe.style.width = '100%';
+                  iframe.style.height = '100%';
+                  iframe.style.borderRadius = '16px';
+                }
               }
             },
             onSubmit: () => {
@@ -98,7 +109,7 @@ const TypeformModal = ({ isOpen, onClose, typeformId, title, description }) => {
       {/* Modal Container with Liquid Glass Design */}
       <div
         ref={modalRef}
-        className="relative bg-white/10 backdrop-blur-2xl border border-white/20 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden animate-modal-enter"
+        className="relative bg-white/10 backdrop-blur-2xl border border-white/20 rounded-3xl shadow-2xl max-w-4xl w-full max-h-[95vh] overflow-hidden animate-modal-enter"
         style={{
           background: 'linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05))',
           boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
@@ -140,25 +151,25 @@ const TypeformModal = ({ isOpen, onClose, typeformId, title, description }) => {
         </div>
 
         {/* Typeform Container */}
-        <div className="relative p-6">
+        <div className="relative p-4">
           <div 
             ref={typeformRef}
-            className="w-full min-h-[500px] rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10"
+            className="w-full h-[600px] rounded-2xl overflow-hidden bg-white border border-white/20 shadow-inner"
             style={{ 
               opacity: 0,
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02))',
+              background: 'rgba(255, 255, 255, 0.98)',
             }}
           >
             {/* Loading state */}
-            <div className="flex items-center justify-center h-full">
+            <div className="flex items-center justify-center h-full bg-gradient-to-br from-indigo-50 to-purple-50">
               <div className="text-center">
                 <div className="relative">
-                  <div className="w-12 h-12 border-4 border-white/20 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
+                  <div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4"></div>
                   {/* Loading particles */}
                   <div className="absolute -top-2 -left-2 w-2 h-2 bg-cyan-400 rounded-full animate-ping"></div>
                   <div className="absolute -bottom-2 -right-2 w-2 h-2 bg-purple-400 rounded-full animate-ping delay-300"></div>
                 </div>
-                <p className="text-white/80 font-medium">Loading your form...</p>
+                <p className="text-gray-600 font-medium">Loading your form...</p>
               </div>
             </div>
           </div>

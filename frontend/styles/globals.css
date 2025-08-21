@@ -747,3 +747,30 @@ img[loading="lazy"] {
 img[loading="lazy"].loaded {
   opacity: 1;
 }
+
+/* Typeform modal enhancements */
+.typeform-widget {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: none;
+}
+
+.typeform-widget iframe {
+  border: none !important;
+  border-radius: 16px !important;
+}
+
+/* Ensure proper Typeform styling within modal */
+[data-tf-widget] {
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
+  border-radius: 16px !important;
+}
+
+[data-tf-widget] iframe {
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
+  border-radius: 16px !important;
+}
