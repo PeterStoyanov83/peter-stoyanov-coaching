@@ -3,34 +3,12 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from models import Base
 
+# Simple Supabase direct connection with SSL
+SUPABASE_URL = "postgresql://postgres:Peterko123!@db.alltdwjhpdtcrsweotgh.supabase.co:5432/postgres?sslmode=require"
+
 def get_supabase_url():
-    """Get Supabase database URL with proper configuration for Render"""
-    base_url = os.getenv("DATABASE_URL")
-    
-    if not base_url:
-        # Fallback to individual components
-        supabase_host = os.getenv("SUPABASE_HOST", "db.alltdwjhpdtcrsweotgh.supabase.co")
-        supabase_user = os.getenv("SUPABASE_USER", "postgres")
-        supabase_password = os.getenv("SUPABASE_PASSWORD", "Peterko123!")
-        supabase_db = os.getenv("SUPABASE_DB", "postgres")
-        supabase_port = os.getenv("SUPABASE_PORT", "5432")
-        
-        base_url = f"postgresql://{supabase_user}:{supabase_password}@{supabase_host}:{supabase_port}/{supabase_db}"
-    
-    # Add connection parameters for better compatibility with Render
-    if "?" not in base_url:
-        base_url += "?"
-    else:
-        base_url += "&"
-    
-    # Add parameters for better connection stability
-    connection_params = [
-        "sslmode=require",
-        "connect_timeout=10",
-        "application_name=peter-stoyanov-backend"
-    ]
-    
-    return base_url + "&".join(connection_params)
+    """Get Supabase database URL for Render"""
+    return os.getenv("DATABASE_URL", SUPABASE_URL)
 
 # Get database URL with proper configuration
 DATABASE_URL = get_supabase_url()
