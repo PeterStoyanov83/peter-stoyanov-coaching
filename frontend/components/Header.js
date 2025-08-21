@@ -67,11 +67,6 @@ export default function Header() {
             }`}>
               {t('nav.corporate')}
             </Link>
-            <Link href="/blog" className={`text-sm text-gray-600 hover:text-indigo-600 transition duration-300 ${
-              router.pathname === '/blog' || router.pathname.startsWith('/blog/') ? 'font-medium text-indigo-600' : ''
-            }`}>
-              {t('nav.blog')}
-            </Link>
             <Link href="/waitlist" className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium py-1.5 px-3 rounded-md transition duration-300">
               {t('nav.waitlist')}
             </Link>
@@ -129,14 +124,6 @@ export default function Header() {
                 onClick={() => setIsMenuOpen(false)}
               >
                 {t('nav.corporate')}
-              </Link>
-              <Link href="/blog" 
-                className={`text-gray-700 hover:text-indigo-600 transition duration-300 ${
-                  router.pathname === '/blog' || router.pathname.startsWith('/blog/') ? 'font-semibold text-indigo-600' : ''
-                }`}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {t('nav.blog')}
               </Link>
               <Link href="/waitlist" 
                 className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 inline-block"

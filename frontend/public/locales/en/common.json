@@ -187,32 +187,15 @@
     "content": "My name is Peter Stoyanov, and I’m an actor, clown, director, and (...well, I’m not a fan of the word \"coach\" – it sounds too wishy-washy to me...). For over 20 years, I’ve worked with people from various cultures and professions – from actors to business leaders – helping them free their voice, overcome stage fright, and connect more deeply with themselves and, through that, with their audience. I teach through games, exercises, improvisation, and physical work. My approach is practical, fun, and liberating.",
 
     "hero": {
-      "title": "Meet",
-      "name": "Peter Stoyanov",
-      "subtitle": "Actor • Clown • Director • Teacher",
-      "stats": {
-        "experience": "Years Experience",
-        "countries": "Countries"
-      },
-      "cta": {
-        "workshop": "Join a Workshop",
-        "corporate": "Corporate Training"
-      }
+      "title": "About Peter Stoyanov",
+      "subtitle": "Actor, Clown, Director & Communication Coach"
     },
     "journey": {
       "title": "My Journey",
-      "theater": {
-        "title": "Theater & Clowning",
-        "description": "My journey began on the stage, where I discovered the transformative power of performance. Through years of theater and clowning, I learned that authenticity and vulnerability are the keys to genuine connection with an audience."
-      },
-      "international": {
-        "title": "International Experience",
-        "description": "Over two decades, I've worked across 15+ countries, collaborating with diverse audiences and understanding how communication transcends cultural boundaries. This global perspective shapes my unique approach to coaching."
-      },
-      "methodology": {
-        "title": "Unique Methodology",
-        "description": "My coaching combines theater techniques, voice work, breathing exercises, and mindfulness. Unlike traditional public speaking training, I focus on discovering your authentic voice and presence through play and exploration."
-      }
+      "description": "My name is Peter Stoyanov, and I'm an actor, clown, director, and communication coach. For over 20 years, I've worked with people from various cultures and professions – from actors to business leaders – helping them free their voice, overcome stage fright, and connect more deeply with themselves and, through that, with their audience."
+    },
+    "expertise": {
+      "title": "My Expertise"
     },
     "philosophy": {
       "title": "My Philosophy",
@@ -361,6 +344,13 @@
         "professionals": "Professionals Trained"
       },
       "quote": "Theater techniques don't just improve communication—they transform how teams connect, collaborate, and lead with authentic confidence."
+    },
+    "programs": {
+      "title": "Our Training Programs"
+    },
+    "contact": {
+      "title": "Request Corporate Training",
+      "description": "Ready to transform your team's communication skills? Let's discuss a customized training program."
     },
     "services": {
       "title": "Training Programs",
