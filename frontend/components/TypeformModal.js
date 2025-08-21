@@ -160,16 +160,75 @@ const TypeformModal = ({ isOpen, onClose, typeformId, title, description }) => {
               background: 'rgba(255, 255, 255, 0.98)',
             }}
           >
-            {/* Loading state */}
-            <div className="flex items-center justify-center h-full bg-gradient-to-br from-indigo-50 to-purple-50">
-              <div className="text-center">
-                <div className="relative">
-                  <div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4"></div>
-                  {/* Loading particles */}
-                  <div className="absolute -top-2 -left-2 w-2 h-2 bg-cyan-400 rounded-full animate-ping"></div>
-                  <div className="absolute -bottom-2 -right-2 w-2 h-2 bg-purple-400 rounded-full animate-ping delay-300"></div>
+            {/* Enhanced Loading state */}
+            <div className="flex items-center justify-center h-full bg-gradient-to-br from-indigo-50 to-purple-50 relative overflow-hidden">
+              {/* Background animated elements */}
+              <div className="absolute inset-0">
+                <div className="absolute top-10 left-10 w-32 h-32 bg-indigo-200/30 rounded-full blur-xl animate-pulse"></div>
+                <div className="absolute bottom-10 right-10 w-40 h-40 bg-purple-200/30 rounded-full blur-xl animate-pulse delay-700"></div>
+                <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-cyan-200/20 rounded-full blur-2xl animate-pulse delay-1000"></div>
+              </div>
+              
+              <div className="text-center relative z-10">
+                {/* Main loading spinner with multiple rings */}
+                <div className="relative mb-8">
+                  {/* Outer ring */}
+                  <div className="w-24 h-24 border-4 border-indigo-100 border-t-indigo-500 rounded-full animate-spin mx-auto"></div>
+                  {/* Middle ring */}
+                  <div className="absolute top-2 left-2 w-20 h-20 border-4 border-purple-100 border-r-purple-500 rounded-full animate-spin mx-auto" style={{animationDirection: 'reverse', animationDuration: '1.5s'}}></div>
+                  {/* Inner ring */}
+                  <div className="absolute top-4 left-4 w-16 h-16 border-4 border-cyan-100 border-b-cyan-500 rounded-full animate-spin mx-auto" style={{animationDuration: '0.8s'}}></div>
+                  
+                  {/* Central pulsing dot */}
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full animate-pulse"></div>
+                  
+                  {/* Orbiting particles */}
+                  <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
+                    <div className="w-3 h-3 bg-cyan-400 rounded-full animate-bounce delay-100"></div>
+                  </div>
+                  <div className="absolute top-1/2 -right-2 transform -translate-y-1/2">
+                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce delay-300"></div>
+                  </div>
+                  <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
+                    <div className="w-3 h-3 bg-indigo-400 rounded-full animate-bounce delay-500"></div>
+                  </div>
+                  <div className="absolute top-1/2 -left-2 transform -translate-y-1/2">
+                    <div className="w-2 h-2 bg-pink-400 rounded-full animate-bounce delay-700"></div>
+                  </div>
                 </div>
-                <p className="text-gray-600 font-medium">Loading your form...</p>
+                
+                {/* Loading text with typewriter effect */}
+                <div className="space-y-2">
+                  <h3 className="text-2xl font-bold text-gray-700 mb-2 animate-pulse">Preparing Your Form</h3>
+                  <div className="flex items-center justify-center space-x-1 text-gray-600">
+                    <span className="animate-bounce" style={{animationDelay: '0s'}}>L</span>
+                    <span className="animate-bounce" style={{animationDelay: '0.1s'}}>o</span>
+                    <span className="animate-bounce" style={{animationDelay: '0.2s'}}>a</span>
+                    <span className="animate-bounce" style={{animationDelay: '0.3s'}}>d</span>
+                    <span className="animate-bounce" style={{animationDelay: '0.4s'}}>i</span>
+                    <span className="animate-bounce" style={{animationDelay: '0.5s'}}>n</span>
+                    <span className="animate-bounce" style={{animationDelay: '0.6s'}}>g</span>
+                    <span className="ml-2 text-2xl animate-spin">⚡</span>
+                  </div>
+                  
+                  {/* Progress indicators */}
+                  <div className="mt-6 flex justify-center space-x-2">
+                    <div className="w-3 h-3 bg-indigo-500 rounded-full animate-pulse"></div>
+                    <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse delay-200"></div>
+                    <div className="w-3 h-3 bg-cyan-500 rounded-full animate-pulse delay-400"></div>
+                    <div className="w-3 h-3 bg-pink-500 rounded-full animate-pulse delay-600"></div>
+                  </div>
+                  
+                  {/* Progress bar */}
+                  <div className="w-64 h-2 bg-gray-200 rounded-full overflow-hidden mt-4 mx-auto">
+                    <div className="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 rounded-full animate-pulse transform origin-left" 
+                         style={{
+                           animation: 'loading-progress 3s ease-out infinite'
+                         }}></div>
+                  </div>
+                  
+                  <p className="text-sm text-gray-500 mt-4 animate-pulse">This may take a few seconds...</p>
+                </div>
               </div>
             </div>
           </div>

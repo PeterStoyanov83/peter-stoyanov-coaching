@@ -774,3 +774,81 @@ img[loading="lazy"].loaded {
   border: none !important;
   border-radius: 16px !important;
 }
+
+/* Enhanced loading animations for Typeform modal */
+@keyframes typeform-pulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes typeform-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes typeform-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes typeform-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(79, 70, 229, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(79, 70, 229, 0.8), 0 0 40px rgba(139, 92, 246, 0.6);
+  }
+}
+
+.typeform-loading-ring {
+  animation: typeform-rotate 2s linear infinite;
+}
+
+.typeform-loading-ring-reverse {
+  animation: typeform-rotate 1.5s linear infinite reverse;
+}
+
+.typeform-loading-ring-fast {
+  animation: typeform-rotate 0.8s linear infinite;
+}
+
+.typeform-loading-glow {
+  animation: typeform-glow 2s ease-in-out infinite;
+}
+
+@keyframes loading-progress {
+  0% {
+    width: 0%;
+    opacity: 0.7;
+  }
+  30% {
+    width: 30%;
+    opacity: 0.8;
+  }
+  60% {
+    width: 70%;
+    opacity: 0.9;
+  }
+  80% {
+    width: 85%;
+    opacity: 1;
+  }
+  100% {
+    width: 95%;
+    opacity: 0.8;
+  }
+}
