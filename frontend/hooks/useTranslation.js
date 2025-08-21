@@ -143,6 +143,15 @@ const translations = {
     'services.leadership.description': 'Изградете увереност, присъствие и комуникационни умения за ефективно лидерство.',
     
     // Footer
+    'footer.description': 'Трансформиране на комуникацията чрез театрални техники, работа с дишането и автентично присъствие.',
+    'footer.contact': 'Контакт',
+    'footer.followUs': 'Последвай ни',
+    'footer.newsletter': 'Бюлетин',
+    'footer.newsletterDescription': 'Бъди в крак новините от нас.',
+    'footer.subscribe': 'Абонирай се',
+    'footer.allRightsReserved': 'Всички права запазени',
+    'footer.privacyPolicy': 'Политика за поверителност',
+    'footer.termsOfService': 'Условия за ползване',
     'footer.copyright': '© 2024 Peter Stoyanov Coaching',
     'footer.tagline': 'Професионално развитие на комуникацията и лидерството',
     
@@ -382,6 +391,15 @@ const translations = {
     'services.leadership.description': 'Build confidence, presence, and communication skills for effective leadership.',
     
     // Footer
+    'footer.description': 'Transforming communication through theater techniques, breath work, and authentic presence.',
+    'footer.contact': 'Contact',
+    'footer.followUs': 'Follow Us',
+    'footer.newsletter': 'Newsletter',
+    'footer.newsletterDescription': 'Stay updated.',
+    'footer.subscribe': 'Subscribe',
+    'footer.allRightsReserved': 'All Rights Reserved',
+    'footer.privacyPolicy': 'Privacy Policy',
+    'footer.termsOfService': 'Terms of Service',
     'footer.copyright': '© 2024 Peter Stoyanov Coaching',
     'footer.tagline': 'Professional Communication & Leadership Development',
     
