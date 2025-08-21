@@ -49,13 +49,10 @@ export default function About() {
                       {t('about.journey.description')}
                     </p>
                     <p className="text-lg text-gray-600 leading-relaxed mb-6">
-                      With over two decades of experience spanning theater, education, and corporate training, 
-                      I've discovered that the most powerful leaders are those who can communicate their vision 
-                      with clarity, passion, and authenticity.
+                      {t('about.journey.experience')}
                     </p>
                     <p className="text-lg text-gray-600 leading-relaxed">
-                      My unique background as a professional actor and director gives me insights into the 
-                      psychology of presence, the power of storytelling, and the art of connecting with any audience.
+                      {t('about.journey.background')}
                     </p>
                   </div>
                   <div className="text-center">
@@ -89,8 +86,8 @@ export default function About() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m0 0V1a1 1 0 011-1h2a1 1 0 011 1v18a1 1 0 01-1 1H4a1 1 0 01-1-1V4a1 1 0 011-1h2a1 1 0 011-1V2z" />
                       </svg>
                     </div>
-                    <h3 className="text-xl font-semibold mb-2">Theater & Performance</h3>
-                    <p className="text-gray-600">20+ years on stage teaching presence and authentic expression</p>
+                    <h3 className="text-xl font-semibold mb-2">{t('about.expertise.theater.title')}</h3>
+                    <p className="text-gray-600">{t('about.expertise.theater.description')}</p>
                   </div>
                   
                   <div className="text-center">
@@ -99,8 +96,8 @@ export default function About() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V2a2 2 0 012 2v16a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2V0z" />
                       </svg>
                     </div>
-                    <h3 className="text-xl font-semibold mb-2">Corporate Training</h3>
-                    <p className="text-gray-600">Executive coaching and team development across industries</p>
+                    <h3 className="text-xl font-semibold mb-2">{t('about.expertise.corporate.title')}</h3>
+                    <p className="text-gray-600">{t('about.expertise.corporate.description')}</p>
                   </div>
                   
                   <div className="text-center">
@@ -109,8 +106,8 @@ export default function About() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                       </svg>
                     </div>
-                    <h3 className="text-xl font-semibold mb-2">Leadership Psychology</h3>
-                    <p className="text-gray-600">Deep understanding of influence, motivation, and human dynamics</p>
+                    <h3 className="text-xl font-semibold mb-2">{t('about.expertise.psychology.title')}</h3>
+                    <p className="text-gray-600">{t('about.expertise.psychology.description')}</p>
                   </div>
                 </div>
               </div>
@@ -122,31 +119,27 @@ export default function About() {
                 </h2>
                 <div className="grid md:grid-cols-2 gap-8">
                   <div>
-                    <h3 className="text-xl font-semibold mb-4 text-indigo-600">Authentic Connection</h3>
+                    <h3 className="text-xl font-semibold mb-4 text-indigo-600">{t('about.approach.authentic.title')}</h3>
                     <p className="text-gray-600 leading-relaxed">
-                      I believe that true leadership isn't about putting on a performance—it's about finding 
-                      your authentic voice and learning to share it with confidence and clarity.
+                      {t('about.approach.authentic.description')}
                     </p>
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold mb-4 text-indigo-600">Practical Skills</h3>
+                    <h3 className="text-xl font-semibold mb-4 text-indigo-600">{t('about.approach.practical.title')}</h3>
                     <p className="text-gray-600 leading-relaxed">
-                      Every session focuses on actionable techniques you can implement immediately, 
-                      from body language and vocal presence to strategic storytelling.
+                      {t('about.approach.practical.description')}
                     </p>
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold mb-4 text-indigo-600">Personalized Growth</h3>
+                    <h3 className="text-xl font-semibold mb-4 text-indigo-600">{t('about.approach.personalized.title')}</h3>
                     <p className="text-gray-600 leading-relaxed">
-                      I tailor every program to your specific goals, industry, and communication style, 
-                      ensuring maximum relevance and impact.
+                      {t('about.approach.personalized.description')}
                     </p>
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold mb-4 text-indigo-600">Measurable Results</h3>
+                    <h3 className="text-xl font-semibold mb-4 text-indigo-600">{t('about.approach.measurable.title')}</h3>
                     <p className="text-gray-600 leading-relaxed">
-                      Together, we'll track your progress and celebrate measurable improvements in 
-                      confidence, influence, and leadership effectiveness.
+                      {t('about.approach.measurable.description')}
                     </p>
                   </div>
                 </div>

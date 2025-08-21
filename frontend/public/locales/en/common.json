@@ -192,10 +192,24 @@
     },
     "journey": {
       "title": "My Journey",
-      "description": "My name is Peter Stoyanov, and I'm an actor, clown, director, and communication coach. For over 20 years, I've worked with people from various cultures and professions – from actors to business leaders – helping them free their voice, overcome stage fright, and connect more deeply with themselves and, through that, with their audience."
+      "description": "My name is Peter Stoyanov, and I'm an actor, clown, director, and communication coach. For over 20 years, I've worked with people from various cultures and professions – from actors to business leaders – helping them free their voice, overcome stage fright, and connect more deeply with themselves and, through that, with their audience.",
+      "experience": "With over two decades of experience spanning theater, education, and corporate training, I've discovered that the most powerful leaders are those who can communicate their vision with clarity, passion, and authenticity.",
+      "background": "My unique background as a professional actor and director gives me insights into the psychology of presence, the power of storytelling, and the art of connecting with any audience."
     },
     "expertise": {
-      "title": "My Expertise"
+      "title": "My Expertise",
+      "theater": {
+        "title": "Theater & Performance",
+        "description": "20+ years on stage teaching presence and authentic expression"
+      },
+      "corporate": {
+        "title": "Corporate Training",
+        "description": "Executive coaching and team development across industries"
+      },
+      "psychology": {
+        "title": "Leadership Psychology", 
+        "description": "Deep understanding of influence, motivation, and human dynamics"
+      }
     },
     "philosophy": {
       "title": "My Philosophy",
@@ -205,6 +219,22 @@
     },
     "approach": {
       "title": "My Approach",
+      "authentic": {
+        "title": "Authentic Connection",
+        "description": "I believe that true leadership isn't about putting on a performance—it's about finding your authentic voice and learning to share it with confidence and clarity."
+      },
+      "practical": {
+        "title": "Practical Skills",
+        "description": "Every session focuses on actionable techniques you can implement immediately, from body language and vocal presence to strategic storytelling."
+      },
+      "personalized": {
+        "title": "Personalized Growth",
+        "description": "I tailor every program to your specific goals, industry, and communication style, ensuring maximum relevance and impact."
+      },
+      "measurable": {
+        "title": "Measurable Results",
+        "description": "Together, we'll track your progress and celebrate measurable improvements in confidence, influence, and leadership effectiveness."
+      },
       "playBased": {
         "title": "Play-Based Learning",
         "description": "Learning through joy and exploration, not fear and pressure."

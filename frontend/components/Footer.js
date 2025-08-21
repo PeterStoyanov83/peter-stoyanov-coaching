@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from '../hooks/useTranslation';
 
 export default function Footer() {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
 
   return (
