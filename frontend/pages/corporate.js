@@ -50,10 +50,9 @@ export default function Corporate() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold mb-4 text-gray-800">Leadership Presence</h3>
+                <h3 className="text-xl font-semibold mb-4 text-gray-800">{t('corporate.programs.leadership.title')}</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Develop executive presence, confident communication, and authentic leadership style 
-                  that inspires and motivates teams.
+                  {t('corporate.programs.leadership.description')}
                 </p>
               </div>
 
@@ -63,10 +62,9 @@ export default function Corporate() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold mb-4 text-gray-800">Team Communication</h3>
+                <h3 className="text-xl font-semibold mb-4 text-gray-800">{t('corporate.programs.teamCommunication.title')}</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Improve collaboration, reduce conflicts, and create a culture of open, 
-                  effective communication across all levels.
+                  {t('corporate.programs.teamCommunication.description')}
                 </p>
               </div>
 
@@ -76,10 +74,9 @@ export default function Corporate() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold mb-4 text-gray-800">Presentation Skills</h3>
+                <h3 className="text-xl font-semibold mb-4 text-gray-800">{t('corporate.programs.presentation.title')}</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Master the art of compelling presentations, from structure and storytelling 
-                  to delivery and audience engagement.
+                  {t('corporate.programs.presentation.description')}
                 </p>
               </div>
 
@@ -89,10 +86,9 @@ export default function Corporate() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold mb-4 text-gray-800">Change Management</h3>
+                <h3 className="text-xl font-semibold mb-4 text-gray-800">{t('corporate.programs.changeManagement.title')}</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Navigate organizational change with clear communication strategies that 
-                  build trust and reduce resistance.
+                  {t('corporate.programs.changeManagement.description')}
                 </p>
               </div>
 
@@ -102,10 +98,9 @@ export default function Corporate() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold mb-4 text-gray-800">Conflict Resolution</h3>
+                <h3 className="text-xl font-semibold mb-4 text-gray-800">{t('corporate.programs.conflictResolution.title')}</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Transform workplace conflicts into opportunities for growth through 
-                  effective communication and mediation techniques.
+                  {t('corporate.programs.conflictResolution.description')}
                 </p>
               </div>
 
@@ -115,10 +110,9 @@ export default function Corporate() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold mb-4 text-gray-800">Executive Coaching</h3>
+                <h3 className="text-xl font-semibold mb-4 text-gray-800">{t('corporate.programs.executiveCoaching.title')}</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  One-on-one coaching for C-level executives to enhance their leadership 
-                  communication and strategic influence.
+                  {t('corporate.programs.executiveCoaching.description')}
                 </p>
               </div>
             </div>
