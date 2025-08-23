@@ -156,7 +156,7 @@ export default function Corporate() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                       </svg>
                       <span className="text-lg tracking-wide font-semibold">
-                        Request Consultation
+                        {t('corporate.contact.button')}
                       </span>
                       <div className="w-2 h-2 bg-yellow-300 rounded-full animate-pulse"></div>
                     </div>
@@ -166,7 +166,7 @@ export default function Corporate() {
                   </button>
                   
                   <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                    Ready to transform your team's communication skills? Our professional training programs are designed to create lasting impact through proven theater-based techniques.
+                    {t('corporate.contact.ready')}
                   </p>
                   
                   {/* Visual enhancement dots */}

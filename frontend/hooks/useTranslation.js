@@ -165,12 +165,28 @@ const translations = {
     
     // About
     'about.title': 'За мен',
-    'about.hero.title': 'Здравейте, аз съм Peter Stoyanov',
-    'about.hero.subtitle': 'Коуч за комуникация и лидерство с над 20 години опит',
+    'about.hero.title': 'За Петър Стоянов',
+    'about.hero.subtitle': 'Актьор, Клоун, Режисьор и Комуникационен Коуч',
     'about.journey.title': 'Моето пътешествие',
-    'about.journey.description': 'От театралната сцена до корпоративните стаи за съвещания, моят път ме е научил, че истинското лидерство започва с автентична комуникация.',
-    'about.expertise.title': 'Моята експертиза',
+    'about.journey.description': 'Казвам се Петър Стоянов и съм актьор, клоун, режисьор и комуникационен коуч. В продължение на над 20 години работя с хора от различни култури и професии – от актьори до бизнес лидери – за да им помогна да освободят гласа си, да преодолеят страха си от сцената и да се свържат по-дълбоко със себе си.',
+    'about.journey.experience': 'С над два десетилетия опит, обхващащ театър, образование и корпоративно обучение, открих, че най-силните лидери са тези, които могат да комуникират визията си с яснота, страст и автентичност.',
+    'about.journey.background': 'Уникалният ми произход като професионален актьор и режисьор ми дава прозрения в психологията на присъствието, силата на разказването и изкуството да се свързваш с всяка аудитория.',
+    'about.expertise.title': 'Моят опит',
+    'about.expertise.theater.title': 'Театър и изпълнение',
+    'about.expertise.theater.description': '20+ години на сцена, преподавайки присъствие и автентично изразяване',
+    'about.expertise.corporate.title': 'Корпоративно обучение',
+    'about.expertise.corporate.description': 'Изпълнителско коучинг и развитие на екипи в различни индустрии',
+    'about.expertise.psychology.title': 'Лидерска психология',
+    'about.expertise.psychology.description': 'Дълбоко разбиране на влиянието, мотивацията и човешката динамика',
     'about.approach.title': 'Моят подход',
+    'about.approach.authentic.title': 'Автентична връзка',
+    'about.approach.authentic.description': 'Вярвам, че истинското лидерство не се състои в играене на роля - а в намирането на автентичния ти глас и научаването как да го споделяш с увереност и яснота.',
+    'about.approach.practical.title': 'Практически умения',
+    'about.approach.practical.description': 'Всяка сесия се фокусира върху приложими техники, които можеш да внедриш незабавно - от език на тялото и гласово присъствие до стратегическо разказване.',
+    'about.approach.personalized.title': 'Персонализиран растеж',
+    'about.approach.personalized.description': 'Пригаждам всяка програма към твоите специфични цели, индустрия и стил на комуникация, осигурявайки максимална релевантност и въздействие.',
+    'about.approach.measurable.title': 'Измерими резултати',
+    'about.approach.measurable.description': 'Заедно ще проследяваме напредъка ти и ще празнуваме измеримите подобрения в увереността, влиянието и лидерската ефективност.',
     
     // Corporate
     'corporate.title': 'Корпоративно обучение',
@@ -191,6 +207,8 @@ const translations = {
     'corporate.programs.executiveCoaching.description': 'Индивидуален коучинг за ръководители от С-ниво за подобряване на лидерската им комуникация и стратегическо влияние.',
     'corporate.contact.title': 'Започнете днес',
     'corporate.contact.description': 'Свържете се с нас за персонализирана консултация и предложение за вашата организация.',
+    'corporate.contact.button': 'Заявете консултация',
+    'corporate.contact.ready': 'Готови ли сте да трансформирате комуникационните умения на вашия екип? Нашите професионални програми за обучение са проектирани да създадат трайно въздействие чрез доказани техники, базирани на театъра.',
     
     // Waitlist
     'waitlist.title': 'Станете част от бъдещето на комуникацията',
@@ -425,12 +443,28 @@ const translations = {
     
     // About
     'about.title': 'About Me',
-    'about.hero.title': 'Hello, I\'m Peter Stoyanov',
-    'about.hero.subtitle': 'Communication & Leadership Coach with 20+ years of experience',
+    'about.hero.title': 'About Peter Stoyanov',
+    'about.hero.subtitle': 'Actor, Clown, Director & Communication Coach',
     'about.journey.title': 'My Journey',
-    'about.journey.description': 'From the theater stage to corporate boardrooms, my path has taught me that true leadership begins with authentic communication.',
+    'about.journey.description': 'My name is Peter Stoyanov, and I\'m an actor, clown, director, and communication coach. For over 20 years, I\'ve worked with people from various cultures and professions – from actors to business leaders – helping them free their voice, overcome stage fright, and connect more deeply with themselves and, through that, with their audience.',
+    'about.journey.experience': 'With over two decades of experience spanning theater, education, and corporate training, I\'ve discovered that the most powerful leaders are those who can communicate their vision with clarity, passion, and authenticity.',
+    'about.journey.background': 'My unique background as a professional actor and director gives me insights into the psychology of presence, the power of storytelling, and the art of connecting with any audience.',
     'about.expertise.title': 'My Expertise',
+    'about.expertise.theater.title': 'Theater & Performance',
+    'about.expertise.theater.description': '20+ years on stage teaching presence and authentic expression',
+    'about.expertise.corporate.title': 'Corporate Training',
+    'about.expertise.corporate.description': 'Executive coaching and team development across industries',
+    'about.expertise.psychology.title': 'Leadership Psychology',
+    'about.expertise.psychology.description': 'Deep understanding of influence, motivation, and human dynamics',
     'about.approach.title': 'My Approach',
+    'about.approach.authentic.title': 'Authentic Connection',
+    'about.approach.authentic.description': 'I believe that true leadership isn\'t about putting on a performance—it\'s about finding your authentic voice and learning to share it with confidence and clarity.',
+    'about.approach.practical.title': 'Practical Skills',
+    'about.approach.practical.description': 'Every session focuses on actionable techniques you can implement immediately, from body language and vocal presence to strategic storytelling.',
+    'about.approach.personalized.title': 'Personalized Growth',
+    'about.approach.personalized.description': 'I tailor every program to your specific goals, industry, and communication style, ensuring maximum relevance and impact.',
+    'about.approach.measurable.title': 'Measurable Results',
+    'about.approach.measurable.description': 'Together, we\'ll track your progress and celebrate measurable improvements in confidence, influence, and leadership effectiveness.',
     
     // Corporate
     'corporate.title': 'Corporate Training',
@@ -451,6 +485,8 @@ const translations = {
     'corporate.programs.executiveCoaching.description': 'One-on-one coaching for C-level executives to enhance their leadership communication and strategic influence.',
     'corporate.contact.title': 'Get Started Today',
     'corporate.contact.description': 'Contact us for a personalized consultation and proposal for your organization.',
+    'corporate.contact.button': 'Request Consultation',
+    'corporate.contact.ready': 'Ready to transform your team\'s communication skills? Our professional training programs are designed to create lasting impact through proven theater-based techniques.',
     
     // Waitlist
     'waitlist.title': 'Become Part of Communication\'s Future',
