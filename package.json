@@ -1,0 +1,13 @@
+{
+  "name": "peter-stoyanov-coaching",
+  "version": "1.0.0",
+  "description": "Static coaching website with external service integrations",
+  "scripts": {
+    "build": "cd coaching-site/frontend && npm install && npm run build",
+    "dev": "cd coaching-site/frontend && npm run dev",
+    "start": "cd coaching-site/frontend && npm run start"
+  },
+  "keywords": ["coaching", "static-site", "next.js", "cloudflare-pages"],
+  "author": "Peter Stoyanov",
+  "license": "MIT"
+}
