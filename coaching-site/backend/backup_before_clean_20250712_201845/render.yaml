@@ -1,0 +1,53 @@
+services:
+  - type: web
+    name: peter-stoyanov-backend
+    env: python
+    plan: free
+    runtime: python
+    buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
+    startCommand: "python -m uvicorn main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.7"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: peter-stoyanov-db
+          property: connectionString
+      - key: MAILERLITE_API_KEY
+        sync: false
+      - key: MAILGUN_API_KEY
+        sync: false
+      - key: MAILGUN_DOMAIN
+        sync: false
+      - key: MAILGUN_WEBHOOK_SECRET
+        sync: false
+      - key: JWT_SECRET_KEY
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+    healthCheckPath: "/"
+    
+databases:
+  - name: peter-stoyanov-db
+    databaseName: peter_stoyanov
+    user: peter_stoyanov_user
+    plan: free
+    
+  - type: cron
+    name: email-scheduler
+    schedule: "0 9 * * *"
+    buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
+    startCommand: "python email_scheduler.py"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: peter-stoyanov-db
+          property: connectionString
+      - key: MAILERLITE_API_KEY
+        sync: false
+      - key: MAILGUN_API_KEY
+        sync: false
+      - key: MAILGUN_DOMAIN
+        sync: false
+      - key: MAILGUN_WEBHOOK_SECRET
+        sync: false

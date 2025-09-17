@@ -1,0 +1,689 @@
+{
+  "home": {
+    "title": "Master the Stage. Speak with Charisma. Inspire with Ease.",
+    "description": "Transform yourself through theater techniques, voice, breathing, and play.",
+    "hero": {
+      "title": "Transform Your Stage Presence with Confidence",
+      "subtitle": "From theater stages to boardrooms - discover the authentic secrets that turn fear into fearless presence",
+      "cta": "Make the Change",
+      "meetPetar": "Meet Peter",
+      "stats": {
+        "experience": "Years of Experience",
+        "students": "Students Trained",
+        "countries": "Countries Reached"
+      }
+    },
+    "leadMagnet": {
+      "title": "Free Download: \"8 Essential Exercises to Transform Your Voice & Presence\"",
+      "description": "Discover the professional techniques actors use to captivate audiences and eliminate stage fright. These proven methods will transform your presence in meetings, presentations, and conversations.",
+      "benefits": [
+        "Instantly calm your nerves before any important conversation",
+        "Use voice and posture to project unshakeable confidence",
+        "Master the art of authentic storytelling that engages audiences",
+        "Quick exercises to improve your on-camera presence"
+      ],
+      "emailPlaceholder": "Enter your email address",
+      "downloadButton": "Download Free Guide",
+      "sending": "Sending...",
+      "joinText": "Join 1,000+ professionals who've transformed their communication skills",
+      "errors": {
+        "emailRequired": "Please enter a valid email address",
+        "networkError": "Network error. Please check your connection and try again.",
+        "submitError": "Something went wrong. Please try again."
+      },
+      "success": "Thank you! Your guide is ready for download."
+    },
+    "video": {
+      "title": "Video Introduction",
+      "description": "Watch Peter share his unique approach to stage presence and communication training.",
+      "comingSoon": "Video Coming Soon",
+      "preview": "Exclusive training preview",
+      "quote": "Every person has a unique voice and presence. My role is to help you discover and amplify yours.",
+      "credentials": "Actor, Coach & Communication Expert"
+    },
+    "methodology": {
+      "title": "Learning Through Practice",
+      "subtitle": "Skip traditional theory. Experience immediate transformation through proven theater techniques that create lasting change.",
+      "method1": {
+        "title": "Feel the Change",
+        "description": "Experience breakthrough moments as fear transforms into confidence through hands-on exercises."
+      },
+      "method2": {
+        "title": "Discover Your Voice",
+        "description": "Uncover your unique communication style and authentic presence that captivates any audience."
+      },
+      "method3": {
+        "title": "Apply Immediately",
+        "description": "Use your new skills right away in meetings, presentations, and important conversations."
+      }
+    },
+    "features": {
+      "title": "What You'll Learn",
+      "subtitle": "Develop the skills that will transform how you communicate and connect with others.",
+      "feature1": {
+        "title": "Stage Presence",
+        "description": "Develop confidence and charisma on stage"
+      },
+      "feature2": {
+        "title": "Voice Techniques",
+        "description": "Unlock the power of your voice"
+      },
+      "feature3": {
+        "title": "Body Language",
+        "description": "Master non-verbal communication and commanding physical presence"
+      },
+      "feature4": {
+        "title": "Work with Camera",
+        "description": "Excel in video meetings, interviews, and digital presentations with commanding on-camera confidence."
+      },
+      "feature5": {
+        "title": "Addressing Audience",
+        "description": "Connect authentically with any audience and command attention in any room."
+      },
+      "feature6": {
+        "title": "Improvisational Skills",
+        "description": "Build quick thinking and adaptability for any speaking situation."
+      }
+    },
+    "testimonials": {
+      "title": "My Success Stories",
+      "subtitle": "Hear from students who have transformed their communication skills and stage presence.",
+      "testimonial1": {
+        "name": "Iliana Peneva",
+        "position": "Legal Advisor @ Sofia TechPark",
+        "text": "This course is the perfect solution for anyone who wants to overcome their own limits and turn presenting into a pleasure."
+      },
+      "testimonial2": {
+        "name": "Dinko Georgiev",
+        "position": "Software Engineer",
+        "text": "The course was amazing! Pepe didn’t just teach techniques on how to perform successfully in front of an audience — he truly helped me apply them in a way that suited me and my needs. An extremely valuable and inspiring experience, I highly recommend it!"
+      },
+      "testimonial3": {
+        "name": "Ivan Danchev",
+      "position": "Co-founder of PetConnect",
+        "text": "Professionalism and a personal approach, delivered by Pepe in an informal setting. I recommend it."
+      },
+      "testimonial4": {
+        "name": "Trifon Trifonov",
+        "position": "Software Engineer",
+        "text": "I’ve learned practical, easy-to-use techniques for public speaking that help prepare both my body and my emotional mindset for addressing a large audience. With Peter’s guidance, I discovered the methods that work best for me, and they help me warm up and overcome the state of paralysis and stage fright."
+
+      },
+      "testimonial5": {
+        "name": "Paola Petkova",
+        "position": "Community Manager @ Sofia TechPark",
+        "text": "The course came to me at exactly the right time, breaking myths, stepping out of my comfort zone, giving courage and strength to my voice and confidence."
+      },
+      "testimonial6": {
+        "name": "Elena Ivanova",
+        "position": "Teacher",
+        "text": "The voice techniques revolutionized my classroom presence. Even difficult students pay attention now."
+      },
+      "testimonial7": {
+        "name": "Stefan Petrov",
+        "position": "CEO",
+        "text": "Board meetings used to stress me out. Now I command the room with natural confidence and clarity."
+      },
+      "testimonial8": {
+        "name": "Kristina Todorova",
+        "position": "HR Director",
+        "text": "The body language techniques helped me become more effective in interviews and team meetings."
+      },
+      "testimonial9": {
+        "name": "Viktor Mihaylov",
+        "position": "Consultant",
+        "text": "Client presentations are now my strength instead of my weakness. The ROI on this training is incredible."
+      },
+      "testimonial10": {
+        "name": "Svetlana Nikolova",
+        "position": "Project Manager",
+        "text": "I finally feel authentic and confident when speaking. The fear is completely gone, replaced by excitement."
+      }
+    },
+    "transformation": {
+      "title": "From Fear-Full to Fear-Less",
+      "subtitle": "Experience the journey from communication anxiety to confident presence",
+      "before": {
+        "title": "Before: Silent Struggle",
+        "item1": "Racing heart before speaking",
+        "item2": "Avoiding important conversations",
+        "item3": "Feeling invisible in meetings",
+        "item4": "Self-doubt and overthinking"
+      },
+      "after": {
+        "title": "After: Commanding Presence",
+        "item1": "Speaking with calm confidence",
+        "item2": "Leading important discussions",
+        "item3": "Commanding attention naturally",
+        "item4": "Authentic self-expression"
+      },
+      "cta": {
+        "title": "Ready for Your Transformation?",
+        "button": "Start Your Journey"
+      }
+    },
+    "leadMagnetSection": {
+      "title": "Free Download: \"8 Essential Exercises to Transform Your Voice & Presence\"",
+      "description": "Discover the professional techniques actors use to captivate audiences and eliminate stage fright. These proven methods will transform your presence in meetings, presentations, and conversations.",
+      "benefits": [
+        "Instantly calm your nerves before any important conversation",
+        "Use voice and posture to project unshakeable confidence",
+        "Master the art of authentic storytelling that engages audiences",
+        "Quick exercises to improve your on-camera presence"
+      ],
+      "freeLabel": "FREE",
+      "guideLabel": "FREE GUIDE",
+      "pdfLabel": "PDF Download"
+    },
+    "cta": {
+      "title": "Ready to Start?",
+      "description": "Join the waitlist for the next workshop",
+      "button": "Sign Up Now",
+      "corporateButton": "Corporate Training"
+    }
+  },
+  "about": {
+    "title": "Who am I?",
+    "content": "My name is Peter Stoyanov, and I’m an actor, clown, director, and (...well, I’m not a fan of the word \"coach\" – it sounds too wishy-washy to me...). For over 20 years, I’ve worked with people from various cultures and professions – from actors to business leaders – helping them free their voice, overcome stage fright, and connect more deeply with themselves and, through that, with their audience. I teach through games, exercises, improvisation, and physical work. My approach is practical, fun, and liberating.",
+
+    "hero": {
+      "title": "Meet",
+      "name": "Peter Stoyanov",
+      "subtitle": "Actor • Clown • Director • Teacher",
+      "stats": {
+        "experience": "Years Experience",
+        "countries": "Countries"
+      },
+      "cta": {
+        "workshop": "Join a Workshop",
+        "corporate": "Corporate Training"
+      }
+    },
+    "journey": {
+      "title": "My Journey",
+      "theater": {
+        "title": "Theater & Clowning",
+        "description": "My journey began on the stage, where I discovered the transformative power of performance. Through years of theater and clowning, I learned that authenticity and vulnerability are the keys to genuine connection with an audience."
+      },
+      "international": {
+        "title": "International Experience",
+        "description": "Over two decades, I've worked across 15+ countries, collaborating with diverse audiences and understanding how communication transcends cultural boundaries. This global perspective shapes my unique approach to coaching."
+      },
+      "methodology": {
+        "title": "Unique Methodology",
+        "description": "My coaching combines theater techniques, voice work, breathing exercises, and mindfulness. Unlike traditional public speaking training, I focus on discovering your authentic voice and presence through play and exploration."
+      }
+    },
+    "philosophy": {
+      "title": "My Philosophy",
+      "quote": "Every person has a unique voice and presence. My role is not to change who you are, but to help you discover and amplify your authentic self.",
+      "belief": "I believe that confidence comes from authenticity, not from pretending to be someone else. Through my workshops, you'll learn to embrace your natural communication style while developing the skills to express yourself powerfully and clearly.",
+      "approach": "My approach combines theater techniques with practical business applications, creating a safe space where vulnerability becomes strength and fear transforms into confidence."
+    },
+    "approach": {
+      "title": "My Approach",
+      "playBased": {
+        "title": "Play-Based Learning",
+        "description": "Learning through joy and exploration, not fear and pressure."
+      },
+      "bodyAwareness": {
+        "title": "Body Awareness",
+        "description": "Understanding how your body communicates and using it as a tool."
+      },
+      "voiceBreath": {
+        "title": "Voice & Breath",
+        "description": "Developing vocal power and breathing techniques for confidence."
+      },
+      "mindfulPresence": {
+        "title": "Mindful Presence",
+        "description": "Being fully present and authentic in every interaction."
+      }
+    },
+    "workTogether": {
+      "title": "Let's Work Together",
+      "description": "Whether you're looking to overcome speaking anxiety, enhance your leadership presence, or transform your team's communication skills, I'm here to guide you on that journey.",
+      "individual": {
+        "title": "Individual Coaching",
+        "description": "Personalized sessions focused on your specific communication goals and challenges."
+      },
+      "group": {
+        "title": "Group Workshops",
+        "description": "Dynamic group sessions where participants learn together and support each other's growth."
+      },
+      "corporate": {
+        "title": "Corporate Training",
+        "description": "Customized programs designed to enhance your team's communication and leadership skills."
+      }
+    },
+    "cta": {
+      "title": "Ready to Transform Your Communication?",
+      "description": "Join hundreds of students who have discovered their authentic voice and confident presence.",
+      "workshop": "Join a Workshop",
+      "corporate": "Corporate Training"
+    }
+  },
+  "waitlist": {
+    "title": "Join the Waitlist",
+    "description": "Be among the first to access exclusive workshops and personalized coaching sessions. Transform your communication skills with theater-based techniques.",
+    "hero": {
+      "stats": {
+        "limited": "Limited",
+        "early": "Early",
+        "exclusive": "Exclusive",
+        "spotsAvailable": "Spots Available",
+        "birdPricing": "Bird Pricing",
+        "access": "Access"
+      },
+      "quote": "Communication is the skill to listen to your conversation partner, not just waiting for your turn to speak."
+    },
+    "understanding": {
+      "title": "I Understand Your Challenge",
+      "subtitle": "Communication anxiety affects even the most successful professionals. You're not alone in this journey.",
+      "challenges": {
+        "title": "Common Challenges I Help Solve",
+        "fear": {
+          "title": "Fear of Public Speaking",
+          "description": "That knot in your stomach before presentations, the racing heart, the blank mind."
+        },
+        "impostor": {
+          "title": "Impostor Syndrome",
+          "description": "Feeling like you don't belong in the room, despite your qualifications and achievements."
+        },
+        "presence": {
+          "title": "Lack of Executive Presence",
+          "description": "Struggling to command attention and respect in high-stakes business situations."
+        },
+        "camera": {
+          "title": "Camera Anxiety",
+          "description": "Freezing up in video calls, virtual presentations, or when being recorded."
+        }
+      },
+      "truth": {
+        "title": "Here's the truth:",
+        "description": "These challenges don't reflect your worth or potential. They're simply skills that can be learned and obstacles that can be overcome with the right approach."
+      }
+    },
+    "form": {
+      "title": "Complete Your Registration",
+      "subtitle": "Join our exclusive community of aspiring speakers and performers",
+      "fullName": "Full Name",
+      "email": "Email",
+      "cityCountry": "Where are you from?",
+      "occupation": "Occupation",
+      "whyJoin": "Why do you want to join this workshop?",
+      "skillsToImprove": "What communication skills do you want to improve?",
+      "submitButton": "Join Waitlist",
+      "submitting": "Submitting...",
+      "privacyNote": "By joining, you agree to receive updates about our workshops and coaching programs.",
+      "errors": {
+        "fullNameRequired": "Full name is required",
+        "emailRequired": "Email is required",
+        "emailInvalid": "Email is invalid",
+        "cityCountryRequired": "City & Country is required",
+        "occupationRequired": "Occupation is required",
+        "whyJoinRequired": "Please tell us why you want to join",
+        "skillsToImproveRequired": "Please tell us what skills you want to improve",
+        "submitError": "An error occurred. Please try again.",
+        "networkError": "Network error. Please check your connection and try again."
+      }
+    },
+    "benefits": {
+      "title": "Why Join Our Community?",
+      "subtitle": "Gain exclusive access to transformative workshops and connect with like-minded individuals",
+      "earlyAccess": {
+        "title": "Early Access Benefits",
+        "description": "Be the first to know about new workshops, get priority booking, and receive exclusive early-bird pricing discounts."
+      },
+      "flexible": {
+        "title": "Flexible Scheduling",
+        "description": "Choose from multiple time slots and formats that fit your lifestyle, including weekend intensives and evening sessions."
+      },
+      "community": {
+        "title": "Community Network",
+        "description": "Connect with other aspiring speakers and performers, share experiences, and build lasting professional relationships."
+      },
+      "personalized": {
+        "title": "Personalized Guidance",
+        "description": "Receive tailored coaching based on your specific goals, whether for business presentations, public speaking, or performance."
+      }
+    }
+  },
+  "corporate": {
+    "title": "Corporate Training",
+    "description": "Elevate your team's communication, leadership presence, and collaboration skills through proven theater techniques and interactive workshops designed for business professionals.",
+    "hero": {
+      "title": "Corporate Training",
+      "subtitle": "That Transforms Teams",
+      "description": "Elevate your team's communication, leadership presence, and collaboration skills through proven theater techniques and interactive workshops designed for business professionals.",
+      "stats": {
+        "companies": "Companies Trained",
+        "satisfaction": "Satisfaction Rate",
+        "professionals": "Professionals Trained"
+      },
+      "quote": "Theater techniques don't just improve communication—they transform how teams connect, collaborate, and lead with authentic confidence."
+    },
+    "services": {
+      "title": "Training Programs",
+      "subtitle": "Customized workshops that address your team's specific communication and leadership challenges",
+      "presentation": {
+        "title": "Presentation Mastery",
+        "description": "Master the art of compelling presentations using voice, body language, and storytelling techniques that captivate audiences."
+      },
+      "leadership": {
+        "title": "Authentic Presence",
+        "description": "Develop commanding presence and authentic communication that inspires teams and drives results."
+      },
+      "communication": {
+        "title": "Team Communication",
+        "description": "Enhance collaboration, active listening, and conflict resolution through interactive theater-based exercises."
+      },
+      "camera": {
+        "title": "Camera Confidence",
+        "description": "Excel in video meetings, interviews, and digital presentations with professional on-camera presence and delivery."
+      },
+      "improvisation": {
+        "title": "Improvisation Skills",
+        "description": "Build quick thinking, adaptability, and creative problem-solving skills for dynamic situations."
+      },
+      "stress": {
+        "title": "Stress Management",
+        "description": "Learn breathing techniques and mindfulness practices to maintain composure and clarity under pressure."
+      }
+    },
+    "form": {
+      "title": "Request a Custom Training Proposal",
+      "subtitle": "Let's discuss how theater-based training can transform your team's communication and performance",
+      "consultationTitle": "Get Your Free Consultation",
+      "consultationSubtitle": "Tell us about your team's goals and we'll create a customized training program",
+      "companyName": "Company Name",
+      "contactPerson": "Contact Person",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "teamSize": "Team Size",
+      "budget": "Estimated Budget",
+      "trainingGoals": "Training Goals & Challenges",
+      "trainingGoalsPlaceholder": "What communication challenges does your team face? What outcomes are you hoping to achieve?",
+      "preferredDates": "Preferred Training Dates",
+      "preferredDatesPlaceholder": "e.g., March 2024, flexible, ASAP",
+      "additionalInfo": "Additional Information",
+      "additionalInfoPlaceholder": "Any specific requirements, team dynamics, or additional context we should know about?",
+      "submitButton": "Request Free Consultation",
+      "submitting": "Sending Request...",
+      "responseNote": "We'll respond within 24 hours with a customized training proposal",
+      "teamSizeOptions": {
+        "placeholder": "Select team size",
+        "small": "5-15 people",
+        "medium": "16-30 people",
+        "large": "31-50 people",
+        "xlarge": "51-100 people",
+        "enterprise": "100+ people"
+      },
+      "budgetOptions": {
+        "placeholder": "Select budget range",
+        "under5k": "Under 5,000 BGN",
+        "5k10k": "5,000 BGN - 10,000 BGN",
+      "10k20k": "10,000 BGN - 20,000 BGN",
+        "20kplus": "20,000+ BGN",
+        "discuss": "Let's discuss"
+      },
+      "errors": {
+        "companyNameRequired": "Company name is required",
+        "contactPersonRequired": "Contact person is required",
+        "emailRequired": "Email is required",
+        "emailInvalid": "Email is invalid",
+        "teamSizeRequired": "Team size is required",
+        "trainingGoalsRequired": "Training goals are required",
+        "submitError": "An error occurred. Please try again.",
+        "networkError": "Network error. Please check your connection and try again."
+      }
+    },
+    "benefits": {
+      "title": "Why Choose Theater-Based Training?",
+      "subtitle": "Proven techniques from the world of performance that create lasting behavioral change",
+      "experiential": {
+        "title": "Experiential Learning",
+        "description": "Learn by doing through interactive exercises that create muscle memory for confident communication."
+      },
+      "immediate": {
+        "title": "Immediate Results",
+        "description": "See transformation in real-time as participants break through limiting beliefs and discover their authentic presence."
+      },
+      "teamBonding": {
+        "title": "Team Bonding",
+        "description": "Build trust and collaboration as teams work together in a safe, supportive, and energizing environment."
+      }
+    }
+  },
+  "thankYou": {
+    "title": "Thank You!",
+    "description": "Your message has been received. We'll be in touch soon to discuss your communication journey.",
+    "messages": {
+      "corporate": "Your corporate training inquiry has been received. We'll prepare a customized proposal for your team.",
+      "waitlist": "Welcome to our exclusive community! You're now on the waitlist for our transformative workshops.",
+      "general": "Your message has been received. We'll be in touch soon to discuss your communication journey."
+    },
+    "stats": {
+      "responseTime": "Response Time",
+      "satisfactionRate": "Satisfaction Rate",
+      "livesTransformed": "Lives Transformed"
+    },
+    "nextSteps": {
+      "title": "What Happens Next?",
+      "subtitle": "Here's your roadmap to communication transformation",
+      "step1": {
+        "corporate": "Proposal Review",
+        "general": "Email Confirmation",
+        "corporateDesc": "We'll analyze your team's needs and prepare a customized training proposal within 24 hours.",
+        "generalDesc": "Check your email for a confirmation message with exclusive resources and next steps."
+      },
+      "step2": {
+        "corporate": "Strategy Call",
+        "general": "Personal Consultation",
+        "corporateDesc": "We'll schedule a strategy call to discuss your training goals and answer any questions.",
+        "generalDesc": "Receive a personal consultation to discuss your communication goals and workshop options."
+      },
+      "step3": {
+        "corporate": "Transform Your Team",
+        "general": "Begin Your Journey",
+        "corporateDesc": "Experience the transformation as your team develops authentic communication skills and confidence.",
+        "generalDesc": "Start your journey to confident communication with our proven theater-based techniques."
+      }
+    },
+    "actions": {
+      "returnHome": "Return Home",
+      "learnAbout": "Learn About Peter"
+    },
+    "resources": {
+      "title": "While You Wait...",
+      "subtitle": "Explore these resources to start your transformation journey today",
+      "freeGuide": {
+        "title": "Free Guide",
+        "description": "Download \"8 Essential Exercises to Transform Your Voice & Presence\" for instant confidence tips",
+        "action": "Get Free Guide"
+      },
+      "aboutPetar": {
+        "title": "About Peter",
+        "description": "Learn about Peter's 20+ year journey from actor to international communication coach",
+        "action": "Read His Story"
+      },
+      "shareInspire": {
+        "title": "Share & Inspire",
+        "description": "Help others discover the power of confident communication by sharing your journey"
+      }
+    }
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "corporate": "Corporate",
+    "blog": "Blog",
+    "waitlist": "Join Waitlist"
+  },
+  "footer": {
+    "description": "Transforming communication through theater techniques, breath work, and authentic presence.",
+    "quickLinks": "Quick Links",
+    "contact": "Contact",
+    "followUs": "Follow Us",
+    "newsletter": "Newsletter",
+    "newsletterDescription": "Stay updated.",
+    "subscribe": "Subscribe",
+    "allRightsReserved": "All Rights Reserved",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service"
+  },
+  "privacyPolicy": {
+    "title": "Privacy Policy",
+    "subtitle": "Your privacy is important to us. This policy explains how we collect, use, and protect your personal information in compliance with Bulgarian and EU data protection laws.",
+    "description": "Learn how we handle your personal data and protect your privacy",
+    "lastUpdated": "Last Updated",
+    "introduction": {
+      "title": "Introduction",
+      "content1": "This Privacy Policy describes how Peter Stoyanov (\"we\", \"us\", or \"our\") collects, uses, and shares your personal information when you visit our website or use our services. We are committed to protecting your privacy and ensuring the security of your personal data in accordance with the General Data Protection Regulation (GDPR) and Bulgarian data protection laws.",
+      "content2": "By using our website or services, you agree to the collection and use of information in accordance with this policy. We will not use or share your information with anyone except as described in this Privacy Policy."
+    },
+    "dataController": {
+      "title": "Data Controller Information",
+      "name": "Name",
+      "address": "Address", 
+      "email": "Email"
+    },
+    "dataCollection": {
+      "title": "What Information We Collect",
+      "personal": {
+        "title": "Personal Information",
+        "name": "Full name",
+        "email": "Email address",
+        "phone": "Phone number (optional)",
+        "company": "Company name (for corporate inquiries)",
+        "location": "City and country",
+        "occupation": "Occupation/profession"
+      },
+      "technical": {
+        "title": "Technical Information",
+        "ip": "IP address",
+        "browser": "Browser type and version",
+        "device": "Device information",
+        "usage": "Website usage patterns",
+        "cookies": "Cookies and similar technologies"
+      }
+    },
+    "legalBasis": {
+      "title": "Legal Basis for Processing",
+      "consent": {
+        "title": "Consent",
+        "description": "When you voluntarily provide your information through our contact forms, newsletter signup, or workshop registration."
+      },
+      "contract": {
+        "title": "Contract Performance",
+        "description": "When processing is necessary to provide you with our coaching services or respond to your inquiries."
+      },
+      "legitimate": {
+        "title": "Legitimate Interest",
+        "description": "For improving our services, website analytics, and communicating about our workshops and services."
+      }
+    },
+    "dataUsage": {
+      "title": "How We Use Your Information",
+      "communication": "To respond to your inquiries and provide customer support",
+      "services": "To deliver our coaching services and workshops",
+      "marketing": "To send you information about our services (with your consent)",
+      "analytics": "To analyze website usage and improve our services",
+      "legal": "To comply with legal obligations and protect our rights"
+    },
+    "rights": {
+      "title": "Your Rights Under GDPR",
+      "access": {
+        "title": "Right to Access",
+        "description": "Request copies of your personal data"
+      },
+      "rectification": {
+        "title": "Right to Rectification", 
+        "description": "Request correction of inaccurate data"
+      },
+      "erasure": {
+        "title": "Right to Erasure",
+        "description": "Request deletion of your personal data"
+      },
+      "portability": {
+        "title": "Right to Data Portability",
+        "description": "Request transfer of your data"
+      },
+      "objection": {
+        "title": "Right to Object",
+        "description": "Object to processing of your data"
+      },
+      "complaint": {
+        "title": "Right to Complain",
+        "description": "Lodge a complaint with supervisory authority"
+      }
+    },
+    "contact": {
+      "title": "Contact Us About Privacy",
+      "description": "If you have any questions about this Privacy Policy or wish to exercise your rights, please contact us:",
+      "email": "Email",
+      "response": "Response time",
+      "responseTime": "Within 30 days as required by law"
+    }
+  },
+  "termsOfService": {
+    "title": "Terms of Service", 
+    "subtitle": "These terms govern your use of our website and services. Please read them carefully before using our services.",
+    "description": "Legal terms and conditions for using our coaching services",
+    "lastUpdated": "Last Updated",
+    "acceptance": {
+      "title": "Acceptance of Terms",
+      "content": "By accessing and using this website and our services, you accept and agree to be bound by these Terms of Service and our Privacy Policy. If you do not agree to these terms, please do not use our services."
+    },
+    "services": {
+      "title": "Description of Services",
+      "content": "Peter Stoyanov provides communication coaching, public speaking training, corporate workshops, and related educational services. All services are provided in accordance with Bulgarian law and professional standards."
+    },
+    "userObligations": {
+      "title": "User Obligations",
+      "respectful": "Use our services respectfully and lawfully",
+      "accurate": "Provide accurate information when requested",
+      "confidential": "Maintain confidentiality of workshop content",
+      "payment": "Make payments according to agreed terms",
+      "prohibited": "Do not use services for illegal purposes"
+    },
+    "intellectualProperty": {
+      "title": "Intellectual Property",
+      "content": "All content, materials, and methodologies provided through our services are the intellectual property of Pete  r Stoyanov. You may not reproduce, distribute, or use these materials without written permission."
+    },
+    "limitation": {
+      "title": "Limitation of Liability",
+      "content": "To the maximum extent permitted by Bulgarian law, Peter Stoyanov shall not be liable for any indirect, incidental, special, or consequential damages arising from the use of our services."
+    },
+    "termination": {
+      "title": "Termination",
+      "content": "Either party may terminate services with appropriate notice. Upon termination, your access to materials and ongoing support will cease, subject to any ongoing obligations."
+    },
+    "governingLaw": {
+      "title": "Governing Law",
+      "content": "These terms are governed by Bulgarian law. Any disputes will be resolved through Bulgarian courts or through mediation as appropriate."
+    },
+    "contact": {
+      "title": "Contact Information",
+      "content": "For questions about these terms, please contact us at peterstoyanov83@gmail.com"
+    }
+  },
+  "blog": {
+    "title": "Insights & Techniques",
+    "description": "Discover theater-based techniques, communication tips, and insights to transform your presence and voice.",
+    "hero": {
+      "title": "Communication Insights",
+      "subtitle": "Practical tips, techniques, and stories from the world of theater and communication coaching"
+    },
+    "search": "Search articles",
+    "searchPlaceholder": "Search for articles, techniques, tips...",
+    "filterByTag": "Filter by category",
+    "allTags": "All Categories",
+    "noPostsFound": "No articles found",
+    "tryDifferentSearch": "Try adjusting your search or filter to find what you're looking for.",
+    "clearFilters": "Clear all filters",
+    "readMore": "Read more",
+    "backToBlog": "Back to all articles",
+    "relatedPosts": "Related Articles",
+    "authorBio": "Actor & communication expert "
+  }
+}

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Sarah Went From Silent in Meetings to Leading Presentations</title>
+    <style>
+        /* Reset styles */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* Container and layout */
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            background-color: #ffffff;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #dc2626 0%, #ea580c 50%, #d97706 100%);
+            padding: 40px 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 26px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            line-height: 1.3;
+        }
+
+        .header .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        /* Content */
+        .content {
+            padding: 40px 30px;
+            background-color: #ffffff;
+        }
+
+        .greeting {
+            font-size: 18px;
+            font-weight: 600;
+            color: #dc2626;
+            margin-bottom: 20px;
+        }
+
+        .content p {
+            margin-bottom: 20px;
+            font-size: 16px;
+            line-height: 1.7;
+            color: #374151;
+        }
+
+        /* Story intro */
+        .story-intro {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border-left: 4px solid #ef4444;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .story-intro h3 {
+            color: #dc2626;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .story-intro p {
+            color: #7f1d1d;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        /* What changed section */
+        .what-changed {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 2px solid #22c55e;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .what-changed h3 {
+            color: #15803d;
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .what-changed p {
+            color: #166534;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .changes-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .changes-list li {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #22c55e;
+            font-size: 15px;
+            color: #374151;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* Turning point */
+        .turning-point {
+            background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%);
+            color: white;
+            padding: 30px 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .turning-point h4 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #fbbf24;
+        }
+
+        .turning-point p {
+            font-size: 16px;
+            color: #e0e7ff;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        .turning-point .quote {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-style: italic;
+            border-left: 4px solid #fbbf24;
+        }
+
+        /* Result section */
+        .result {
+            background: #fbbf24;
+            color: #92400e;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 25px 0;
+            text-align: center;
+            font-weight: 600;
+            font-size: 17px;
+        }
+
+        /* Power message */
+        .power-message {
+            background: linear-gradient(135deg, #7c3aed 0%, #c026d3 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        /* Signature */
+        .signature {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .signature .name {
+            font-weight: 700;
+            color: #dc2626;
+            font-size: 17px;
+        }
+
+        .signature .title {
+            color: #6b7280;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* PS section */
+        .ps {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-top: 25px;
+            font-size: 14px;
+            color: #92400e;
+        }
+
+        .ps strong {
+            color: #78350f;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #f9fafb;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .footer p {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 10px;
+        }
+
+        .footer a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+
+        /* Mobile responsiveness */
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                width: 100% !important;
+            }
+
+            .header, .content, .footer {
+                padding: 20px !important;
+            }
+
+            .header h1 {
+                font-size: 22px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>How Sarah Went From Silent in Meetings to Leading Presentations</h1>
+            <div class="subtitle">A transformation story</div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <div class="greeting">Hi {{first_name}},</div>
+
+            <p>I want to tell you about Sarah, one of my clients who went from dreading presentations to actually enjoying them.</p>
+
+            <div class="story-intro">
+                <h3>Sarah's Situation</h3>
+                <p>Sarah was a brilliant marketing director who had great ideas but rarely spoke up. Sound familiar?</p>
+                <p>"I'd prepare talking points before meetings," she told me, "but when the moment came, I'd just... freeze. My mind would go blank, and I'd convince myself someone else would say it better."</p>
+            </div>
+
+            <p>After six months of coaching, Sarah not only contributed regularly in meetings - she became the go-to person for client presentations.</p>
+
+            <div class="what-changed">
+                <h3>Here's what changed everything:</h3>
+                <p>Instead of fighting her perfectionist tendencies, we worked WITH them. Sarah learned to prepare not just content, but confidence cues:</p>
+
+                <ul class="changes-list">
+                    <li>She developed a 3-point structure for any contribution: "I believe...", "Here's why...", "Here's how we move forward..."</li>
+                    <li>We practiced the "theater technique" of stepping into character - in her case, the confident expert she already was</li>
+                    <li>She started viewing speaking opportunities as gifts to her colleagues, not performances for judgment</li>
+                </ul>
+            </div>
+
+            <div class="turning-point">
+                <h4>The Turning Point</h4>
+                <p>The turning point came during a crucial client pitch. Sarah's presentation was so compelling that the client said:</p>
+                <div class="quote">
+                    "We need someone who communicates with this kind of clarity leading our project."
+                </div>
+            </div>
+
+            <div class="result">
+                That's the power of authentic confidence - when you stop performing and start sharing what matters to you, everything shifts.
+            </div>
+
+            <div class="power-message">
+                Your voice matters more than you realize.
+            </div>
+
+            <div class="signature">
+                <div class="name">Cheering you on,<br>Peter</div>
+                <div class="title">Professional Communication Coach</div>
+            </div>
+
+            <div class="ps">
+                <strong>P.S.</strong> Sarah still gets nervous before big presentations. The difference? She now knows that feeling means she's about to do something important.
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Peter Stoyanov Professional Coaching</p>
+            <p>You're receiving this because you joined our waitlist. <a href="{{unsubscribe_url}}">Unsubscribe</a> | <a href="{{preferences_url}}">Update preferences</a></p>
+        </div>
+    </div>
+</body>
+</html>

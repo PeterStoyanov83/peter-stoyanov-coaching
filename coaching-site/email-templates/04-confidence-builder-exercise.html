@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Try This 5-Minute Confidence Builder (Works Anywhere)</title>
+    <style>
+        /* Reset styles */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* Container and layout */
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            background-color: #ffffff;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #7c3aed 0%, #c026d3 50%, #e11d48 100%);
+            padding: 40px 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 26px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            line-height: 1.3;
+        }
+
+        .header .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        /* Content */
+        .content {
+            padding: 40px 30px;
+            background-color: #ffffff;
+        }
+
+        .greeting {
+            font-size: 18px;
+            font-weight: 600;
+            color: #7c3aed;
+            margin-bottom: 20px;
+        }
+
+        .content p {
+            margin-bottom: 20px;
+            font-size: 16px;
+            line-height: 1.7;
+            color: #374151;
+        }
+
+        /* Exercise section */
+        .exercise-box {
+            background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+            border: 2px solid #a855f7;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .exercise-box h3 {
+            color: #7c3aed;
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .exercise-subtitle {
+            text-align: center;
+            color: #6b21b6;
+            font-style: italic;
+            margin-bottom: 25px;
+            font-size: 16px;
+        }
+
+        .requirements {
+            background: rgba(255,255,255,0.7);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #6b21b6;
+            font-weight: 500;
+        }
+
+        /* Steps */
+        .step {
+            background: white;
+            border-left: 4px solid #a855f7;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .step h4 {
+            color: #7c3aed;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .step p {
+            color: #374151;
+            margin-bottom: 10px;
+        }
+
+        .step ul {
+            margin-left: 20px;
+            color: #6b21b6;
+        }
+
+        .step li {
+            margin-bottom: 8px;
+        }
+
+        /* Origin story */
+        .origin {
+            background: linear-gradient(135deg, #fef7ff 0%, #f3e8ff 100%);
+            border-left: 4px solid #c026d3;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .origin h4 {
+            color: #c026d3;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .origin p {
+            color: #86198f;
+            font-style: italic;
+        }
+
+        /* Key insight */
+        .insight {
+            background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        /* Call to action */
+        .cta {
+            background: #fbbf24;
+            color: #92400e;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 25px 0;
+            text-align: center;
+            font-weight: 600;
+            font-size: 17px;
+        }
+
+        /* Future self message */
+        .future-self {
+            background: linear-gradient(135deg, #c026d3 0%, #e11d48 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        /* Signature */
+        .signature {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .signature .name {
+            font-weight: 700;
+            color: #7c3aed;
+            font-size: 17px;
+        }
+
+        .signature .title {
+            color: #6b7280;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* PS section */
+        .ps {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-top: 25px;
+            font-size: 14px;
+            color: #92400e;
+        }
+
+        .ps strong {
+            color: #78350f;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #f9fafb;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .footer p {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 10px;
+        }
+
+        .footer a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+
+        /* Mobile responsiveness */
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                width: 100% !important;
+            }
+
+            .header, .content, .footer {
+                padding: 20px !important;
+            }
+
+            .header h1 {
+                font-size: 22px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Try This 5-Minute Confidence Builder</h1>
+            <div class="subtitle">(Works anywhere)</div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <div class="greeting">Hi {{first_name}},</div>
+
+            <p>Here's a practical exercise I use with executives who need to build speaking confidence quickly. It works whether you have a presentation tomorrow or just want to feel more confident in conversations.</p>
+
+            <div class="exercise-box">
+                <h3>The "Confident Speaker Choreography" Exercise</h3>
+                <div class="exercise-subtitle">5 minutes that can change everything</div>
+
+                <div class="requirements">
+                    <strong>What you need:</strong> Find 5 minutes of private space (your office, bedroom, even a bathroom works).
+                </div>
+
+                <div class="step">
+                    <h4>Step 1: Foundation Walk</h4>
+                    <p><strong>Stand tall, shoulders back.</strong> Walk across the room as if you're approaching your audience. Notice your posture, pace, and energy.</p>
+                </div>
+
+                <div class="step">
+                    <h4>Step 2: Power Practice</h4>
+                    <p><strong>Practice your opening line - ANY opening line.</strong> It could be "Good morning everyone" or "I have an idea I'd like to share." Say it three times, focusing on:</p>
+                    <ul>
+                        <li>Clear, deliberate pacing (slower than feels natural)</li>
+                        <li>Eye contact with imaginary listeners</li>
+                        <li>Breathing through your nose between words</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <h4>Step 3: The "Oscar Moment"</h4>
+                    <p><strong>End with acknowledgment.</strong> Give your imaginary audience a slight nod and genuine smile, as if accepting appreciation.</p>
+                </div>
+            </div>
+
+            <div class="insight">
+                This isn't about perfection - it's about muscle memory. When you practice confident movement privately, your body remembers it publicly.
+            </div>
+
+            <div class="origin">
+                <h4>Where This Comes From</h4>
+                <p>I learned this choreography principle from years of theater training. Every confident moment on stage starts with confident movement in rehearsal.</p>
+            </div>
+
+            <div class="cta">
+                Try this before your next speaking situation. Even 30 seconds of this "confidence choreography" can shift your entire presence.
+            </div>
+
+            <div class="future-self">
+                Your future confident self is already inside you - we're just practicing letting it out.
+            </div>
+
+            <div class="signature">
+                <div class="name">Keep growing,<br>Peter</div>
+                <div class="title">Professional Communication Coach</div>
+            </div>
+
+            <div class="ps">
+                <strong>P.S.</strong> The most successful professionals I coach do this exercise regularly, not just before big presentations. Confidence is a practice, not a one-time event.
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Peter Stoyanov Professional Coaching</p>
+            <p>You're receiving this because you joined our waitlist. <a href="{{unsubscribe_url}}">Unsubscribe</a> | <a href="{{preferences_url}}">Update preferences</a></p>
+        </div>
+    </div>
+</body>
+</html>
